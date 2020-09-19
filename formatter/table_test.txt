@@ -1,0 +1,133 @@
+package formatter
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/timtadh/lexmachine"
+)
+
+func TestParseTable(t *testing.T) {
+	type args struct {
+		code []byte
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *document
+		wantErr bool
+	}{
+		{
+			name: "local table constructor",
+			args: args{
+				code: []byte(`
+{
+  exp = 1,
+}
+`,
+				),
+			},
+			want: &document{
+				Body: map[uint64]codeblock{
+					0: {
+						Pad:       0,
+						Formatter: FunctionFormatter,
+						Start: []element{
+							{
+								Token: &lexmachine.Token{
+									Type:        nLocal,
+									Value:       keywords[nLocal],
+									Lexeme:      []byte(keywords[nLocal]),
+									TC:          1,
+									StartLine:   2,
+									StartColumn: 1,
+									EndLine:     2,
+									EndColumn:   5,
+								},
+							},
+							{
+								Token: &lexmachine.Token{
+									Type:        nFunction,
+									Value:       keywords[nFunction],
+									Lexeme:      []byte(keywords[nFunction]),
+									TC:          7,
+									StartLine:   2,
+									StartColumn: 7,
+									EndLine:     2,
+									EndColumn:   14,
+								},
+							},
+							{
+								Token: &lexmachine.Token{
+									Type:        nID,
+									Value:       "a",
+									Lexeme:      []byte("a"),
+									TC:          16,
+									StartLine:   2,
+									StartColumn: 16,
+									EndLine:     2,
+									EndColumn:   16,
+								},
+							},
+							{
+								Token: &lexmachine.Token{
+									Type:        nParentheses,
+									Value:       "(",
+									Lexeme:      []byte("("),
+									TC:          17,
+									StartLine:   2,
+									StartColumn: 17,
+									EndLine:     2,
+									EndColumn:   17,
+								},
+							},
+							{
+								Token: &lexmachine.Token{
+									Type:        nClosingParentheses,
+									Value:       ")",
+									Lexeme:      []byte(")"),
+									TC:          18,
+									StartLine:   2,
+									StartColumn: 18,
+									EndLine:     2,
+									EndColumn:   18,
+								},
+							},
+						},
+						Body: map[uint64]codeblock{},
+						End: []element{
+							{
+
+								Token: &lexmachine.Token{
+									Type:        nEnd,
+									Value:       keywords[nEnd],
+									Lexeme:      []byte(keywords[nEnd]),
+									TC:          20,
+									StartLine:   3,
+									StartColumn: 1,
+									EndLine:     3,
+									EndColumn:   3,
+								},
+							},
+						},
+					},
+				},
+				QtyBlocks: 1,
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := Parse(tt.args.code)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if !assert.Equal(t, got, tt.want) {
+				t.Errorf("Parse() = \n%v, want \n%v", got, tt.want)
+			}
+		})
+	}
+}

@@ -1,0 +1,336 @@
+package main
+
+import (
+	"fmt"
+	"log"
+	"strings"
+
+	"github.com/timtadh/lexmachine"
+	"github.com/timtadh/lexmachine/machines"
+)
+
+const (
+	nEmpty = iota
+	nID
+	nLF
+	nSpace
+	nCommentLong
+	nComment
+	nAnd
+	nBreak
+	nDo
+	nElse
+	nElseif
+	nEnd
+	nFalse
+	nFor
+	nFunction
+	nGoto
+	nIf
+	nIn
+	nLocal
+	nNil
+	nNot
+	nOr
+	nRepeat
+	nReturn
+	nThen
+	nTrue
+	nUntil
+	nWhil
+	nNegEq
+	nColon
+	nSemiColon
+	nParentheses
+	nClosingParentheses
+	nSquareBracket
+	nClosingSquareBracket
+	nCurlyBracket
+	nClosingCurlyBracket
+	nEq
+	nComma
+	nSingleQuote
+	nDoubleQuote
+	nBranch
+	nNumber
+	nString
+)
+
+var (
+	Tokens []string
+
+	keywords = map[int]string{
+		nAnd:       "and",
+		nBreak:     "break",
+		nDo:        "do",
+		nElse:      "else",
+		nElseif:    "elseif",
+		nEnd:       "end",
+		nFalse:     "false",
+		nFor:       "for",
+		nFunction:  "function",
+		nGoto:      "goto",
+		nIf:        "if",
+		nIn:        "in",
+		nLocal:     "local",
+		nNil:       "nil",
+		nNot:       "not",
+		nOr:        "or",
+		nRepeat:    "repeat",
+		nReturn:    "return",
+		nThen:      "then",
+		nTrue:      "true",
+		nUntil:     "until",
+		nWhil:      "while",
+		nNegEq:     "~=",
+		nColon:     ":",
+		nSemiColon: ";",
+		nEq:        `=`,
+		nComma:     `,`,
+
+		nParentheses:          `\(`,
+		nClosingParentheses:   `\)`,
+		nSquareBracket:        `\[`,
+		nClosingSquareBracket: `\]`,
+		nCurlyBracket:         `\{`,
+		nClosingCurlyBracket:  `\}`,
+		// nSingleQuote:          `'`,
+		// nDoubleQuote:          `"`,
+
+		nNumber: `\d`,
+		nString: `'.*'`,
+	}
+
+	TokenIDs = map[int]string{
+		nID:          "ID",
+		nLF:          "LF",
+		nSpace:       "Space",
+		nCommentLong: "comment",
+		nComment:     "comment",
+		nAnd:         "and",
+		nBreak:       "break",
+		nDo:          "do",
+		nElse:        "else",
+		nElseif:      "elseif",
+		nEnd:         "end",
+		nFalse:       "false",
+		nFor:         "for",
+		nFunction:    "function",
+		nGoto:        "goto",
+		nIf:          "if",
+		nIn:          "in",
+		nLocal:       "local",
+		nNil:         "nil",
+		nNot:         "not",
+		nOr:          "or",
+		nRepeat:      "repeat",
+		nReturn:      "return",
+		nThen:        "then",
+		nTrue:        "true",
+		nUntil:       "until",
+		nWhil:        "while",
+		nNegEq:       "nNegEq",
+		nColon:       "nColon",
+		nComma:       `nComma`,
+		nEq:          `nEq`,
+
+		nSemiColon:            "nSemiColon",
+		nParentheses:          "nParentheses",
+		nClosingParentheses:   "nClosingParentheses",
+		nSquareBracket:        `nSquareBracket`,
+		nClosingSquareBracket: `nClosingSquareBracket`,
+		nCurlyBracket:         `nCurlyBracket`,
+		nClosingCurlyBracket:  `nClosingCurlyBracket`,
+		nSingleQuote:          `nSingleQuote`,
+		nDoubleQuote:          `nDoubleQuote`,
+
+		nNumber: `Number`,
+		nString: `String`,
+	}
+)
+
+type element struct {
+	Token *lexmachine.Token
+	NL    int
+}
+
+const (
+	lEmpty = iota
+	lVar
+	lID
+	lEq
+	lDoubleQuote
+	lSingleQuote
+)
+
+type line struct {
+	Type     int
+	Length   int
+	Elements []element
+	Branch   branch
+	Template template
+}
+
+type block struct {
+	Lines []line
+}
+
+type template int
+
+type syntax []int
+type branch map[int]template
+
+const (
+	noTmp = iota
+	tmplVarList
+	tmplFunc
+)
+
+func (b branch) nextToken(tokenType int) (branch, template) {
+	tmpl, ok := b[tokenType]
+	if !ok {
+		return nil, 0
+	}
+
+	return synTree[tokenType], tmpl
+}
+
+func (l line) Format() error {
+	log.Printf("======= line ===== %#v", l)
+
+	for _, e := range l.Elements {
+		log.Printf("======= line.el ===== %s", e.Token.Lexeme)
+	}
+
+	return nil
+}
+
+var synTree = map[int]branch{
+	nLocal: branch{
+		nID:       tmplVarList,
+		nFunction: 2,
+	},
+	nID: branch{
+		nEq: noTmp,
+	},
+	nEq: branch{
+		nString: tmplVarList,
+	},
+	nString: branch{},
+	//nID:    branch{nEq, nParentheses, nCurlyBracket, nSquareBracket},
+	// nComma: branch{nID},
+}
+
+func main() {
+	lexer := lexmachine.NewLexer()
+	for k, v := range keywords {
+		lexer.Add([]byte(strings.ToLower(v)), token(k))
+	}
+	lexer.Add([]byte(`([a-zA-Z_][a-zA-Z0-9_.]*)`), token(nID))
+	lexer.Add([]byte("( |\t|\f|\r)+"), skip)
+	lexer.Add([]byte(`--\[\[([^\]\]])*\]\]`), token(nCommentLong))
+	lexer.Add([]byte(`--( |\S)*`), token(nComment))
+	lexer.Add([]byte(`\n\s*\n`), token(nLF))
+
+	if err := lexer.Compile(); err != nil {
+		log.Fatalf("failed to compile lexer, %s", err)
+	}
+	s, err := lexer.Scanner([]byte(`local box = 'a'`))
+	if err != nil {
+		log.Fatal(err)
+	}
+	nl := 0
+	l := line{}
+	for tok, err, eof := s.Next(); !eof; tok, err, eof = s.Next() {
+		if _, is := err.(*machines.UnconsumedInput); is {
+			// to skip bad token do:
+			// s.TC = ui.FailTC
+			log.Fatal(err)
+		} else if err != nil {
+			log.Fatal(err)
+		}
+		token := tok.(*lexmachine.Token)
+		e := element{
+			Token: token,
+			NL:    nl,
+		}
+		nl = getNestedLevel(token.Type, nl)
+
+		//
+		// log.Printf("+++++++ %#v", l.Branch)
+		log.Printf("+++CURTOKEN++++ %s, %s", token.Lexeme, TokenIDs[e.Token.Type])
+		if l.Branch == nil {
+			l.Branch = synTree[token.Type]
+		} else {
+			b, t := l.Branch.nextToken(token.Type)
+			if b == nil {
+				l.Format()
+				// send to writer current line
+				l = line{}
+			} else {
+				l.Branch = b
+				l.Template = t
+			}
+		}
+		// l.Elements[len(l.Elements)]
+		//
+
+		l.Elements = append(l.Elements, e)
+		l.Length += e.Token.EndLine - e.Token.StartLine
+
+		fmt.Printf("%-20v |%-10v \n",
+			TokenIDs[e.Token.Type],
+			e.NL)
+	}
+	l.Format()
+}
+
+func getNestedLevel(nodeType int, nlCurrent int) int {
+	nl := nlCurrent
+
+	switch nodeType {
+	case nFunction:
+		nl++
+	case nEnd:
+		nl--
+	}
+
+	if nl < 0 {
+		return 0
+	}
+
+	return nl
+}
+
+func skip(*lexmachine.Scanner, *machines.Match) (interface{}, error) {
+	return nil, nil
+}
+
+// \n--comment\n-- comment2\n--[[block\ncomm]]\nlocallocal\n--[[zxxxx]]\nlocallocal\n--[[yyyy]]\nfunction _a_a.asd({})\nif\nthen\nend\nreturn\nfunction a() return 1 end\nend" ==== 84
+// \n--comment\n-- comment	2\n--[[block\ncomm]]\nlocallocal\n--[[zxxxx]]\nfunction _a_a.asd({})\nif\nthen\nend\nreturn\nfunction a() return 1 end\nend" ==== 62"\n
+// \n--comment\n-- comment2\n--[[block\ncomm]]\nlocal\n--[[zxxxx]]\nfunction _a_a.asd({})\nif\nthen\nend\nreturn\nfunction a() return 1 end\nend" ==== 57
+// func token(name string) lexmachine.Action {
+// 	return func(s *lexmachine.Scanner, m *machines.Match) (interface{}, error) {
+// 		// fmt.Printf("\n=========== %#v ==== %d\n\n", string(s.Text), s.TC)
+// 		return s.Token(name, string(m.Bytes), m), nil
+// 	}
+// }
+
+// func comm(name string) lexmachine.Action {
+// 	return func(s *lexmachine.Scanner, m *machines.Match) (interface{}, error) {
+// 		// fmt.Printf("\n=========== %#v ==== %d\n\n", string(s.Text), s.TC)
+// 		// fmt.Printf("=========== %#v ==== %d", string(s.Text), s.TC)
+// 		// for tc := s.TC; tc < len(s.Text); tc++ {
+// 		// 	fmt.Printf("%#v\n", string(s.Text[tc]))
+// 		// }
+// 		// s.TC = 7
+// 		// fmt.Printf("+++%#v\n", string(m.Bytes))
+// 		return s.Token(TokenIds[name], string(m.Bytes), m), nil
+// 	}
+// }
+
+func token(nodeID int) lexmachine.Action {
+	return func(s *lexmachine.Scanner, m *machines.Match) (interface{}, error) {
+		return s.Token(nodeID, string(m.Bytes), m), nil
+	}
+}
