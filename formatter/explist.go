@@ -1,0 +1,39 @@
+package formatter
+
+type explist struct {
+	List []*exp // separator ,
+}
+
+func (explist) New() statementIntf {
+	return &explist{}
+}
+
+func (explist) InnerStatement() statementIntf {
+	return &exp{}
+}
+
+func (explist) TypeOf() typeStatement {
+	return tsExpList
+}
+
+func (s *explist) IsEnd(prev, cur *element) bool {
+	if cur.Token.Type == nComma || prev.Token.Type == nComma {
+		return false
+	}
+	return true
+}
+
+func (s *explist) HasSyntax(el element) bool {
+	return false
+}
+
+func (s *explist) Append(el *element) {
+	e := &exp{}
+	e.Append(el)
+
+	s.List = append(s.List, e)
+}
+
+func (s *explist) AppendStatement(st statementIntf) {
+	s.List = append(s.List, newExp(st))
+}

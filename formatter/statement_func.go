@@ -14,8 +14,16 @@ func (functionStatement) New() statementIntf {
 	return &functionStatement{}
 }
 
-func (s *functionStatement) IsEnd(el *element) bool {
-	return el.Token.Type == nEnd
+func (functionStatement) InnerStatement() statementIntf {
+	return nil
+}
+
+func (functionStatement) TypeOf() typeStatement {
+	return tsFunction
+}
+
+func (s *functionStatement) IsEnd(prev, cur *element) bool {
+	return cur.Token.Type == nEnd
 }
 
 func (s *functionStatement) HasSyntax(el element) bool {

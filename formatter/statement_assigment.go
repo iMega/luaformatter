@@ -12,8 +12,16 @@ func (assignmentStatement) New() statementIntf {
 	return &assignmentStatement{}
 }
 
-func (s *assignmentStatement) IsEnd(el *element) bool {
-	return len(s.Namelist) == len(s.Explist)
+func (assignmentStatement) InnerStatement() statementIntf {
+	return nil
+}
+
+func (assignmentStatement) TypeOf() typeStatement {
+	return tsAssignment
+}
+
+func (s *assignmentStatement) IsEnd(prev, cur *element) bool {
+	return len(s.Namelist) == len(s.Explist.List)
 	// return el.Token.Type != nComma
 }
 
@@ -70,13 +78,13 @@ func (s *assignmentStatement) Append(el *element) {
 
 	switch el.Token.Type {
 	case nNumber:
-		s.Explist = append(s.Explist, newExp(el))
+		s.Explist.List = append(s.Explist.List, newExp(el))
 	}
 }
 
 func (s *assignmentStatement) AppendStatement(st statementIntf) {
 	switch v := st.(type) {
 	case *functionStatement:
-		s.Explist = append(s.Explist, newExp(v))
+		s.Explist.List = append(s.Explist.List, newExp(v))
 	}
 }

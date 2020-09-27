@@ -1,25 +1,68 @@
 package formatter
 
 type exp struct {
-	Element *element // nil | false | true | Numeral | LiteralString | ‘...’
-	Table   *tableconstructor
-	Func    *functionStatement
-	Binop   *binop
-	Unop    *unop
+	Element *element           // nil | false | true | Numeral | LiteralString | ‘...’
+	Table   *tableconstructor  // {
+	Func    *functionStatement // function
+	Binop   *element
+	Unop    *element
+	Exp     *exp
 }
 
 func (exp) New() statementIntf {
 	return &exp{}
 }
 
-func (s *exp) IsEnd(el *element) bool {
-	return false
+func (exp) InnerStatement() statementIntf {
+	return nil
+}
+
+func (exp) TypeOf() typeStatement {
+	return tsExp
+}
+
+func (s *exp) IsEnd(prev, cur *element) bool {
+	var syntax = map[tokenID]map[tokenID]bool{
+		nNumber: {
+			nAddition: false,
+		},
+	}
+
+	v, ok := syntax[tokenID(prev.Token.Type)]
+	if !ok {
+		return false
+	}
+
+	res, ok := v[tokenID(cur.Token.Type)]
+	if !ok {
+		return true
+	}
+
+	return res
 }
 
 func (s *exp) HasSyntax(el element) bool {
 	return false
 }
 
-func (s *exp) Append(el *element) {}
+func (s *exp) Append(el *element) {
+	switch el.Token.Type {
+	case nNot:
+		s.Unop = el
+	case nAddition:
+		s.Binop = el
+	default:
+		s.Element = el
+	}
+}
 
-func (s *exp) AppendStatement(st statementIntf) {}
+func (s *exp) AppendStatement(st statementIntf) {
+	switch v := st.(type) {
+	// case *tableconstructor:
+	// s.Table = v
+	case *functionStatement:
+		s.Func = v
+	case *exp:
+		s.Exp = v
+	}
+}

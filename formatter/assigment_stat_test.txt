@@ -59,20 +59,9 @@ myvar = 1
 										EndColumn:   7,
 									},
 								},
-								Explist: []*exp{
-									{
-										Element: &element{
-											Token: &lexmachine.Token{
-												Type:        nNumber,
-												Value:       "1",
-												Lexeme:      []byte("1"),
-												TC:          9,
-												StartLine:   2,
-												StartColumn: 9,
-												EndLine:     2,
-												EndColumn:   9,
-											},
-										},
+								Explist: explist{
+									List: []*exp{
+										{},
 									},
 								},
 							},
@@ -368,7 +357,7 @@ myvar = function () end
 		},
 		{
 			skip: true,
-			name: "assignment statement one function",
+			name: "assignment statement one function with return",
 			args: args{
 				code: []byte(`
 myvar = function ()
@@ -488,7 +477,7 @@ end
 		},
 		{
 			skip: false,
-			name: "assignment statement one function",
+			name: "assignment statement one function with nested function with return",
 			args: args{
 				code: []byte(`
 myvar = function ()

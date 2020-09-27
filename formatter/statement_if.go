@@ -14,7 +14,15 @@ func (ifStatement) New() statementIntf {
 	return &ifStatement{}
 }
 
-func (s *ifStatement) IsEnd(el *element) bool {
+func (ifStatement) InnerStatement() statementIntf {
+	return nil
+}
+
+func (ifStatement) TypeOf() typeStatement {
+	return tsIf
+}
+
+func (s *ifStatement) IsEnd(prev, cur *element) bool {
 	return false
 }
 

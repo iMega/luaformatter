@@ -1,16 +1,28 @@
 package formatter
 
 type returnStatement struct {
-	Explist explist
+	Explist *explist
 }
 
 func (returnStatement) New() statementIntf {
 	return &returnStatement{}
 }
 
-func (s *returnStatement) IsEnd(el *element) bool {
+func (returnStatement) InnerStatement() statementIntf {
+	return nil
+}
+
+func (returnStatement) TypeOf() typeStatement {
+	return tsReturn
+}
+
+func (s *returnStatement) IsEnd(prev, cur *element) bool {
+	if nReturn == cur.Token.Type {
+		return false
+	}
+
 	branch := getsyntax(tokenID(nReturn))
-	_, ok := branch[el.Token.Type]
+	_, ok := branch[cur.Token.Type]
 
 	return !ok
 }
@@ -20,12 +32,16 @@ func (s *returnStatement) HasSyntax(el element) bool {
 }
 
 func (s *returnStatement) Append(el *element) {
-	if el.Token.Type == nReturn {
+	if el == nil || el.Token.Type == nReturn {
 		return
 	}
-	s.Explist = append(s.Explist, newExp(el))
+	s.Explist.List = append(s.Explist.List, newExp(el))
 }
 
 func (s *returnStatement) AppendStatement(st statementIntf) {
-	s.Explist = append(s.Explist, newExp(st))
+	el, ok := st.(*explist)
+	if !ok {
+		return
+	}
+	s.Explist = el
 }

@@ -52,23 +52,9 @@ func (d *document) AddBlock(b Block) {
 // }
 
 type varlist []element // separator ,
-type explist []*exp    // separator ,
 
 func newExp(elOrStat interface{}) *exp {
 	e := &exp{}
-
-	switch v := elOrStat.(type) {
-	case *element:
-		e.Element = v
-	case *tableconstructor:
-		e.Table = v
-	case *functionStatement:
-		e.Func = v
-	case *binop:
-		e.Binop = v
-	case *unop:
-		e.Unop = v
-	}
 
 	return e
 }
@@ -103,14 +89,14 @@ type functiondef struct {
 type parlist []*element
 
 type binop struct {
-	FirstExp  exp
+	FirstExp  *exp
 	Operator  element
 	SecondExp exp
 }
 
 type unop struct {
-	Operator element
-	Exp      exp
+	Operator *element
+	Exp      *exp
 }
 
 type Block struct {
@@ -121,10 +107,23 @@ type Block struct {
 type statementIntf interface {
 	New() statementIntf
 	Append(*element)
-	AppendStatement(st statementIntf)
-	HasSyntax(el element) bool
-	IsEnd(el *element) bool
+	AppendStatement(statementIntf)
+	InnerStatement() statementIntf
+	// HasSyntax(el element) bool
+	IsEnd(prev, cur *element) bool
+	TypeOf() typeStatement
 }
+
+type typeStatement int
+
+const (
+	tsAssignment = iota
+	tsFunction
+	tsIf
+	tsReturn
+	tsExp
+	tsExpList
+)
 
 type statement struct {
 	Assignment   *assignmentStatement

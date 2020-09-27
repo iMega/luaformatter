@@ -28,12 +28,19 @@ var (
 		},
 		nReturn: {
 			nThis:     &returnStatement{},
-			nFunction: &functionStatement{},
-			nNumber:   &returnStatement{},
+			nFunction: &explist{},
+			nID:       &explist{},
+			nNumber:   &explist{},
 		},
 		nIf: {
 			nThis: &ifStatement{},
 			nID:   &exp{},
+		},
+		// nNumber: {
+		// 	nAddition: &exp{},
+		// },
+		nAddition: {
+			nNumber: &exp{},
 		},
 		// nLocal: {
 		// 	nFunction: FunctionFormatter,
@@ -54,9 +61,9 @@ var (
 		// 	nComma:              InheritFormatter,
 		// 	nClosingParentheses: InheritFormatter,
 		// },
-		// nComma: {
-		// 	nID: InheritFormatter,
-		// },
+		nComma: {
+			nID: &exp{},
+		},
 		// nReturn: {
 		// 	nID:    ReturnFormatter,
 		// 	nFalse: ReturnFormatter,

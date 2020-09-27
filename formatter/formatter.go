@@ -12,10 +12,11 @@ const (
 // Format code format
 func Parse(code []byte) (*document, error) {
 	var (
-		chainElements    []*element
-		chainStatments   []statementIntf
+		prevElement      *element
+		curElement       *element
 		currentStatement statementIntf
-		currentBranch    branch
+
+		chainSt = &chainStatments{}
 	)
 
 	s, err := newScanner(code)
@@ -30,64 +31,57 @@ func Parse(code []byte) (*document, error) {
 		if err != nil {
 			return nil, err
 		}
+		curElement = &el
+
+		if prevElement != nil {
+			fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
+		}
 
 		fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
 
-		// if currentStatement != nil && currentStatement.HasSyntax(el) == false {
-		// 	bl := Block{}
-
-		// 	switch v := currentStatement.(type) {
-		// 	case *assignmentStatement:
-		// 		bl.Statement = statement{Assignment: v}
-		// 	}
-
-		// 	doc.AddBlock(bl)
-		// 	currentBranch = nil
-		// 	currentStatement = nil
-		// 	chainElements = nil
-		// }
-		if currentStatement != nil && hasExplist(currentStatement) && currentStatement.IsEnd(&el) {
-			if len(chainStatments) > 0 {
-				chainStatments = chainStatments[:len(chainStatments)-1]
-				currentStatement = getLastStatement(chainStatments)
+		if currentStatement != nil {
+			for ok := currentStatement.IsEnd(prevElement, curElement); ok; ok = currentStatement.IsEnd(prevElement, curElement) {
+				currentStatement = chainSt.Prev()
+				if currentStatement == nil {
+					break
+				}
 			}
 		}
 
-		lastStatement := getLastStatement(chainStatments)
+		if st := getStatement(prevElement, curElement); st != nil {
+			if currentStatement == nil {
+				chainSt.Append(st)
+				if prevElement != nil {
+					st.Append(prevElement)
+				}
+			} else {
+				// if currentStatement.TypeOf() != st.TypeOf() {
+				currentStatement.AppendStatement(st)
+				chainSt.Append(st)
+				// }
 
-		st := getStatement(getLastElement(chainElements), &el)
-		if st != nil {
+				for inner := st.InnerStatement(); inner != nil; inner = nil {
+					if st.TypeOf() != inner.TypeOf() {
+						st.AppendStatement(inner)
+						chainSt.Append(inner)
+					}
+					st = inner
+				}
+
+			}
 			currentStatement = st
 		}
 
-		if currentStatement != lastStatement {
-			chainStatments = append(chainStatments, currentStatement)
-			if lastStatement != nil {
-				lastStatement.AppendStatement(currentStatement)
+		if currentStatement != nil {
+			currentStatement.Append(curElement)
+
+			if currentStatement.IsEnd(prevElement, curElement) {
+				currentStatement = chainSt.Prev()
 			}
 		}
 
-		chainElements = append(chainElements, &el)
-
-		if currentStatement == nil {
-			continue
-		}
-
-		for _, i := range chainElements {
-			currentStatement.Append(i)
-		}
-		chainElements = nil
-
-		if currentStatement != nil && !hasExplist(currentStatement) && currentStatement.IsEnd(&el) {
-			if len(chainStatments) > 0 {
-				chainStatments = chainStatments[:len(chainStatments)-1]
-				currentStatement = getLastStatement(chainStatments)
-			}
-		}
-
-		_ = currentBranch
-		_ = chainElements
-		_ = chainStatments
+		prevElement = curElement
+		curElement = nil
 	}
 
 	if currentStatement != nil {
@@ -99,12 +93,19 @@ func Parse(code []byte) (*document, error) {
 		}
 
 		doc.AddBlock(bl)
-		currentBranch = nil
 		currentStatement = nil
-		chainElements = nil
 	}
 
 	return doc, nil
+}
+
+func statementAppend(st statementIntf, elOrSt interface{}) {
+	switch v := elOrSt.(type) {
+	case *element:
+		st.Append(v)
+	case statementIntf:
+		st.AppendStatement(v)
+	}
 }
 
 func hasExplist(st statementIntf) bool {
@@ -138,24 +139,33 @@ func getLastStatement(chain []statementIntf) statementIntf {
 func getStatement(last, curEl *element) statementIntf {
 	var el *element
 
+	branch := getsyntax(tokenID(curEl.Token.Type))
+	if cb, ok := branch[nThis]; ok {
+		return cb.New()
+	}
+	//
+
 	el = last
 	if last == nil {
 		el = curEl
 	}
 
-	branch := getsyntax(tokenID(el.Token.Type))
+	branch = getsyntax(tokenID(el.Token.Type))
 	if branch == nil {
+		branch = getsyntax(tokenID(curEl.Token.Type))
+		if cb, ok := branch[nThis]; ok {
+			return cb.New()
+		}
 		return nil
 	}
 
-	if cb, ok := branch[nThis]; ok {
+	if cb, ok := branch[curEl.Token.Type]; ok {
 		return cb.New()
 	}
 
-	cb, ok := branch[curEl.Token.Type]
-	if !ok {
-		return nil
-	}
+	// if cb, ok := branch[nThis]; ok {
+	// 	return cb.New()
+	// }
 
-	return cb.New()
+	return nil
 }

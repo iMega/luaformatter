@@ -130,6 +130,20 @@ const (
 	nStar
 	nVararg
 	nThis
+
+	// Arithmetic Operators
+	nAddition
+
+	// Bitwise Operators
+	// nBitwiseAND
+	// nBitwiseOR
+	// nBitwiseExclusiveOR
+	// nLeftShift
+	// nRightShift
+	// nUnaryBitwiseNOT
+
+	// Length Operator
+	// nLength
 )
 
 var (
@@ -165,6 +179,27 @@ var (
 		nComma:     `,`,
 		nStar:      `\*`,
 		nVararg:    `\.\.\.`,
+
+		// Arithmetic Operators
+		nAddition: `\+`,
+		// -: subtraction
+		// *: multiplication
+		// /: float division
+		// //: floor division
+		// %: modulo
+		// ^: exponentiation
+		// -: unary minus
+
+		// Bitwise Operators
+		// nBitwiseAND:         `&`,
+		// nBitwiseOR:          `|`,
+		// nBitwiseExclusiveOR: `~`,
+		// nLeftShift:          `<<`,
+		// nRightShift:         `>>`,
+		// nUnaryBitwiseNOT:    `~`,
+
+		// Length Operator
+		// nLength: `#`,
 
 		nParentheses:          `\(`,
 		nClosingParentheses:   `\)`,
@@ -213,6 +248,8 @@ var (
 		nEq:          `nEq`,
 		nStar:        `nStar`,
 		nVararg:      `nVararg`,
+
+		nAddition: `+`,
 
 		nSemiColon:            "nSemiColon",
 		nParentheses:          "nParentheses",
