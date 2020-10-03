@@ -42,6 +42,9 @@ var (
 		nAddition: {
 			nNumber: &exp{},
 		},
+		nNegEq: {
+			nNumber: &exp{},
+		},
 		// nLocal: {
 		// 	nFunction: FunctionFormatter,
 		// },

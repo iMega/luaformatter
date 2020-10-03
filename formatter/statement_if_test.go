@@ -24,7 +24,7 @@ func TestParseIf(t *testing.T) {
 			args: args{
 				code: []byte(`
 if a ~= 1 then
-    return 1
+    return 22
 end
 `,
 				),
@@ -33,36 +33,33 @@ end
 				Body: map[uint64]Block{
 					0: {
 						Statement: statement{
-							Assignment: &assignmentStatement{
-								LastTokenType: nNumber,
-								Namelist: []*element{
-									{
+							If: &ifStatement{
+								Exp: &exp{
+									Element: &element{
 										Token: &lexmachine.Token{
 											Type:        nID,
-											Value:       "myvar",
-											Lexeme:      []byte("myvar"),
-											TC:          1,
+											Value:       "a",
+											Lexeme:      []byte("a"),
+											TC:          4,
 											StartLine:   2,
-											StartColumn: 1,
+											StartColumn: 4,
 											EndLine:     2,
-											EndColumn:   5,
+											EndColumn:   4,
 										},
 									},
-								},
-								EqPart: &element{
-									Token: &lexmachine.Token{
-										Type:        nEq,
-										Value:       keywords[nEq],
-										Lexeme:      []byte(keywords[nEq]),
-										TC:          7,
-										StartLine:   2,
-										StartColumn: 7,
-										EndLine:     2,
-										EndColumn:   7,
+									Binop: &element{
+										Token: &lexmachine.Token{
+											Type:        nNegEq,
+											Value:       keywords[nNegEq],
+											Lexeme:      []byte(keywords[nNegEq]),
+											TC:          6,
+											StartLine:   2,
+											StartColumn: 6,
+											EndLine:     2,
+											EndColumn:   7,
+										},
 									},
-								},
-								Explist: []*exp{
-									{
+									Exp: &exp{
 										Element: &element{
 											Token: &lexmachine.Token{
 												Type:        nNumber,
@@ -73,6 +70,30 @@ end
 												StartColumn: 9,
 												EndLine:     2,
 												EndColumn:   9,
+											},
+										},
+									},
+								},
+								Body: []Block{
+									{
+										Return: &returnStatement{
+											Explist: &explist{
+												List: []*exp{
+													{
+														Element: &element{
+															Token: &lexmachine.Token{
+																Type:        nNumber,
+																Value:       "22",
+																Lexeme:      []byte("22"),
+																TC:          27,
+																StartLine:   3,
+																StartColumn: 12,
+																EndLine:     3,
+																EndColumn:   13,
+															},
+														},
+													},
+												},
 											},
 										},
 									},

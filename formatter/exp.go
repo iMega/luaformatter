@@ -61,6 +61,7 @@ func (s *exp) Append(el *element) {
 	case nNot:
 		s.Unop = el
 	case nAddition:
+	case nNegEq:
 		s.Binop = el
 	default:
 		s.Element = el

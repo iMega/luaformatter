@@ -1,5 +1,7 @@
 package formatter
 
+import "fmt"
+
 const (
 	defaultStyle = "\x1b[0m"
 	mMagenta     = "\x1b[35m"
@@ -29,11 +31,11 @@ func Parse(code []byte) (*document, error) {
 		}
 		curElement = &el
 
-		// if prevElement != nil {
-		// 	fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
-		// }
+		if prevElement != nil {
+			fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
+		}
 
-		// fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
+		fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
 
 		if currentStatement != nil {
 			for ok := currentStatement.IsEnd(prevElement, curElement); ok; ok = currentStatement.IsEnd(prevElement, curElement) {
@@ -97,18 +99,7 @@ func Parse(code []byte) (*document, error) {
 	}
 
 	if currentStatement != nil {
-		bl := Block{}
-
-		switch v := currentStatement.(type) {
-		case *assignmentStatement:
-			bl.Statement = statement{Assignment: v}
-		case *functionStatement:
-			bl.Statement = statement{Function: v}
-		case *returnStatement:
-			bl.Return = v
-		}
-
-		doc.AddBlock(bl)
+		doc.AddBlock(newBlock(currentStatement))
 		currentStatement = nil
 	}
 
@@ -195,4 +186,21 @@ func getStatement(prev, cur *element) statementIntf {
 	// }
 
 	return nil
+}
+
+func newBlock(st statementIntf) Block {
+	bl := Block{}
+
+	switch v := st.(type) {
+	case *assignmentStatement:
+		bl.Statement = statement{Assignment: v}
+	case *functionStatement:
+		bl.Statement = statement{Function: v}
+	case *ifStatement:
+		bl.Statement = statement{If: v}
+	case *returnStatement:
+		bl.Return = v
+	}
+
+	return bl
 }

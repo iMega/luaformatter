@@ -33,7 +33,12 @@ func (s *ifStatement) HasSyntax(el element) bool {
 func (s *ifStatement) Append(el *element) {}
 
 func (s *ifStatement) AppendStatement(st statementIntf) {
-	s.Exp = st.(*exp)
+	if v, ok := st.(*exp); ok {
+		s.Exp = v
+		return
+	}
+
+	s.Body = append(s.Body, newBlock(st))
 }
 
 type elseifPart struct {
