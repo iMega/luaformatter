@@ -62,7 +62,8 @@ var (
 		// 	nClosingParentheses: InheritFormatter,
 		// },
 		nComma: {
-			nID: &exp{},
+			nID:       &exp{},
+			nFunction: &exp{},
 		},
 		// nReturn: {
 		// 	nID:    ReturnFormatter,

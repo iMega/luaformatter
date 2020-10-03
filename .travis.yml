@@ -1,0 +1,13 @@
+language: ruby
+services:
+  - docker
+
+stages:
+  - name: Release
+
+jobs:
+  - stage: Release
+    arch: amd64
+    os: linux
+    script:
+      - make release TAG=`echo $TRAVIS_COMMIT | cut -c -7`

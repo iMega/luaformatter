@@ -11,7 +11,7 @@ type fakeStatements struct {
 
 func (fakeStatements) New() statementIntf { return nil }
 
-func (fakeStatements) InnerStatement() statementIntf {
+func (fakeStatements) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }
 

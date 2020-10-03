@@ -1,9 +1,5 @@
 package formatter
 
-import (
-	"fmt"
-)
-
 const (
 	defaultStyle = "\x1b[0m"
 	mMagenta     = "\x1b[35m"
@@ -33,11 +29,11 @@ func Parse(code []byte) (*document, error) {
 		}
 		curElement = &el
 
-		if prevElement != nil {
-			fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
-		}
+		// if prevElement != nil {
+		// 	fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
+		// }
 
-		fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
+		// fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
 
 		if currentStatement != nil {
 			for ok := currentStatement.IsEnd(prevElement, curElement); ok; ok = currentStatement.IsEnd(prevElement, curElement) {
@@ -73,7 +69,7 @@ func Parse(code []byte) (*document, error) {
 				chainSt.Append(st)
 				// }
 
-				for inner := st.InnerStatement(); inner != nil; inner = nil {
+				for inner := st.InnerStatement(prevElement, curElement); inner != nil; inner = st.InnerStatement(prevElement, curElement) {
 					if st.TypeOf() != inner.TypeOf() {
 						st.AppendStatement(inner)
 						chainSt.Append(inner)

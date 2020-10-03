@@ -31,18 +31,6 @@ end
 					0: {
 						Statement: statement{
 							Function: &functionStatement{
-								IDStatement: &element{
-									Token: &lexmachine.Token{
-										Type:        nFunction,
-										Value:       keywords[nFunction],
-										Lexeme:      []byte(keywords[nFunction]),
-										TC:          1,
-										StartLine:   2,
-										StartColumn: 1,
-										EndLine:     2,
-										EndColumn:   8,
-									},
-								},
 								NamePart: &element{
 									Token: &lexmachine.Token{
 										Type:        nID,
@@ -80,18 +68,6 @@ end
 					0: {
 						Statement: statement{
 							Function: &functionStatement{
-								IDStatement: &element{
-									Token: &lexmachine.Token{
-										Type:        nFunction,
-										Value:       keywords[nFunction],
-										Lexeme:      []byte(keywords[nFunction]),
-										TC:          1,
-										StartLine:   2,
-										StartColumn: 1,
-										EndLine:     2,
-										EndColumn:   8,
-									},
-								},
 								NamePart: &element{
 									Token: &lexmachine.Token{
 										Type:        nID,
@@ -110,18 +86,6 @@ end
 					1: {
 						Statement: statement{
 							Function: &functionStatement{
-								IDStatement: &element{
-									Token: &lexmachine.Token{
-										Type:        nFunction,
-										Value:       keywords[nFunction],
-										Lexeme:      []byte(keywords[nFunction]),
-										TC:          19,
-										StartLine:   5,
-										StartColumn: 1,
-										EndLine:     5,
-										EndColumn:   8,
-									},
-								},
 								NamePart: &element{
 									Token: &lexmachine.Token{
 										Type:        nID,
@@ -132,19 +96,6 @@ end
 										StartColumn: 10,
 										EndLine:     5,
 										EndColumn:   10,
-									},
-								},
-								// bug
-								EndElement: &element{
-									Token: &lexmachine.Token{
-										Type:        nEnd,
-										Value:       keywords[nEnd],
-										Lexeme:      []byte(keywords[nEnd]),
-										TC:          14,
-										StartLine:   3,
-										StartColumn: 1,
-										EndLine:     3,
-										EndColumn:   3,
 									},
 								},
 							},

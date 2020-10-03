@@ -13,7 +13,14 @@ func (exp) New() statementIntf {
 	return &exp{}
 }
 
-func (exp) InnerStatement() statementIntf {
+func (exp) InnerStatement(prev, cur *element) statementIntf {
+	switch cur.Token.Type {
+	case nFunction:
+		return &functionStatement{}
+		// case nTable:
+		// return &tableconstructor{}
+	}
+
 	return nil
 }
 
@@ -22,6 +29,10 @@ func (exp) TypeOf() typeStatement {
 }
 
 func (s *exp) IsEnd(prev, cur *element) bool {
+	if cur.Token.Type == nEnd {
+		return true
+	}
+
 	var syntax = map[tokenID]map[tokenID]bool{
 		nNumber: {
 			nAddition: false,

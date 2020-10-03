@@ -108,7 +108,7 @@ type statementIntf interface {
 	New() statementIntf
 	Append(*element)
 	AppendStatement(statementIntf)
-	InnerStatement() statementIntf
+	InnerStatement(prev, cur *element) statementIntf
 	// HasSyntax(el element) bool
 	IsEnd(prev, cur *element) bool
 	TypeOf() typeStatement

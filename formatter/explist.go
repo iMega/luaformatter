@@ -8,7 +8,7 @@ func (explist) New() statementIntf {
 	return &explist{}
 }
 
-func (explist) InnerStatement() statementIntf {
+func (explist) InnerStatement(prev, cur *element) statementIntf {
 	return &exp{}
 }
 
@@ -20,6 +20,11 @@ func (s *explist) IsEnd(prev, cur *element) bool {
 	if cur.Token.Type == nComma || prev.Token.Type == nComma {
 		return false
 	}
+
+	if cur.Resolved {
+		return false
+	}
+
 	return true
 }
 

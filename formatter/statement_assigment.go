@@ -12,7 +12,7 @@ func (assignmentStatement) New() statementIntf {
 	return &assignmentStatement{}
 }
 
-func (assignmentStatement) InnerStatement() statementIntf {
+func (assignmentStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }
 

@@ -14,7 +14,7 @@ func (ifStatement) New() statementIntf {
 	return &ifStatement{}
 }
 
-func (ifStatement) InnerStatement() statementIntf {
+func (ifStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }
 

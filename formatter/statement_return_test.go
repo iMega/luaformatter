@@ -131,7 +131,43 @@ return function () end
 							Explist: &explist{
 								List: []*exp{
 									{
-										Func: &functionStatement{},
+										Func: &functionStatement{
+											Anonymous: true,
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				QtyBlocks: 1,
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
+			name: "return statement with two func",
+			args: args{
+				code: []byte(`
+return function () end, function () end
+`,
+				),
+			},
+			want: &document{
+				Body: map[uint64]Block{
+					0: {
+						Return: &returnStatement{
+							Explist: &explist{
+								List: []*exp{
+									{
+										Func: &functionStatement{
+											Anonymous: true,
+										},
+									},
+									{
+										Func: &functionStatement{
+											Anonymous: true,
+										},
 									},
 								},
 							},

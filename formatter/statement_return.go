@@ -8,7 +8,7 @@ func (returnStatement) New() statementIntf {
 	return &returnStatement{}
 }
 
-func (returnStatement) InnerStatement() statementIntf {
+func (returnStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }
 

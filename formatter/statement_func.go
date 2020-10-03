@@ -1,12 +1,10 @@
 package formatter
 
 type functionStatement struct {
-	LocalElement *element
-	IDStatement  *element
+	LocalElement bool
 	NamePart     *element
 	ParlistPart  parlist
 	Body         []Block
-	EndElement   *element
 	Anonymous    bool
 }
 
@@ -14,7 +12,7 @@ func (functionStatement) New() statementIntf {
 	return &functionStatement{}
 }
 
-func (functionStatement) InnerStatement() statementIntf {
+func (functionStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }
 
@@ -23,7 +21,13 @@ func (functionStatement) TypeOf() typeStatement {
 }
 
 func (s *functionStatement) IsEnd(prev, cur *element) bool {
-	return cur.Token.Type == nEnd
+	if cur.Token.Type == nEnd {
+		cur.Resolved = true
+
+		return true
+	}
+
+	return false
 }
 
 func (s *functionStatement) HasSyntax(el element) bool {
@@ -32,14 +36,9 @@ func (s *functionStatement) HasSyntax(el element) bool {
 
 func (s *functionStatement) Append(el *element) {
 	switch el.Token.Type {
-	case nFunction:
-		s.IDStatement = el
 
 	case nLocal:
-		s.LocalElement = el
-
-	case nEnd:
-		s.EndElement = el
+		s.LocalElement = true
 
 	case nParentheses:
 		s.Anonymous = s.NamePart == nil
