@@ -19,8 +19,27 @@ func TestParseReturn(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			skip: false,
-			name: "return statement two var",
+			skip: true,
+			name: "return statement",
+			args: args{
+				code: []byte(`
+return
+`,
+				),
+			},
+			want: &document{
+				Body: map[uint64]Block{
+					0: {
+						Return: &returnStatement{},
+					},
+				},
+				QtyBlocks: 1,
+			},
+			wantErr: false,
+		},
+		{
+			skip: true,
+			name: "return statement with two exp",
 			args: args{
 				code: []byte(`
 return 1+2, b
@@ -86,6 +105,33 @@ return 1+2, b
 												EndColumn:   13,
 											},
 										},
+									},
+								},
+							},
+						},
+					},
+				},
+				QtyBlocks: 1,
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
+			name: "return statement with func",
+			args: args{
+				code: []byte(`
+return function () end
+`,
+				),
+			},
+			want: &document{
+				Body: map[uint64]Block{
+					0: {
+						Return: &returnStatement{
+							Explist: &explist{
+								List: []*exp{
+									{
+										Func: &functionStatement{},
 									},
 								},
 							},

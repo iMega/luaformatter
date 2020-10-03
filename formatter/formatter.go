@@ -156,30 +156,41 @@ func getLastStatement(chain []statementIntf) statementIntf {
 	return chain[len(chain)-1]
 }
 
-func getStatement(last, curEl *element) statementIntf {
-	var el *element
+func getStatement(prev, cur *element) statementIntf {
+	var (
+		branch branch
+		el     *element
+	)
 
-	branch := getsyntax(tokenID(curEl.Token.Type))
-	if cb, ok := branch[nThis]; ok {
-		return cb.New()
+	if cur.Token.Type == nReturn {
+		branch = getsyntax(tokenID(cur.Token.Type))
+		if cb, ok := branch[nThis]; ok {
+			return cb.New()
+		}
 	}
-	//
 
-	el = last
-	if last == nil {
-		el = curEl
+	if prev == nil {
+		branch = getsyntax(tokenID(cur.Token.Type))
+		if cb, ok := branch[nThis]; ok {
+			return cb.New()
+		}
+	}
+
+	el = prev
+	if prev == nil {
+		el = cur
 	}
 
 	branch = getsyntax(tokenID(el.Token.Type))
 	if branch == nil {
-		branch = getsyntax(tokenID(curEl.Token.Type))
+		branch = getsyntax(tokenID(cur.Token.Type))
 		if cb, ok := branch[nThis]; ok {
 			return cb.New()
 		}
 		return nil
 	}
 
-	if cb, ok := branch[curEl.Token.Type]; ok {
+	if cb, ok := branch[cur.Token.Type]; ok {
 		return cb.New()
 	}
 

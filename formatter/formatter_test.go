@@ -9,67 +9,88 @@ import (
 
 func Test_getStatement(t *testing.T) {
 	type args struct {
-		last    *element
-		current *element
+		prev *element
+		cur  *element
 	}
 	tests := []struct {
 		name string
 		args args
 		want statementIntf
 	}{
-		// {
-		// 	name: ",myvar",
-		// 	args: args{
-		// 		last: &element{
-		// 			Token: &lexmachine.Token{
-		// 				Type:  nComma,
-		// 				Value: ",",
-		// 			},
-		// 		},
-		// 		current: &element{
-		// 			Token: &lexmachine.Token{
-		// 				Type:  nID,
-		// 				Value: "myvar",
-		// 			},
-		// 		},
-		// 	},
-		// 	want: nil,
-		// },
 		{
-			name: "= function",
+			name: "[function] a() end",
 			args: args{
-				last: &element{
+				cur: &element{
 					Token: &lexmachine.Token{
-						Type:  nEq,
-						Value: "=",
-					},
-				},
-				current: &element{
-					Token: &lexmachine.Token{
-						Type:  nFunction,
-						Value: "function",
+						Type: nFunction,
 					},
 				},
 			},
 			want: &functionStatement{},
 		},
 		{
-			name: "function",
+			name: "[return]",
 			args: args{
-				last: nil,
-				current: &element{
+				cur: &element{
 					Token: &lexmachine.Token{
-						Type:  nFunction,
-						Value: "function",
+						Type: nReturn,
 					},
 				},
 			},
-			want: &functionStatement{},
+			want: &returnStatement{},
+		},
+		{
+			name: "[return function] a() end",
+			args: args{
+				prev: &element{
+					Token: &lexmachine.Token{
+						Type: nReturn,
+					},
+				},
+				cur: &element{
+					Token: &lexmachine.Token{
+						Type: nFunction,
+					},
+				},
+			},
+			want: &explist{},
+		},
+		{
+			name: "[return 1]",
+			args: args{
+				prev: &element{
+					Token: &lexmachine.Token{
+						Type: nReturn,
+					},
+				},
+				cur: &element{
+					Token: &lexmachine.Token{
+						Type: nNumber,
+					},
+				},
+			},
+			want: &explist{},
+		},
+		{
+			name: "function a() [end function] b() end",
+			args: args{
+				prev: &element{
+					Token: &lexmachine.Token{
+						Type: nReturn,
+					},
+				},
+				cur: &element{
+					Token: &lexmachine.Token{
+						Type: nNumber,
+					},
+				},
+			},
+			want: &explist{},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := getStatement(tt.args.last, tt.args.current); !reflect.DeepEqual(got, tt.want) {
+			if got := getStatement(tt.args.prev, tt.args.cur); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("getStatement() = %v, want %v", got, tt.want)
 			}
 		})
