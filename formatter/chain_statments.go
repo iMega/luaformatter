@@ -21,3 +21,11 @@ func (cs *chainStatments) Prev() statementIntf {
 
 	return cs.chain[len(cs.chain)-1]
 }
+
+func (cs *chainStatments) Len() int {
+	return len(cs.chain)
+}
+
+func (cs *chainStatments) First() statementIntf {
+	return cs.chain[0]
+}

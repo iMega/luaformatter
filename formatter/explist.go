@@ -27,13 +27,10 @@ func (s *explist) HasSyntax(el element) bool {
 	return false
 }
 
-func (s *explist) Append(el *element) {
-	e := &exp{}
-	e.Append(el)
-
-	s.List = append(s.List, e)
-}
+func (s *explist) Append(el *element) {}
 
 func (s *explist) AppendStatement(st statementIntf) {
-	s.List = append(s.List, newExp(st))
+	if v, ok := st.(*exp); ok {
+		s.List = append(s.List, v)
+	}
 }

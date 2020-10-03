@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/timtadh/lexmachine"
 )
 
 func TestParseReturn(t *testing.T) {
@@ -22,14 +23,73 @@ func TestParseReturn(t *testing.T) {
 			name: "return statement two var",
 			args: args{
 				code: []byte(`
-return 1+1, b
+return 1+2, b
 `,
 				),
 			},
 			want: &document{
 				Body: map[uint64]Block{
 					0: {
-						Statement: statement{},
+						Return: &returnStatement{
+							Explist: &explist{
+								List: []*exp{
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nNumber,
+												Value:       "1",
+												Lexeme:      []byte("1"),
+												TC:          8,
+												StartLine:   2,
+												StartColumn: 8,
+												EndLine:     2,
+												EndColumn:   8,
+											},
+										},
+										Binop: &element{
+											Token: &lexmachine.Token{
+												Type:        nAddition,
+												Value:       "+",
+												Lexeme:      []byte("+"),
+												TC:          9,
+												StartLine:   2,
+												StartColumn: 9,
+												EndLine:     2,
+												EndColumn:   9,
+											},
+										},
+										Exp: &exp{
+											Element: &element{
+												Token: &lexmachine.Token{
+													Type:        nNumber,
+													Value:       "2",
+													Lexeme:      []byte("2"),
+													TC:          10,
+													StartLine:   2,
+													StartColumn: 10,
+													EndLine:     2,
+													EndColumn:   10,
+												},
+											},
+										},
+									},
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "b",
+												Lexeme:      []byte("b"),
+												TC:          13,
+												StartLine:   2,
+												StartColumn: 13,
+												EndLine:     2,
+												EndColumn:   13,
+											},
+										},
+									},
+								},
+							},
+						},
 					},
 				},
 				QtyBlocks: 1,

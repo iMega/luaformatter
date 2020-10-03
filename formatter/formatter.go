@@ -80,7 +80,6 @@ func Parse(code []byte) (*document, error) {
 					}
 					st = inner
 				}
-
 			}
 			currentStatement = st
 		}
@@ -97,6 +96,10 @@ func Parse(code []byte) (*document, error) {
 		curElement = nil
 	}
 
+	if chainSt.Len() > 0 {
+		currentStatement = chainSt.First()
+	}
+
 	if currentStatement != nil {
 		bl := Block{}
 
@@ -105,6 +108,8 @@ func Parse(code []byte) (*document, error) {
 			bl.Statement = statement{Assignment: v}
 		case *functionStatement:
 			bl.Statement = statement{Function: v}
+		case *returnStatement:
+			bl.Return = v
 		}
 
 		doc.AddBlock(bl)
