@@ -41,20 +41,12 @@ func Parse(code []byte) (*document, error) {
 			for ok := currentStatement.IsEnd(prevElement, curElement); ok; ok = currentStatement.IsEnd(prevElement, curElement) {
 				cs := chainSt.Prev()
 				if cs == nil {
-					bl := Block{}
-
-					switch v := currentStatement.(type) {
-					case *assignmentStatement:
-						bl.Statement = statement{Assignment: v}
-					case *functionStatement:
-						bl.Statement = statement{Function: v}
-					}
-
-					doc.AddBlock(bl)
+					doc.AddBlock(newBlock(currentStatement))
 					currentStatement = cs
 
 					break
 				}
+
 				currentStatement = cs
 			}
 		}
@@ -194,6 +186,8 @@ func newBlock(st statementIntf) Block {
 	switch v := st.(type) {
 	case *assignmentStatement:
 		bl.Statement = statement{Assignment: v}
+	case *labelStatement:
+		bl.Statement = statement{Label: v}
 	case *functionStatement:
 		bl.Statement = statement{Function: v}
 	case *ifStatement:

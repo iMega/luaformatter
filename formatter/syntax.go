@@ -17,10 +17,10 @@ type branch map[int]statementIntf
 var (
 	syntax = map[tokenID]branch{
 		nID: {
-			nComma: &assignmentStatement{},
-			nEq:    &assignmentStatement{},
+			nComma:  &assignmentStatement{},
+			nAssing: &assignmentStatement{},
 		},
-		nEq: {
+		nAssing: {
 			nFunction: &functionStatement{},
 		},
 		nFunction: {
@@ -35,6 +35,13 @@ var (
 		nIf: {
 			nThis: &ifStatement{},
 			nID:   &exp{},
+		},
+		nElseif: {
+			nThis: &elseifStatement{},
+			nID:   &exp{},
+		},
+		nLabel: {
+			nThis: &labelStatement{},
 		},
 		// nNumber: {
 		// 	nAddition: &exp{},

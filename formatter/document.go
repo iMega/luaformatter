@@ -109,7 +109,6 @@ type statementIntf interface {
 	Append(*element)
 	AppendStatement(statementIntf)
 	InnerStatement(prev, cur *element) statementIntf
-	// HasSyntax(el element) bool
 	IsEnd(prev, cur *element) bool
 	TypeOf() typeStatement
 }
@@ -178,7 +177,6 @@ type functionCallStatement struct {
 	Args    *explist
 }
 
-type labelStatement element
 type breakStatement element
 type gotoStatement struct {
 	Element element

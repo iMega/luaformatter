@@ -30,14 +30,14 @@ func (s *assignmentStatement) HasSyntax(el element) bool {
 
 	switch s.LastTokenType {
 	case nID:
-		syntax = []tokenID{nComma, nEq}
+		syntax = []tokenID{nComma, nAssing}
 	case nComma:
 		syntax = []tokenID{
 			nID,
 			// exp
 			nNumber,
 		}
-	case nEq:
+	case nAssing:
 		// nil | false | true | Numeral | LiteralString | ‘...’ | functiondef |
 		// prefixexp | tableconstructor | exp binop exp | unop exp
 		syntax = []tokenID{
@@ -66,7 +66,7 @@ func (s *assignmentStatement) HasSyntax(el element) bool {
 func (s *assignmentStatement) Append(el *element) {
 	s.LastTokenType = tokenID(el.Token.Type)
 
-	if el.Token.Type == nEq {
+	if el.Token.Type == nAssing {
 		s.EqPart = el
 		return
 	}

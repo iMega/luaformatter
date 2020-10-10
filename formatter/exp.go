@@ -57,15 +57,26 @@ func (s *exp) HasSyntax(el element) bool {
 }
 
 func (s *exp) Append(el *element) {
-	switch el.Token.Type {
-	case nNot:
-		s.Unop = el
-	case nAddition:
-	case nNegEq:
-		s.Binop = el
-	default:
-		s.Element = el
+	if s.Element == nil {
+		switch el.Token.Type {
+		case nSubtraction:
+			s.Unop = el
+		case nNot:
+			s.Unop = el
+		case nLength:
+			s.Unop = el
+		case nBitwiseExclusiveOR:
+			s.Unop = el
+		}
+		return
 	}
+
+	if el.Token.Type >= nAnd && el.Token.Type <= nGreaterOrEqual {
+		s.Binop = el
+		return
+	}
+
+	s.Element = el
 }
 
 func (s *exp) AppendStatement(st statementIntf) {
