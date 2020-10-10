@@ -177,8 +177,6 @@ type functionCallStatement struct {
 	Args    *explist
 }
 
-type breakStatement element
-
 type doStatement struct {
 	DoElement  *element
 	Body       []Block

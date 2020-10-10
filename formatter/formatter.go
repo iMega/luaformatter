@@ -194,6 +194,9 @@ func newBlock(st statementIntf) Block {
 	case *gotoStatement:
 		bl.Statement = statement{Goto: v}
 
+	case *breakStatement:
+		bl.Statement = statement{Break: v}
+
 	case *functionStatement:
 		bl.Statement = statement{Function: v}
 

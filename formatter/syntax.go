@@ -42,6 +42,7 @@ var (
 		},
 		nLabel: {nThis: &labelStatement{}},
 		nGoto:  {nThis: &gotoStatement{}},
+		nBreak: {nThis: &breakStatement{}},
 		// nNumber: {
 		// 	nAddition: &exp{},
 		// },
