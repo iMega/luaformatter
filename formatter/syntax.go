@@ -40,9 +40,8 @@ var (
 			nThis: &elseifStatement{},
 			nID:   &exp{},
 		},
-		nLabel: {
-			nThis: &labelStatement{},
-		},
+		nLabel: {nThis: &labelStatement{}},
+		nGoto:  {nThis: &gotoStatement{}},
 		// nNumber: {
 		// 	nAddition: &exp{},
 		// },

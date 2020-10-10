@@ -178,9 +178,6 @@ type functionCallStatement struct {
 }
 
 type breakStatement element
-type gotoStatement struct {
-	Element element
-}
 
 type doStatement struct {
 	DoElement  *element

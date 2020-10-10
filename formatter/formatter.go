@@ -77,9 +77,10 @@ func Parse(code []byte) (*document, error) {
 		if currentStatement != nil {
 			currentStatement.Append(curElement)
 
-			if currentStatement.IsEnd(prevElement, curElement) {
-				currentStatement = chainSt.Prev()
-			}
+			// goto
+			// if currentStatement.IsEnd(prevElement, curElement) {
+			// 	currentStatement = chainSt.Prev()
+			// }
 		}
 
 		prevElement = curElement
@@ -186,12 +187,19 @@ func newBlock(st statementIntf) Block {
 	switch v := st.(type) {
 	case *assignmentStatement:
 		bl.Statement = statement{Assignment: v}
+
 	case *labelStatement:
 		bl.Statement = statement{Label: v}
+
+	case *gotoStatement:
+		bl.Statement = statement{Goto: v}
+
 	case *functionStatement:
 		bl.Statement = statement{Function: v}
+
 	case *ifStatement:
 		bl.Statement = statement{If: v}
+
 	case *returnStatement:
 		bl.Return = v
 	}
