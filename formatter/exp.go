@@ -61,15 +61,22 @@ func (s *exp) Append(el *element) {
 		switch el.Token.Type {
 		case nSubtraction:
 			s.Unop = el
+
 			return
+
 		case nNot:
 			s.Unop = el
+
 			return
+
 		case nLength:
 			s.Unop = el
+
 			return
+
 		case nBitwiseExclusiveOR:
 			s.Unop = el
+
 			return
 		}
 	}

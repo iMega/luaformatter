@@ -5,7 +5,7 @@ CWD = /go/src/$(REPO)
 GO_IMG = golang:1.15-alpine3.12
 
 unit:
-	@docker run --rm -w $(CWD) -v $(CURDIR):$(CWD)
+	@docker run --rm -w $(CWD) -v $(CURDIR):$(CWD) \
 		$(GO_IMG) sh -c "go list ./... | xargs go test -vet=off"
 
 lint:
