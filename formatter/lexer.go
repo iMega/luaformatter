@@ -1,7 +1,6 @@
 package formatter
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/timtadh/lexmachine"
@@ -26,11 +25,11 @@ func newScanner(code []byte) (*scanner, error) {
 	lexer.Add([]byte(`\n\s*\n`), token(nLF))
 
 	if err := lexer.Compile(); err != nil {
-		return nil, fmt.Errorf("failed to compile lexer, %s", err)
+		return nil, err
 	}
 	s, err := lexer.Scanner(code)
 	if err != nil {
-		return nil, fmt.Errorf("failed to scan code, %s", err)
+		return nil, err
 	}
 
 	return &scanner{
@@ -46,11 +45,13 @@ func (s *scanner) Next() bool {
 
 	if _, is := err.(*machines.UnconsumedInput); is {
 		s.err = err
+
 		return false
 	}
 
 	if err != nil {
 		s.err = err
+
 		return false
 	}
 

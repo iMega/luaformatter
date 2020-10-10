@@ -3,8 +3,7 @@ module github.com/imega/luaformatter
 go 1.13
 
 require (
-	github.com/go-delve/delve v1.5.0 // indirect
-	github.com/stretchr/objx v0.3.0 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/stretchr/testify v1.6.1
 	github.com/timtadh/data-structures v0.5.3 // indirect
 	github.com/timtadh/lexmachine v0.2.2

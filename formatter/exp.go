@@ -73,6 +73,7 @@ func (s *exp) Append(el *element) {
 
 	if el.Token.Type >= nAnd && el.Token.Type <= nGreaterOrEqual {
 		s.Binop = el
+
 		return
 	}
 
