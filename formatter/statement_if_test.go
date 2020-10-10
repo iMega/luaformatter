@@ -19,7 +19,7 @@ func TestParseIf(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			skip: true,
+			skip: false,
 			name: "condition statement one var",
 			args: args{
 				code: []byte(`
@@ -49,9 +49,9 @@ end
 									},
 									Binop: &element{
 										Token: &lexmachine.Token{
-											Type:        nNegEq,
-											Value:       keywords[nNegEq],
-											Lexeme:      []byte(keywords[nNegEq]),
+											Type:        nInequality,
+											Value:       keywords[nInequality],
+											Lexeme:      []byte(keywords[nInequality]),
 											TC:          6,
 											StartLine:   2,
 											StartColumn: 6,
@@ -139,9 +139,9 @@ end
 									},
 									Binop: &element{
 										Token: &lexmachine.Token{
-											Type:        nNegEq,
-											Value:       keywords[nNegEq],
-											Lexeme:      []byte(keywords[nNegEq]),
+											Type:        nInequality,
+											Value:       keywords[nInequality],
+											Lexeme:      []byte(keywords[nInequality]),
 											TC:          6,
 											StartLine:   2,
 											StartColumn: 6,

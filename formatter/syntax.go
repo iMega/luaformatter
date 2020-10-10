@@ -40,7 +40,7 @@ var (
 		nAddition: {
 			nNumber: &exp{},
 		},
-		nNegEq: {
+		nInequality: {
 			nNumber: &exp{},
 		},
 		nComma: {

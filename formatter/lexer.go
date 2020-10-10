@@ -110,7 +110,6 @@ const (
 	nTrue
 	nUntil
 	nWhil
-	nNegEq
 	nColon
 	nSemiColon
 	nParentheses
@@ -284,7 +283,6 @@ var (
 		nTrue:        "nTrue",
 		nUntil:       "nUntil",
 		nWhil:        "nWhile",
-		nNegEq:       "nNegEq",
 		nColon:       "nColon",
 		nComma:       `nComma`,
 		nAssing:      `nAssing`,
