@@ -156,6 +156,11 @@ func getStatement(prev, cur *element) statementIntf {
 		}
 	}
 
+	// branch = getsyntax(tokenID(cur.Token.Type))
+	// if cb, ok := branch[nThis]; ok {
+	// 	return cb.New()
+	// }
+
 	el = prev
 	if prev == nil {
 		el = cur

@@ -19,7 +19,7 @@ func TestParseReturn(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			skip: true,
+			skip: false,
 			name: "return statement",
 			args: args{
 				code: []byte(`

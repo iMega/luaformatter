@@ -107,14 +107,14 @@ end
 			wantErr: false,
 		},
 		{
-			skip: false,
+			skip: true,
 			name: "condition statement with elseif",
 			args: args{
 				code: []byte(`
 if a == 1 then
-    print:qq "1"
+    break
 elseif a == 3 then
-    print "3"
+    break
 end
 `,
 				),
