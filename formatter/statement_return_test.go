@@ -38,7 +38,7 @@ return
 			wantErr: false,
 		},
 		{
-			skip: true,
+			skip: false,
 			name: "return statement with two exp",
 			args: args{
 				code: []byte(`
