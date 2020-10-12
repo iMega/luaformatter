@@ -87,7 +87,7 @@ func (elseStatement) TypeOf() typeStatement {
 }
 
 func (s *elseStatement) IsEnd(prev, cur *element) bool {
-	return false
+	return cur.Token.Type == nEnd
 }
 
 func (s *elseStatement) Append(el *element) {}

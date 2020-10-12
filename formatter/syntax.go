@@ -34,6 +34,10 @@ var (
 			nThis: &elseifStatement{},
 			nID:   &exp{},
 		},
+		nElse: {
+			nThis: &elseStatement{},
+			nID:   &exp{},
+		},
 		nLabel: {nThis: &labelStatement{}},
 		nGoto:  {nThis: &gotoStatement{}},
 		nBreak: {nThis: &breakStatement{}},
