@@ -61,6 +61,12 @@ var (
 			nThis: &whileStatement{},
 			nID:   &exp{},
 		},
+		nRepeat: {
+			nThis: &repeatStatement{},
+		},
+		nUntil: {
+			nID: &exp{},
+		},
 	}
 )
 

@@ -177,13 +177,6 @@ type functionCallStatement struct {
 	Args    *explist
 }
 
-type repeatStatement struct {
-	StartElement *element
-	Body         []Block
-	EndElement   *element
-	Exp          exp
-}
-
 type forNumericalStatement struct {
 	IDStatement *element
 	VarPart     varPart
