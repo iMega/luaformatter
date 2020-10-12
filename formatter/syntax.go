@@ -57,6 +57,10 @@ var (
 		nDo: {
 			nThis: &doStatement{},
 		},
+		nWhile: {
+			nThis: &whileStatement{},
+			nID:   &exp{},
+		},
 	}
 )
 

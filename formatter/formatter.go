@@ -232,6 +232,9 @@ func newBlock(st statementIntf) Block {
 	case *doStatement:
 		bl.Statement = statement{Do: v}
 
+	case *whileStatement:
+		bl.Statement = statement{While: v}
+
 	case *functionStatement:
 		bl.Statement = statement{Function: v}
 

@@ -35,13 +35,29 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 
 	var syntax = map[tokenID]map[tokenID]bool{
 		nNumber: {
-			nAddition: false,
+			nAddition:   false,
+			nInequality: false,
+			nEquality:   false,
+		},
+		nID: {
+			nAddition:   false,
+			nInequality: false,
+			nEquality:   false,
+		},
+		nAddition: {
+			nNumber: false,
+		},
+		nInequality: {
+			nNumber: false,
+		},
+		nEquality: {
+			nNumber: false,
 		},
 	}
 
 	v, ok := syntax[tokenID(prev.Token.Type)]
 	if !ok {
-		return false
+		return true
 	}
 
 	res, ok := v[tokenID(cur.Token.Type)]

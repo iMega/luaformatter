@@ -109,7 +109,7 @@ const (
 	nThen
 	nTrue
 	nUntil
-	nWhil
+	nWhile
 	nColon
 	nSemiColon
 	nParentheses
@@ -196,7 +196,7 @@ var (
 		nThen:      "then",
 		nTrue:      "true",
 		nUntil:     "until",
-		nWhil:      "while",
+		nWhile:     "while",
 		nColon:     ":",
 		nSemiColon: ";",
 		nAssing:    `=`,
@@ -282,7 +282,7 @@ var (
 		nThen:        "nThen",
 		nTrue:        "nTrue",
 		nUntil:       "nUntil",
-		nWhil:        "nWhile",
+		nWhile:       "nWhilee",
 		nColon:       "nColon",
 		nComma:       `nComma`,
 		nAssing:      `nAssing`,

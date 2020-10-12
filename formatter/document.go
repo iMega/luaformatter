@@ -177,11 +177,6 @@ type functionCallStatement struct {
 	Args    *explist
 }
 
-type whileStatement struct {
-	StartElement *element
-	doStatement
-}
-
 type repeatStatement struct {
 	StartElement *element
 	Body         []Block
