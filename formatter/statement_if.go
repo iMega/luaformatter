@@ -20,7 +20,7 @@ func (ifStatement) TypeOf() typeStatement {
 }
 
 func (s *ifStatement) IsEnd(prev, cur *element) bool {
-	return false
+	return cur.Token.Type == nEnd
 }
 
 func (s *ifStatement) Append(el *element) {}
@@ -56,7 +56,7 @@ func (elseifStatement) TypeOf() typeStatement {
 }
 
 func (s *elseifStatement) IsEnd(prev, cur *element) bool {
-	return false
+	return cur.Token.Type == nEnd || cur.Token.Type == nElse
 }
 
 func (s *elseifStatement) Append(el *element) {}
