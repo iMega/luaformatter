@@ -110,6 +110,23 @@ func Test_getStatement(t *testing.T) {
 			},
 			want: &exp{},
 		},
+		{
+			skip: false,
+			name: "return 1[, function]() end",
+			args: args{
+				prev: &element{
+					Token: &lexmachine.Token{
+						Type: nComma,
+					},
+				},
+				cur: &element{
+					Token: &lexmachine.Token{
+						Type: nID,
+					},
+				},
+			},
+			want: &exp{},
+		},
 	}
 	for _, tt := range tests {
 		if tt.skip == true {

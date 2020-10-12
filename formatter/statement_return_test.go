@@ -191,7 +191,7 @@ return function () end, function () end
 			}
 
 			if !assert.Equal(t, got, tt.want) {
-				t.Errorf("Parse() = \n%v, want \n%v", got, tt.want)
+				t.Errorf("Parse() = \n%v, wasnt \n%v", got, tt.want)
 			}
 		})
 	}

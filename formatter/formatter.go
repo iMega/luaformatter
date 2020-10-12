@@ -42,6 +42,7 @@ func Parse(code []byte) (*document, error) {
 				cs := chainSt.Prev()
 				if cs == nil {
 					doc.AddBlock(newBlock(currentStatement))
+					el.Resolved = true
 					currentStatement = cs
 
 					break
@@ -139,51 +140,77 @@ func getLastStatement(chain []statementIntf) statementIntf {
 func getStatement(prev, cur *element) statementIntf {
 	var (
 		branch branch
-		el     *element
+		// el     *element
 	)
 
-	if cur.Token.Type == nReturn {
-		branch = getsyntax(tokenID(cur.Token.Type))
-		if cb, ok := branch[nThis]; ok {
-			return cb.New()
-		}
-	}
-
-	if prev == nil {
-		branch = getsyntax(tokenID(cur.Token.Type))
-		if cb, ok := branch[nThis]; ok {
-			return cb.New()
-		}
-	}
-
-	// branch = getsyntax(tokenID(cur.Token.Type))
-	// if cb, ok := branch[nThis]; ok {
-	// 	return cb.New()
-	// }
-
-	el = prev
-	if prev == nil {
-		el = cur
-	}
-
-	branch = getsyntax(tokenID(el.Token.Type))
-	if branch == nil {
-		branch = getsyntax(tokenID(cur.Token.Type))
-		if cb, ok := branch[nThis]; ok {
-			return cb.New()
-		}
+	if cur.Resolved {
 		return nil
 	}
 
-	if cb, ok := branch[cur.Token.Type]; ok {
+	// if cur.Token.Type == nReturn {
+	// 	branch = getsyntax(tokenID(cur.Token.Type))
+	// 	if cb, ok := branch[nThis]; ok {
+	// 		return cb.New()
+	// 	}
+	// }
+
+	// if prev == nil {
+	// 	branch = getsyntax(tokenID(cur.Token.Type))
+	// 	if cb, ok := branch[nThis]; ok {
+	// 		return cb.New()
+	// 	}
+	// }
+	if prev != nil && prev.Token.Type == nReturn {
+		branch = getsyntax(tokenID(nReturn))
+		if cb, ok := branch[cur.Token.Type]; ok {
+			return cb.New()
+		}
+	}
+
+	if prev != nil && prev.Token.Type == nComma {
+		branch = getsyntax(tokenID(nComma))
+		if cb, ok := branch[cur.Token.Type]; ok {
+			return cb.New()
+		}
+	}
+
+	branch = getsyntax(tokenID(cur.Token.Type))
+	if cb, ok := branch[nThis]; ok {
 		return cb.New()
 	}
+
+	if prev != nil {
+		branch = getsyntax(tokenID(prev.Token.Type))
+		if cb, ok := branch[cur.Token.Type]; ok {
+			return cb.New()
+		}
+	}
+
+	return nil
+
+	// el = prev
+	// if prev == nil {
+	// 	el = cur
+	// }
+
+	// branch = getsyntax(tokenID(el.Token.Type))
+	// if branch == nil {
+	// 	branch = getsyntax(tokenID(cur.Token.Type))
+	// 	if cb, ok := branch[nThis]; ok {
+	// 		return cb.New()
+	// 	}
+	// 	return nil
+	// }
+
+	// if cb, ok := branch[cur.Token.Type]; ok {
+	// 	return cb.New()
+	// }
 
 	// if cb, ok := branch[nThis]; ok {
 	// 	return cb.New()
 	// }
 
-	return nil
+	// return nil
 }
 
 func newBlock(st statementIntf) Block {

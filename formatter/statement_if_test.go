@@ -113,7 +113,7 @@ end
 				code: []byte(`
 if a == 1 then
     break
-elseif a == 3 then
+elseif b == 3 then
     break
 end
 `,
@@ -130,23 +130,23 @@ end
 											Type:        nID,
 											Value:       "a",
 											Lexeme:      []byte("a"),
-											TC:          4,
-											StartLine:   2,
-											StartColumn: 4,
-											EndLine:     2,
-											EndColumn:   4,
+											TC:          33,
+											StartLine:   4,
+											StartColumn: 8,
+											EndLine:     4,
+											EndColumn:   8,
 										},
 									},
 									Binop: &element{
 										Token: &lexmachine.Token{
-											Type:        nInequality,
-											Value:       keywords[nInequality],
-											Lexeme:      []byte(keywords[nInequality]),
-											TC:          6,
-											StartLine:   2,
-											StartColumn: 6,
-											EndLine:     2,
-											EndColumn:   7,
+											Type:        nEquality,
+											Value:       keywords[nEquality],
+											Lexeme:      []byte(keywords[nEquality]),
+											TC:          35,
+											StartLine:   4,
+											StartColumn: 10,
+											EndLine:     4,
+											EndColumn:   11,
 										},
 									},
 									Exp: &exp{
@@ -166,23 +166,57 @@ end
 								},
 								Body: []Block{
 									{
-										Return: &returnStatement{
-											Explist: &explist{
-												List: []*exp{
-													{
-														Element: &element{
-															Token: &lexmachine.Token{
-																Type:        nNumber,
-																Value:       "22",
-																Lexeme:      []byte("22"),
-																TC:          27,
-																StartLine:   3,
-																StartColumn: 12,
-																EndLine:     3,
-																EndColumn:   13,
-															},
-														},
+										Statement: statement{
+											Break: &breakStatement{},
+										},
+									},
+								},
+								ElseIfPart: []*elseifStatement{
+									{
+										Exp: &exp{
+											Element: &element{
+												Token: &lexmachine.Token{
+													Type:        nID,
+													Value:       "b",
+													Lexeme:      []byte("b"),
+													TC:          33,
+													StartLine:   4,
+													StartColumn: 8,
+													EndLine:     4,
+													EndColumn:   8,
+												},
+											},
+											Binop: &element{
+												Token: &lexmachine.Token{
+													Type:        nEquality,
+													Value:       keywords[nEquality],
+													Lexeme:      []byte(keywords[nEquality]),
+													TC:          35,
+													StartLine:   4,
+													StartColumn: 10,
+													EndLine:     4,
+													EndColumn:   11,
+												},
+											},
+											Exp: &exp{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nNumber,
+														Value:       "3",
+														Lexeme:      []byte("3"),
+														TC:          9,
+														StartLine:   2,
+														StartColumn: 9,
+														EndLine:     2,
+														EndColumn:   9,
 													},
+												},
+											},
+										},
+										Body: []Block{
+											{
+												Statement: statement{
+													Break: &breakStatement{},
 												},
 											},
 										},

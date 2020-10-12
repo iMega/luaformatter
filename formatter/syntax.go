@@ -40,6 +40,9 @@ var (
 		nAddition: {
 			nNumber: &exp{},
 		},
+		nEquality: {
+			nNumber: &exp{},
+		},
 		nInequality: {
 			nNumber: &exp{},
 		},
