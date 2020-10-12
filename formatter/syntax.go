@@ -54,6 +54,9 @@ var (
 			nID:       &exp{},
 			nFunction: &exp{},
 		},
+		nDo: {
+			nThis: &doStatement{},
+		},
 	}
 )
 
