@@ -17,40 +17,6 @@ func (d *document) AddBlock(b Block) {
 	d.QtyBlocks++
 }
 
-// type codeblock struct {
-// 	Formatter Formatter
-// 	Pad       uint64
-// 	Start     []element
-// 	Body      map[uint64]codeblock
-// 	QtyBlocks uint64
-// 	End       []element
-// 	List      map[uint64]ListItem
-// }
-
-// func (b *codeblock) AddBlock(cb codeblock) {
-// 	b.Body[b.QtyBlocks] = cb
-// 	b.QtyBlocks++
-// }
-
-// type fieldlist struct {
-// 	FirstSqExp *codeblock
-// 	FirstExp   *codeblock
-// 	SecondExp  *codeblock
-// }
-
-// func (i *fieldlist) GetCodeBlock(tokenID int) *codeblock {
-// 	cb := &codeblock{}
-// 	switch tokenID {
-// 	case nSquareBracket:
-// 		i.FirstSqExp = cb
-// 	case nEq:
-// 		i.SecondExp = cb
-// 	default:
-// 		i.FirstExp = cb
-// 	}
-// 	return cb
-// }
-
 type varlist []element // separator ,
 
 func newExp(elOrStat interface{}) *exp {
@@ -72,11 +38,6 @@ type fieldList struct {
 
 type sqareField struct {
 	ExpKey exp
-	ExpVal exp
-}
-
-type field struct {
-	Name   element
 	ExpVal exp
 }
 
@@ -122,11 +83,13 @@ const (
 	tsReturn
 	tsExp
 	tsExpList
+	tsPrefixexpStatement
+	tsFuncCallStatement
 )
 
 type statement struct {
 	Assignment   *assignmentStatement
-	FunctionCall *functionCallStatement
+	FuncCall     *funcCallStatement
 	Label        *labelStatement
 	Break        *breakStatement
 	Goto         *gotoStatement
@@ -226,6 +189,7 @@ type namelist []*element
 // explist ::= exp {‘,’ exp}
 // exp ::=  nil | false | true | Numeral | LiteralString | ‘...’ | functiondef |
 //      prefixexp | tableconstructor | exp binop exp | unop exp
+//a["bb"]("vvv").cc().dd
 // prefixexp ::= var | functioncall | ‘(’ exp ‘)’
 // functioncall ::=  prefixexp args | prefixexp ‘:’ Name args
 // args ::=  ‘(’ [explist] ‘)’ | tableconstructor | LiteralString
@@ -241,3 +205,5 @@ type namelist []*element
 //      ‘<’ | ‘<=’ | ‘>’ | ‘>=’ | ‘==’ | ‘~=’ |
 //      and | or
 // unop ::= ‘-’ | not | ‘#’ | ‘~’
+
+// Name | prefixexp ‘[’ exp ‘]’ | functioncall | ‘(’ exp ‘)’

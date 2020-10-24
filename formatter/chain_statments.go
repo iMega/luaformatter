@@ -8,6 +8,14 @@ func (cs *chainStatments) Append(st statementIntf) {
 	cs.chain = append(cs.chain, st)
 }
 
+func (cs *chainStatments) Reset() {
+	cs.chain = nil
+}
+
+// func (cs *chainStatments) Prepend(st statementIntf) {
+// 	cs.chain = append([]statementIntf{st}, cs.chain...)
+// }
+
 func (cs *chainStatments) Prev() statementIntf {
 	if len(cs.chain) == 0 {
 		return nil

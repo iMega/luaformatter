@@ -21,7 +21,7 @@ func (s *returnStatement) IsEnd(prev, cur *element) bool {
 		return false
 	}
 
-	branch := getsyntax(tokenID(nReturn))
+	branch := getsyntax(syntax, tokenID(nReturn))
 	_, ok := branch[cur.Token.Type]
 
 	return !ok

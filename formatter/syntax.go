@@ -10,9 +10,16 @@ const (
 
 var (
 	syntax = map[tokenID]branch{
-		nID: {
-			nComma:  &assignmentStatement{},
-			nAssing: &assignmentStatement{},
+		// nID: {
+		// nThis:        &prefixexpStatement{},
+		// nParentheses: &funcCallStatement{},
+		// },
+		nSquareBracket: {
+			nThis: &prefixexpStatement{},
+		},
+		nClosingSquareBracket: {
+			nID:          &prefixexpStatement{},
+			nParentheses: &funcCallStatement{},
 		},
 		nAssing: {
 			nFunction: &functionStatement{},
@@ -72,8 +79,8 @@ var (
 
 type branch map[int]statementIntf
 
-func getsyntax(ID tokenID) branch {
-	b, ok := syntax[ID]
+func getsyntax(s map[tokenID]branch, ID tokenID) branch {
+	b, ok := s[ID]
 	if !ok {
 		return nil
 	}

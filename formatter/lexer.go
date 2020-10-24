@@ -18,7 +18,7 @@ func newScanner(code []byte) (*scanner, error) {
 	for k, v := range keywords {
 		lexer.Add([]byte(strings.ToLower(v)), token(k))
 	}
-	lexer.Add([]byte(`([a-zA-Z_][a-zA-Z0-9_.:]*)`), token(nID))
+	lexer.Add([]byte(`([a-zA-Z_.][a-zA-Z0-9_.:]*)`), token(nID))
 	lexer.Add([]byte("( |\t|\f|\r|\n)+"), skip)
 	lexer.Add([]byte(`--\[\[([^\]\]])*\]\]`), token(nCommentLong))
 	lexer.Add([]byte(`--( |\S)*`), token(nComment))

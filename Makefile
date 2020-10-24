@@ -10,7 +10,7 @@ unit:
 
 lint:
 	@-docker run --rm -t -v $(CURDIR):$(CWD) -w $(CWD) \
-		golangci/golangci-lint golangci-lint run -v
+		golangci/golangci-lint golangci-lint run
 
 test: lint unit
 

@@ -53,6 +53,9 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 		nEquality: {
 			nNumber: false,
 		},
+		nSquareBracket: {
+			nString: false,
+		},
 	}
 
 	v, ok := syntax[tokenID(prev.Token.Type)]
@@ -73,6 +76,10 @@ func (s *exp) HasSyntax(el element) bool {
 }
 
 func (s *exp) Append(el *element) {
+	if el.Token.Type == nParentheses || el.Token.Type == nClosingParentheses {
+		return
+	}
+
 	if s.Element == nil {
 		switch el.Token.Type {
 		case nSubtraction:

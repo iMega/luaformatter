@@ -52,17 +52,32 @@ func Parse(code []byte) (*document, error) {
 			}
 		}
 
-		if st := getStatement(prevElement, curElement); st != nil {
+		s := syntax
+		if curElement.Token.Type == nID && currentStatement == nil {
+			s = map[tokenID]branch{
+				nID: {
+					nThis:        &prefixexpStatement{},
+					nParentheses: &funcCallStatement{},
+				},
+			}
+		}
+
+		if st := getStatement(s, prevElement, curElement); st != nil {
 			if currentStatement == nil {
 				chainSt.Append(st)
 				if prevElement != nil {
 					st.Append(prevElement)
 				}
 			} else {
-				// if currentStatement.TypeOf() != st.TypeOf() {
-				currentStatement.AppendStatement(st)
-				chainSt.Append(st)
-				// }
+				if currentStatement.TypeOf() == tsPrefixexpStatement && st.TypeOf() == tsFuncCallStatement {
+					st.AppendStatement(chainSt.First())
+					chainSt.Reset()
+					chainSt.Append(st)
+				} else {
+					// if currentStatement.TypeOf() != st.TypeOf() {
+					currentStatement.AppendStatement(st)
+					chainSt.Append(st)
+				}
 
 				for inner := st.InnerStatement(prevElement, curElement); inner != nil; inner = st.InnerStatement(prevElement, curElement) {
 					if st.TypeOf() != inner.TypeOf() {
@@ -77,11 +92,6 @@ func Parse(code []byte) (*document, error) {
 
 		if currentStatement != nil {
 			currentStatement.Append(curElement)
-
-			// goto
-			// if currentStatement.IsEnd(prevElement, curElement) {
-			// 	currentStatement = chainSt.Prev()
-			// }
 		}
 
 		prevElement = curElement
@@ -137,80 +147,40 @@ func getLastStatement(chain []statementIntf) statementIntf {
 	return chain[len(chain)-1]
 }
 
-func getStatement(prev, cur *element) statementIntf {
-	var (
-		branch branch
-		// el     *element
-	)
+func getStatement(s map[tokenID]branch, prev, cur *element) statementIntf {
+	var branch branch
 
 	if cur.Resolved {
 		return nil
 	}
 
-	// if cur.Token.Type == nReturn {
-	// 	branch = getsyntax(tokenID(cur.Token.Type))
-	// 	if cb, ok := branch[nThis]; ok {
-	// 		return cb.New()
-	// 	}
-	// }
-
-	// if prev == nil {
-	// 	branch = getsyntax(tokenID(cur.Token.Type))
-	// 	if cb, ok := branch[nThis]; ok {
-	// 		return cb.New()
-	// 	}
-	// }
 	if prev != nil && prev.Token.Type == nReturn {
-		branch = getsyntax(tokenID(nReturn))
+		branch = getsyntax(s, tokenID(nReturn))
 		if cb, ok := branch[cur.Token.Type]; ok {
 			return cb.New()
 		}
 	}
 
 	if prev != nil && prev.Token.Type == nComma {
-		branch = getsyntax(tokenID(nComma))
+		branch = getsyntax(s, tokenID(nComma))
 		if cb, ok := branch[cur.Token.Type]; ok {
 			return cb.New()
 		}
 	}
 
-	branch = getsyntax(tokenID(cur.Token.Type))
+	branch = getsyntax(s, tokenID(cur.Token.Type))
 	if cb, ok := branch[nThis]; ok {
 		return cb.New()
 	}
 
 	if prev != nil {
-		branch = getsyntax(tokenID(prev.Token.Type))
+		branch = getsyntax(s, tokenID(prev.Token.Type))
 		if cb, ok := branch[cur.Token.Type]; ok {
 			return cb.New()
 		}
 	}
 
 	return nil
-
-	// el = prev
-	// if prev == nil {
-	// 	el = cur
-	// }
-
-	// branch = getsyntax(tokenID(el.Token.Type))
-	// if branch == nil {
-	// 	branch = getsyntax(tokenID(cur.Token.Type))
-	// 	if cb, ok := branch[nThis]; ok {
-	// 		return cb.New()
-	// 	}
-	// 	return nil
-	// }
-
-	// if cb, ok := branch[cur.Token.Type]; ok {
-	// 	return cb.New()
-	// }
-
-	// if cb, ok := branch[nThis]; ok {
-	// 	return cb.New()
-	// }
-
-	// return nil
 }
 
 func newBlock(st statementIntf) Block {
@@ -240,6 +210,16 @@ func newBlock(st statementIntf) Block {
 
 	case *functionStatement:
 		bl.Statement = statement{Function: v}
+
+	case *funcCallStatement:
+		bl.Statement = statement{FuncCall: v}
+
+	case *prefixexpStatement:
+		bl.Statement = statement{
+			FuncCall: &funcCallStatement{
+				Prefixexp: v,
+			},
+		}
 
 	case *ifStatement:
 		bl.Statement = statement{If: v}
