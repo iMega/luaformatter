@@ -20,8 +20,7 @@ func (assignmentStatement) TypeOf() typeStatement {
 }
 
 func (s *assignmentStatement) IsEnd(prev, cur *element) bool {
-	return false //len(s.Namelist) == len(s.Explist.List)
-	// return el.Token.Type != nComma
+	return false
 }
 
 func (s *assignmentStatement) HasSyntax(el element) bool {
@@ -31,6 +30,7 @@ func (s *assignmentStatement) HasSyntax(el element) bool {
 func (s *assignmentStatement) Append(el *element) {
 	if el.Token.Type == nAssign {
 		s.HasEqPart = true
+
 		return
 	}
 

@@ -36,7 +36,6 @@ func (s *functionStatement) HasSyntax(el element) bool {
 
 func (s *functionStatement) Append(el *element) {
 	switch el.Token.Type {
-
 	case nLocal:
 		s.LocalElement = true
 
@@ -60,6 +59,7 @@ func (s *functionStatement) Append(el *element) {
 func (s *functionStatement) AppendStatement(st statementIntf) {
 	if v, ok := st.(*returnStatement); ok {
 		s.Body = append(s.Body, Block{Return: v})
+
 		return
 	}
 

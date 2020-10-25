@@ -15,9 +15,11 @@ type scanner struct {
 
 func newScanner(code []byte) (*scanner, error) {
 	lexer := lexmachine.NewLexer()
+
 	for k, v := range keywords {
 		lexer.Add([]byte(strings.ToLower(v)), token(k))
 	}
+
 	lexer.Add([]byte(`([a-zA-Z_.][a-zA-Z0-9_.:]*)`), token(nID))
 	lexer.Add([]byte("( |\t|\f|\r|\n)+"), skip)
 	lexer.Add([]byte(`--\[\[([^\]\]])*\]\]`), token(nCommentLong))
@@ -27,6 +29,7 @@ func newScanner(code []byte) (*scanner, error) {
 	if err := lexer.Compile(); err != nil {
 		return nil, err
 	}
+
 	s, err := lexer.Scanner(code)
 	if err != nil {
 		return nil, err

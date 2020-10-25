@@ -7,7 +7,7 @@ const (
 	mMagenta     = "\x1b[35m"
 )
 
-// Format code format
+// Parse code.
 func Parse(code []byte) (*document, error) {
 	var (
 		prevElement      *element
@@ -29,6 +29,7 @@ func Parse(code []byte) (*document, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		curElement = &el
 
 		if prevElement != nil {
@@ -42,6 +43,7 @@ func Parse(code []byte) (*document, error) {
 				cs := chainSt.Prev()
 				if cs == nil {
 					doc.AddBlock(newBlock(currentStatement))
+
 					el.Resolved = true
 					currentStatement = cs
 
@@ -65,6 +67,7 @@ func Parse(code []byte) (*document, error) {
 		if st := getStatement(s, prevElement, curElement); st != nil {
 			if currentStatement == nil {
 				chainSt.Append(st)
+
 				if prevElement != nil {
 					st.Append(prevElement)
 				}
@@ -106,6 +109,7 @@ func Parse(code []byte) (*document, error) {
 					// chainSt.Append(st)
 				}
 			}
+
 			currentStatement = st
 		}
 

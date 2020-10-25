@@ -64,6 +64,7 @@ func (s *elseifStatement) Append(el *element) {}
 func (s *elseifStatement) AppendStatement(st statementIntf) {
 	if v, ok := st.(*exp); ok {
 		s.Exp = v
+
 		return
 	}
 

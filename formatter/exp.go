@@ -132,6 +132,7 @@ func (s *exp) AppendStatement(st statementIntf) {
 			v.Element = s.Element
 			s.Element = nil
 		}
+
 		s.Prefixexp = v
 	}
 }

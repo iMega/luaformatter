@@ -35,6 +35,7 @@ func (s *returnStatement) Append(el *element) {
 	if el == nil || el.Token.Type == nReturn {
 		return
 	}
+
 	s.Explist.List = append(s.Explist.List, newExp(el))
 }
 
@@ -43,5 +44,6 @@ func (s *returnStatement) AppendStatement(st statementIntf) {
 	if !ok {
 		return
 	}
+
 	s.Explist = el
 }

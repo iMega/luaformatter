@@ -25,6 +25,7 @@ func (s *prefixexpStatement) InnerStatement(prev, cur *element) statementIntf {
 		// s.IsVar = true
 		return &exp{}
 	}
+
 	return nil
 }
 
@@ -33,16 +34,14 @@ func (prefixexpStatement) TypeOf() typeStatement {
 }
 
 func (s *prefixexpStatement) IsEnd(prev, cur *element) bool {
-	if cur.Token.Type == nAssign {
-		return true
-	}
-	return false //prev.Token.Type == nClosingSquareBracket
+	return cur.Token.Type == nAssign
 }
 
 func (s *prefixexpStatement) Append(el *element) {
 	if el.Token.Type == nSquareBracket {
 		return
 	}
+
 	if el.Token.Type == nClosingSquareBracket {
 		return
 	}
