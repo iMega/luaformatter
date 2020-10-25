@@ -189,7 +189,6 @@ type namelist []*element
 // explist ::= exp {‘,’ exp}
 // exp ::=  nil | false | true | Numeral | LiteralString | ‘...’ | functiondef |
 //      prefixexp | tableconstructor | exp binop exp | unop exp
-//a["bb"]("vvv").cc().dd
 // prefixexp ::= var | functioncall | ‘(’ exp ‘)’
 // functioncall ::=  prefixexp args | prefixexp ‘:’ Name args
 // args ::=  ‘(’ [explist] ‘)’ | tableconstructor | LiteralString
@@ -205,5 +204,3 @@ type namelist []*element
 //      ‘<’ | ‘<=’ | ‘>’ | ‘>=’ | ‘==’ | ‘~=’ |
 //      and | or
 // unop ::= ‘-’ | not | ‘#’ | ‘~’
-
-// Name | prefixexp ‘[’ exp ‘]’ | functioncall | ‘(’ exp ‘)’

@@ -20,8 +20,10 @@ var (
 		nClosingSquareBracket: {
 			nID:          &prefixexpStatement{},
 			nParentheses: &funcCallStatement{},
+			nComma:       &assignmentStatement{},
 		},
-		nAssing: {
+		nAssign: {
+			nNumber:   &explist{},
 			nFunction: &functionStatement{},
 		},
 		nFunction: {
@@ -59,6 +61,7 @@ var (
 		},
 		nComma: {
 			nID:       &exp{},
+			nNumber:   &exp{},
 			nFunction: &exp{},
 		},
 		nDo: {

@@ -33,6 +33,9 @@ func (prefixexpStatement) TypeOf() typeStatement {
 }
 
 func (s *prefixexpStatement) IsEnd(prev, cur *element) bool {
+	if cur.Token.Type == nAssign {
+		return true
+	}
 	return false //prev.Token.Type == nClosingSquareBracket
 }
 

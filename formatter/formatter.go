@@ -69,15 +69,27 @@ func Parse(code []byte) (*document, error) {
 					st.Append(prevElement)
 				}
 			} else {
+				isPrefixexpConvertAssignment := false
 				if currentStatement.TypeOf() == tsPrefixexpStatement && st.TypeOf() == tsFuncCallStatement {
 					st.AppendStatement(chainSt.First())
 					chainSt.Reset()
 					chainSt.Append(st)
+				} else if currentStatement.TypeOf() == tsPrefixexpStatement && st.TypeOf() == tsAssignment {
+					isPrefixexpConvertAssignment = true
+					currentStatement = chainSt.First()
+					chainSt.Reset()
+					chainSt.Append(st)
+					// } else if currentStatement.TypeOf() == tsExp && st.TypeOf() == tsPrefixexpStatement {
+					// st.AppendStatement()
 				} else {
-					// if currentStatement.TypeOf() != st.TypeOf() {
 					currentStatement.AppendStatement(st)
 					chainSt.Append(st)
 				}
+
+				// if currentStatement.TypeOf() == tsPrefixexpStatement && st.TypeOf() == tsExp {
+				// 	chainSt.Reset()
+				// 	chainSt.Append(st)
+				// }
 
 				for inner := st.InnerStatement(prevElement, curElement); inner != nil; inner = st.InnerStatement(prevElement, curElement) {
 					if st.TypeOf() != inner.TypeOf() {
@@ -85,6 +97,13 @@ func Parse(code []byte) (*document, error) {
 						chainSt.Append(inner)
 					}
 					st = inner
+				}
+
+				if isPrefixexpConvertAssignment {
+					st.AppendStatement(currentStatement)
+					// st.AppendStatement(chainSt.First())
+					// chainSt.Reset()
+					// chainSt.Append(st)
 				}
 			}
 			currentStatement = st

@@ -20,9 +20,8 @@ func TestParsePrefixexp(t *testing.T) {
 	}{
 		{
 			skip: false,
-			name: "prefixexp statement conver to function call",
+			name: "prefixexp statement convert to function call",
 			args: args{
-				//a.b.c.v:r["ff"].c["bb"]("vvv").cc().dd
 				code: []byte(`
 r["ff"]["dd"].name.name2["ee"]()
 `,
@@ -112,6 +111,173 @@ r["ff"]["dd"].name.name2["ee"]()
 								Explist: &explist{
 									List: []*exp{
 										{},
+									},
+								},
+							},
+						},
+					},
+				},
+				QtyBlocks: 1,
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
+			name: "prefixexp statement convert to assignment statement",
+			args: args{
+				code: []byte(`
+a["bb"]["cc"].dd.ee["ff"], g["hh"] = 1, 2
+`,
+				),
+			},
+			want: &document{
+				Body: map[uint64]Block{
+					0: {
+						Statement: statement{
+							Assignment: &assignmentStatement{
+								VarList: &explist{
+									List: []*exp{
+										{
+											Prefixexp: &prefixexpStatement{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nID,
+														Value:       "a",
+														Lexeme:      []byte("a"),
+														TC:          1,
+														StartLine:   2,
+														StartColumn: 1,
+														EndLine:     2,
+														EndColumn:   1,
+													},
+												},
+												Prefixexp: &prefixexpStatement{
+													FieldAccessorExp: &exp{
+														Element: &element{
+															Token: &lexmachine.Token{
+																Type:        nString,
+																Value:       `"bb"`,
+																Lexeme:      []byte(`"bb"`),
+																TC:          3,
+																StartLine:   2,
+																StartColumn: 3,
+																EndLine:     2,
+																EndColumn:   6,
+															},
+														},
+													},
+													Prefixexp: &prefixexpStatement{
+														FieldAccessorExp: &exp{
+															Element: &element{
+																Token: &lexmachine.Token{
+																	Type:        nString,
+																	Value:       `"cc"`,
+																	Lexeme:      []byte(`"cc"`),
+																	TC:          9,
+																	StartLine:   2,
+																	StartColumn: 9,
+																	EndLine:     2,
+																	EndColumn:   12,
+																},
+															},
+														},
+														Prefixexp: &prefixexpStatement{
+															Element: &element{
+																Token: &lexmachine.Token{
+																	Type:        nID,
+																	Value:       ".dd.ee",
+																	Lexeme:      []byte(".dd.ee"),
+																	TC:          14,
+																	StartLine:   2,
+																	StartColumn: 14,
+																	EndLine:     2,
+																	EndColumn:   19,
+																},
+															},
+															Prefixexp: &prefixexpStatement{
+																FieldAccessorExp: &exp{
+																	Element: &element{
+																		Token: &lexmachine.Token{
+																			Type:        nString,
+																			Value:       `"ff"`,
+																			Lexeme:      []byte(`"ff"`),
+																			TC:          21,
+																			StartLine:   2,
+																			StartColumn: 21,
+																			EndLine:     2,
+																			EndColumn:   24,
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+										{
+											Prefixexp: &prefixexpStatement{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nID,
+														Value:       "g",
+														Lexeme:      []byte("g"),
+														TC:          28,
+														StartLine:   2,
+														StartColumn: 28,
+														EndLine:     2,
+														EndColumn:   28,
+													},
+												},
+												FieldAccessorExp: &exp{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nString,
+															Value:       `"hh"`,
+															Lexeme:      []byte(`"hh"`),
+															TC:          30,
+															StartLine:   2,
+															StartColumn: 30,
+															EndLine:     2,
+															EndColumn:   33,
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+								HasEqPart: true,
+								Explist: &explist{
+									List: []*exp{
+										{
+											Element: &element{
+												Token: &lexmachine.Token{
+													Type:        nNumber,
+													Value:       "1",
+													Lexeme:      []byte("1"),
+													TC:          38,
+													StartLine:   2,
+													StartColumn: 38,
+													EndLine:     2,
+													EndColumn:   38,
+												},
+											},
+										},
+										{
+											Element: &element{
+												Token: &lexmachine.Token{
+													Type:        nNumber,
+													Value:       "2",
+													Lexeme:      []byte("2"),
+													TC:          41,
+													StartLine:   2,
+													StartColumn: 41,
+													EndLine:     2,
+													EndColumn:   41,
+												},
+											},
+										},
 									},
 								},
 							},

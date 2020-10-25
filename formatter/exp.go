@@ -1,12 +1,13 @@
 package formatter
 
 type exp struct {
-	Element *element           // nil | false | true | Numeral | LiteralString | ‘...’
-	Table   *tableconstructor  // {
-	Func    *functionStatement // function
-	Binop   *element
-	Unop    *element
-	Exp     *exp
+	Element   *element           // nil | false | true | Numeral | LiteralString | ‘...’
+	Table     *tableconstructor  // {
+	Func      *functionStatement // function
+	Binop     *element
+	Unop      *element
+	Exp       *exp
+	Prefixexp *prefixexpStatement
 }
 
 func (exp) New() statementIntf {
@@ -40,9 +41,10 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 			nEquality:   false,
 		},
 		nID: {
-			nAddition:   false,
-			nInequality: false,
-			nEquality:   false,
+			nAddition:      false,
+			nInequality:    false,
+			nEquality:      false,
+			nSquareBracket: false,
 		},
 		nAddition: {
 			nNumber: false,
@@ -76,6 +78,10 @@ func (s *exp) HasSyntax(el element) bool {
 }
 
 func (s *exp) Append(el *element) {
+	if el.Token.Type == nComma {
+		return
+	}
+
 	if el.Token.Type == nParentheses || el.Token.Type == nClosingParentheses {
 		return
 	}
@@ -121,5 +127,11 @@ func (s *exp) AppendStatement(st statementIntf) {
 		s.Func = v
 	case *exp:
 		s.Exp = v
+	case *prefixexpStatement:
+		if s.Element != nil {
+			v.Element = s.Element
+			s.Element = nil
+		}
+		s.Prefixexp = v
 	}
 }

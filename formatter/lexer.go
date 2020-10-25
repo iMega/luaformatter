@@ -118,7 +118,7 @@ const (
 	nClosingSquareBracket
 	nCurlyBracket
 	nClosingCurlyBracket
-	nAssing
+	nAssign
 	nComma
 	nSingleQuote
 	nDoubleQuote
@@ -199,7 +199,7 @@ var (
 		nWhile:     "while",
 		nColon:     ":",
 		nSemiColon: ";",
-		nAssing:    `=`,
+		nAssign:    `=`,
 		nComma:     `,`,
 		nStar:      `\*`,
 		nVararg:    `\.\.\.`,
@@ -285,7 +285,7 @@ var (
 		nWhile:       "nWhilee",
 		nColon:       "nColon",
 		nComma:       `nComma`,
-		nAssing:      `nAssing`,
+		nAssign:      `nAssign`,
 		nStar:        `nStar`,
 		nVararg:      `nVararg`,
 		nLabel:       "::",

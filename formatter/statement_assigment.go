@@ -1,11 +1,10 @@
 package formatter
 
 type assignmentStatement struct {
-	LocalElement  *element
-	Namelist      namelist
-	EqPart        *element
-	Explist       explist
-	LastTokenType tokenID
+	IsLocal   bool
+	VarList   *explist
+	HasEqPart bool
+	Explist   *explist
 }
 
 func (assignmentStatement) New() statementIntf {
@@ -13,7 +12,7 @@ func (assignmentStatement) New() statementIntf {
 }
 
 func (assignmentStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+	return &explist{}
 }
 
 func (assignmentStatement) TypeOf() typeStatement {
@@ -21,60 +20,24 @@ func (assignmentStatement) TypeOf() typeStatement {
 }
 
 func (s *assignmentStatement) IsEnd(prev, cur *element) bool {
-	return len(s.Namelist) == len(s.Explist.List)
+	return false //len(s.Namelist) == len(s.Explist.List)
 	// return el.Token.Type != nComma
 }
 
 func (s *assignmentStatement) HasSyntax(el element) bool {
-	var syntax []tokenID
-
-	switch s.LastTokenType {
-	case nID:
-		syntax = []tokenID{nComma, nAssing}
-	case nComma:
-		syntax = []tokenID{
-			nID,
-			// exp
-			nNumber,
-		}
-	case nAssing:
-		// nil | false | true | Numeral | LiteralString | ‘...’ | functiondef |
-		// prefixexp | tableconstructor | exp binop exp | unop exp
-		syntax = []tokenID{
-			nNil,
-			nFalse,
-			nTrue,
-			nNumber,
-			nString,
-			nVararg,
-			nFunction,
-			nCurlyBracket,
-		}
-	case nNumber:
-		syntax = []tokenID{nComma}
-	}
-
-	for _, v := range syntax {
-		if v == tokenID(el.Token.Type) {
-			return true
-		}
-	}
-
 	return false
 }
 
 func (s *assignmentStatement) Append(el *element) {
-	s.LastTokenType = tokenID(el.Token.Type)
-
-	if el.Token.Type == nAssing {
-		s.EqPart = el
+	if el.Token.Type == nAssign {
+		s.HasEqPart = true
 		return
 	}
 
-	if s.EqPart == nil {
-		s.Namelist = append(s.Namelist, el)
-		return
-	}
+	// if s.EqPart == nil {
+	// 	s.Namelist = append(s.Namelist, el)
+	// 	return
+	// }
 
 	switch el.Token.Type {
 	case nNumber:
@@ -86,5 +49,12 @@ func (s *assignmentStatement) AppendStatement(st statementIntf) {
 	switch v := st.(type) {
 	case *functionStatement:
 		s.Explist.List = append(s.Explist.List, newExp(v))
+
+	case *explist:
+		if s.HasEqPart {
+			s.Explist = v
+		} else {
+			s.VarList = v
+		}
 	}
 }
