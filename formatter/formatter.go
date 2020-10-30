@@ -1,14 +1,45 @@
 package formatter
 
-import "fmt"
+import (
+	"io"
+)
 
 const (
 	defaultStyle = "\x1b[0m"
 	mMagenta     = "\x1b[35m"
 )
 
+type Config struct {
+	IndentSize int `mapstructure:"indent-size"`
+}
+
+func Format(c Config, b []byte, w io.Writer) error {
+	doc, err := parse(b)
+	if err != nil {
+		return err
+	}
+
+	for _, b := range doc.Body {
+		b.Format(&c, w)
+	}
+
+	return nil
+}
+
+func DefaultConfig() Config {
+	return Config{
+		IndentSize: 4,
+	}
+}
+
+func newLine(w io.Writer) error {
+	_, err := w.Write([]byte(newLineSymbol))
+
+	return err
+}
+
 // Parse code.
-func Parse(code []byte) (*document, error) {
+func parse(code []byte) (*document, error) {
 	var (
 		prevElement      *element
 		curElement       *element
@@ -32,11 +63,11 @@ func Parse(code []byte) (*document, error) {
 
 		curElement = &el
 
-		if prevElement != nil {
-			fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
-		}
+		// if prevElement != nil {
+		// 	fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
+		// }
 
-		fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
+		// fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
 
 		if currentStatement != nil {
 			for ok := currentStatement.IsEnd(prevElement, curElement); ok; ok = currentStatement.IsEnd(prevElement, curElement) {
@@ -61,6 +92,25 @@ func Parse(code []byte) (*document, error) {
 					nThis:        &prefixexpStatement{},
 					nParentheses: &funcCallStatement{},
 				},
+			}
+		}
+
+		if curElement.Token.Type == nParentheses && currentStatement.TypeOf() == tsExp {
+			s = map[tokenID]branch{
+				nParentheses: {
+					nThis: &prefixexpStatement{},
+					// nParentheses: &funcCallStatement{},
+				},
+			}
+		}
+
+		if currentStatement != nil && prevElement != nil {
+			if currentStatement.TypeOf() == tsFunction && prevElement.Token.Type == nParentheses {
+				s = map[tokenID]branch{
+					nParentheses: {
+						nID: &explist{},
+					},
+				}
 			}
 		}
 

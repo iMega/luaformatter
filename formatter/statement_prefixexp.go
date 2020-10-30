@@ -1,5 +1,9 @@
 package formatter
 
+import (
+	"io"
+)
+
 // var ::=  Name | prefixexp ‘[’ exp ‘]’ | prefixexp ‘.’ Name
 // prefixexp ::= var | functioncall | ‘(’ exp ‘)’
 // functioncall ::=  prefixexp args | prefixexp ‘:’ Name args
@@ -26,6 +30,10 @@ func (s *prefixexpStatement) InnerStatement(prev, cur *element) statementIntf {
 		return &exp{}
 	}
 
+	if cur.Token.Type == nParentheses {
+		return &funcCallStatement{}
+	}
+
 	return nil
 }
 
@@ -45,6 +53,15 @@ func (s *prefixexpStatement) Append(el *element) {
 	if el.Token.Type == nClosingSquareBracket {
 		return
 	}
+
+	if el.Token.Type == nClosingParentheses {
+		return
+	}
+
+	if el.Token.Type == nEnd {
+		return
+	}
+
 	s.Element = el
 }
 
@@ -54,5 +71,47 @@ func (s *prefixexpStatement) AppendStatement(st statementIntf) {
 		s.Prefixexp = v
 	case *exp:
 		s.FieldAccessorExp = v
+	case *funcCallStatement:
+		v.Prefixexp = &prefixexpStatement{
+			Element: s.Element,
+		}
+		s.Element = nil
+		s.FuncCall = v
 	}
+}
+
+func (s *prefixexpStatement) Format(c *Config, w io.Writer) error {
+	if st := s.Element; st != nil {
+		if err := st.Format(c, w); err != nil {
+			return err
+		}
+	}
+
+	if st := s.FieldAccessorExp; st != nil {
+		if _, err := w.Write([]byte("[")); err != nil {
+			return err
+		}
+
+		if err := st.Format(c, w); err != nil {
+			return err
+		}
+
+		if _, err := w.Write([]byte("]")); err != nil {
+			return err
+		}
+	}
+
+	if st := s.Prefixexp; st != nil {
+		if err := st.Format(c, w); err != nil {
+			return err
+		}
+	}
+
+	if st := s.FuncCall; st != nil {
+		if err := st.Format(c, w); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

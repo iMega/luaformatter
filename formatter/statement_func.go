@@ -1,11 +1,13 @@
 package formatter
 
+import "io"
+
 type functionStatement struct {
-	LocalElement bool
-	NamePart     *element
-	ParlistPart  parlist
-	Body         []Block
-	Anonymous    bool
+	IsLocal     bool
+	Name        *element
+	Parlist     *explist
+	Body        []Block
+	IsAnonymous bool
 }
 
 func (functionStatement) New() statementIntf {
@@ -35,28 +37,32 @@ func (s *functionStatement) HasSyntax(el element) bool {
 }
 
 func (s *functionStatement) Append(el *element) {
-	switch el.Token.Type {
-	case nLocal:
-		s.LocalElement = true
+	if el.Token.Type == nLocal {
+		s.IsLocal = true
 
-	case nParentheses:
-		s.Anonymous = s.NamePart == nil
+		return
+	}
 
-	case nID:
-		if s.Anonymous {
-			s.ParlistPart = append(s.ParlistPart, el)
+	if el.Token.Type == nID {
+		s.Name = el
 
-			return
-		}
+		return
+	}
 
-		s.NamePart = el
-
-	case nVararg:
-		s.ParlistPart = append(s.ParlistPart, el)
+	if s.Name == nil && el.Token.Type == nParentheses {
+		s.IsAnonymous = true
 	}
 }
 
 func (s *functionStatement) AppendStatement(st statementIntf) {
+	if s.Parlist == nil {
+		if v, ok := st.(*explist); ok {
+			s.Parlist = v
+
+			return
+		}
+	}
+
 	if v, ok := st.(*returnStatement); ok {
 		s.Body = append(s.Body, Block{Return: v})
 
@@ -64,4 +70,48 @@ func (s *functionStatement) AppendStatement(st statementIntf) {
 	}
 
 	s.Body = append(s.Body, Block{Statement: newStatement(st)})
+}
+
+func (s *functionStatement) Format(c *Config, w io.Writer) error {
+	if s.IsLocal {
+		if _, err := w.Write([]byte("local ")); err != nil {
+			return err
+		}
+	}
+
+	if _, err := w.Write([]byte("function ")); err != nil {
+		return err
+	}
+
+	if s.Name != nil {
+		if err := s.Name.Format(c, w); err != nil {
+			return err
+		}
+	}
+
+	if _, err := w.Write([]byte("(")); err != nil {
+		return err
+	}
+
+	if st := s.Parlist; st != nil {
+		if err := st.Format(c, w); err != nil {
+			return err
+		}
+	}
+
+	if _, err := w.Write([]byte(")\n")); err != nil {
+		return err
+	}
+
+	for _, b := range s.Body {
+		if err := b.Format(c, w); err != nil {
+			return err
+		}
+	}
+
+	if _, err := w.Write([]byte("end")); err != nil {
+		return err
+	}
+
+	return nil
 }

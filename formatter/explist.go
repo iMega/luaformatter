@@ -1,5 +1,7 @@
 package formatter
 
+import "io"
+
 type explist struct {
 	List []*exp // separator ,
 }
@@ -38,4 +40,21 @@ func (s *explist) AppendStatement(st statementIntf) {
 	if v, ok := st.(*exp); ok {
 		s.List = append(s.List, v)
 	}
+}
+
+func (s *explist) Format(c *Config, w io.Writer) error {
+	l := len(s.List)
+	for idx, e := range s.List {
+		if err := e.Format(c, w); err != nil {
+			return err
+		}
+
+		if idx < l-1 {
+			if _, err := w.Write([]byte(", ")); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }

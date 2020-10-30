@@ -1,5 +1,7 @@
 package formatter
 
+import "io"
+
 type assignmentStatement struct {
 	IsLocal   bool
 	VarList   *explist
@@ -57,4 +59,8 @@ func (s *assignmentStatement) AppendStatement(st statementIntf) {
 			s.VarList = v
 		}
 	}
+}
+
+func (s *assignmentStatement) Format(w io.Writer) error {
+	return nil
 }

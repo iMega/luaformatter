@@ -52,6 +52,7 @@ var (
 		nBreak: {nThis: &breakStatement{}},
 		nAddition: {
 			nNumber: &exp{},
+			nID:     &exp{},
 		},
 		nEquality: {
 			nNumber: &exp{},
@@ -63,6 +64,7 @@ var (
 			nID:       &exp{},
 			nNumber:   &exp{},
 			nFunction: &exp{},
+			nVararg:   &exp{},
 		},
 		nDo: {
 			nThis: &doStatement{},

@@ -20,6 +20,130 @@ func TestParseReturn(t *testing.T) {
 	}{
 		{
 			skip: false,
+			name: "return statement with funccall",
+			args: args{
+				code: []byte(`
+function fwrite(fmt, ...) return io.write(string.format(fmt, unpack(arg))) end
+`,
+				),
+			},
+			want: &document{
+				Body: map[uint64]Block{
+					0: {
+						Return: &returnStatement{
+							Explist: &explist{
+								List: []*exp{
+									{
+										Prefixexp: &prefixexpStatement{
+											FuncCall: &funcCallStatement{
+												Prefixexp: &prefixexpStatement{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "io.write",
+															Lexeme:      []byte("io.write"),
+															TC:          8,
+															StartLine:   2,
+															StartColumn: 8,
+															EndLine:     2,
+															EndColumn:   15,
+														},
+													},
+												},
+												Explist: &explist{
+													List: []*exp{
+														{
+															Prefixexp: &prefixexpStatement{
+																FuncCall: &funcCallStatement{
+																	Prefixexp: &prefixexpStatement{
+																		Element: &element{
+																			Token: &lexmachine.Token{
+																				Type:        nID,
+																				Value:       "string.format",
+																				Lexeme:      []byte("string.format"),
+																				TC:          17,
+																				StartLine:   2,
+																				StartColumn: 17,
+																				EndLine:     2,
+																				EndColumn:   29,
+																			},
+																		},
+																	},
+																	Explist: &explist{
+																		List: []*exp{
+																			{
+																				Element: &element{
+																					Token: &lexmachine.Token{
+																						Type:        nID,
+																						Value:       "fmt",
+																						Lexeme:      []byte("fmt"),
+																						TC:          31,
+																						StartLine:   2,
+																						StartColumn: 31,
+																						EndLine:     2,
+																						EndColumn:   33,
+																					},
+																				},
+																			},
+																			{
+																				Prefixexp: &prefixexpStatement{
+																					FuncCall: &funcCallStatement{
+																						Prefixexp: &prefixexpStatement{
+																							Element: &element{
+																								Token: &lexmachine.Token{
+																									Type:        nID,
+																									Value:       "unpack",
+																									Lexeme:      []byte("unpack"),
+																									TC:          36,
+																									StartLine:   2,
+																									StartColumn: 36,
+																									EndLine:     2,
+																									EndColumn:   41,
+																								},
+																							},
+																						},
+																						Explist: &explist{
+																							List: []*exp{
+																								{
+																									Element: &element{
+																										Token: &lexmachine.Token{
+																											Type:        nID,
+																											Value:       "arg",
+																											Lexeme:      []byte("arg"),
+																											TC:          43,
+																											StartLine:   2,
+																											StartColumn: 43,
+																											EndLine:     2,
+																											EndColumn:   45,
+																										},
+																									},
+																								},
+																							},
+																						},
+																					},
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				QtyBlocks: 1,
+			},
+			wantErr: false,
+		},
+		{
+			skip: true,
 			name: "return statement",
 			args: args{
 				code: []byte(`
@@ -38,7 +162,7 @@ return
 			wantErr: false,
 		},
 		{
-			skip: false,
+			skip: true,
 			name: "return statement with two exp",
 			args: args{
 				code: []byte(`
@@ -132,7 +256,7 @@ return function () end
 								List: []*exp{
 									{
 										Func: &functionStatement{
-											Anonymous: true,
+											IsAnonymous: true,
 										},
 									},
 								},
@@ -161,12 +285,12 @@ return function () end, function () end
 								List: []*exp{
 									{
 										Func: &functionStatement{
-											Anonymous: true,
+											IsAnonymous: true,
 										},
 									},
 									{
 										Func: &functionStatement{
-											Anonymous: true,
+											IsAnonymous: true,
 										},
 									},
 								},
@@ -184,7 +308,7 @@ return function () end, function () end
 			continue
 		}
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Parse(tt.args.code)
+			got, err := parse(tt.args.code)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
 				return

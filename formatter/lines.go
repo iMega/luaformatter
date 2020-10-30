@@ -12,10 +12,6 @@ type line struct {
 	Template template
 }
 
-func NewLine() line {
-	return line{}
-}
-
 func (l line) Format() []byte {
 	var (
 		buf   bytes.Buffer

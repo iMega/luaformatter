@@ -1,5 +1,9 @@
 package formatter
 
+import (
+	"io"
+)
+
 type exp struct {
 	Element   *element           // nil | false | true | Numeral | LiteralString | ‘...’
 	Table     *tableconstructor  // {
@@ -45,9 +49,11 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 			nInequality:    false,
 			nEquality:      false,
 			nSquareBracket: false,
+			nParentheses:   false,
 		},
 		nAddition: {
 			nNumber: false,
+			nID:     false,
 		},
 		nInequality: {
 			nNumber: false,
@@ -57,6 +63,9 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 		},
 		nSquareBracket: {
 			nString: false,
+		},
+		nParentheses: {
+			nID: false,
 		},
 	}
 
@@ -135,4 +144,20 @@ func (s *exp) AppendStatement(st statementIntf) {
 
 		s.Prefixexp = v
 	}
+}
+
+func (s *exp) Format(c *Config, w io.Writer) error {
+	if st := s.Element; st != nil {
+		if err := st.Format(c, w); err != nil {
+			return err
+		}
+	}
+
+	if st := s.Prefixexp; st != nil {
+		if err := st.Format(c, w); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

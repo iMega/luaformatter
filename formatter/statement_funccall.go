@@ -1,5 +1,9 @@
 package formatter
 
+import (
+	"io"
+)
+
 type funcCallStatement struct {
 	Prefixexp *prefixexpStatement
 	Explist   *explist
@@ -31,4 +35,28 @@ func (s *funcCallStatement) AppendStatement(st statementIntf) {
 	case *explist:
 		s.Explist = v
 	}
+}
+
+func (s *funcCallStatement) Format(c *Config, w io.Writer) error {
+	if st := s.Prefixexp; st != nil {
+		if err := st.Format(c, w); err != nil {
+			return err
+		}
+	}
+
+	if _, err := w.Write([]byte("(")); err != nil {
+		return err
+	}
+
+	if st := s.Explist; st != nil {
+		if err := st.Format(c, w); err != nil {
+			return err
+		}
+	}
+
+	if _, err := w.Write([]byte(")")); err != nil {
+		return err
+	}
+
+	return nil
 }

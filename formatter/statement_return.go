@@ -1,5 +1,7 @@
 package formatter
 
+import "io"
+
 type returnStatement struct {
 	Explist *explist
 }
@@ -46,4 +48,22 @@ func (s *returnStatement) AppendStatement(st statementIntf) {
 	}
 
 	s.Explist = el
+}
+
+func (s *returnStatement) Format(c *Config, w io.Writer) error {
+	if _, err := w.Write([]byte("return")); err != nil {
+		return err
+	}
+
+	if st := s.Explist; st != nil {
+		if _, err := w.Write([]byte(" ")); err != nil {
+			return err
+		}
+
+		if err := st.Format(c, w); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

@@ -294,7 +294,7 @@ a["bb"]["cc"].dd.ee["ff"], g["hh"] = 1, 2
 			continue
 		}
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Parse(tt.args.code)
+			got, err := parse(tt.args.code)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
 				return

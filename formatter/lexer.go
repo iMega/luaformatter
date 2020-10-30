@@ -1,6 +1,7 @@
 package formatter
 
 import (
+	"io"
 	"strings"
 
 	"github.com/timtadh/lexmachine"
@@ -71,6 +72,12 @@ type element struct {
 	Resolved bool
 	NL       int
 	AddSpace bool
+}
+
+func (s *element) Format(c *Config, w io.Writer) error {
+	_, err := w.Write(s.Token.Lexeme)
+
+	return err
 }
 
 func (s *scanner) Scan() (element, error) {
