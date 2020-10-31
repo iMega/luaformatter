@@ -23,7 +23,7 @@ func TestParseReturn(t *testing.T) {
 			name: "return statement with funccall",
 			args: args{
 				code: []byte(`
-function fwrite(fmt, ...) return io.write(string.format(fmt, unpack(arg))) end
+return io.write(string.format(fmt, unpack(arg)))
 `,
 				),
 			},
