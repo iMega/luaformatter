@@ -61,6 +61,6 @@ func (s *assignmentStatement) AppendStatement(st statementIntf) {
 	}
 }
 
-func (s *assignmentStatement) Format(w io.Writer) error {
+func (s *assignmentStatement) Format(c *Config, p printer, w io.Writer) error {
 	return nil
 }

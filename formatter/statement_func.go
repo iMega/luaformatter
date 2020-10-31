@@ -72,7 +72,7 @@ func (s *functionStatement) AppendStatement(st statementIntf) {
 	s.Body = append(s.Body, Block{Statement: newStatement(st)})
 }
 
-func (s *functionStatement) Format(c *Config, w io.Writer) error {
+func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 	if s.IsLocal {
 		if _, err := w.Write([]byte("local ")); err != nil {
 			return err
@@ -99,14 +99,25 @@ func (s *functionStatement) Format(c *Config, w io.Writer) error {
 		}
 	}
 
-	if _, err := w.Write([]byte(")\n")); err != nil {
+	if _, err := w.Write([]byte(")")); err != nil {
 		return err
 	}
 
+	if err := newLine(w); err != nil {
+		return err
+	}
+
+	inner := printer{
+		Pad: p.Pad + c.IndentSize,
+	}
 	for _, b := range s.Body {
-		if err := b.Format(c, w); err != nil {
+		if err := b.Format(c, inner, w); err != nil {
 			return err
 		}
+	}
+
+	if err := newLine(w); err != nil {
+		return err
 	}
 
 	if _, err := w.Write([]byte("end")); err != nil {

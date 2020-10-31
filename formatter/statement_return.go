@@ -50,7 +50,7 @@ func (s *returnStatement) AppendStatement(st statementIntf) {
 	s.Explist = el
 }
 
-func (s *returnStatement) Format(c *Config, w io.Writer) error {
+func (s *returnStatement) Format(c *Config, p printer, w io.Writer) error {
 	if _, err := w.Write([]byte("return")); err != nil {
 		return err
 	}

@@ -69,9 +69,13 @@ type Block struct {
 	Return    *returnStatement
 }
 
-func (b *Block) Format(c *Config, w io.Writer) error {
+func (b *Block) Format(c *Config, p printer, w io.Writer) error {
+	if err := p.WritePad(w); err != nil {
+		return err
+	}
+
 	if s := b.Statement.Assignment; s != nil {
-		if err := s.Format(w); err != nil {
+		if err := s.Format(c, p, w); err != nil {
 			return err
 		}
 	}
@@ -83,13 +87,13 @@ func (b *Block) Format(c *Config, w io.Writer) error {
 	}
 
 	if s := b.Statement.Function; s != nil {
-		if err := s.Format(c, w); err != nil {
+		if err := s.Format(c, p, w); err != nil {
 			return err
 		}
 	}
 
 	if s := b.Return; s != nil {
-		if err := s.Format(c, w); err != nil {
+		if err := s.Format(c, p, w); err != nil {
 			return err
 		}
 	}
