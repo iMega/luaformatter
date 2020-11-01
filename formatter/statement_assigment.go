@@ -30,21 +30,22 @@ func (s *assignmentStatement) HasSyntax(el element) bool {
 }
 
 func (s *assignmentStatement) Append(el *element) {
+	if el.Token.Type == nLocal {
+		s.IsLocal = true
+
+		return
+	}
+
 	if el.Token.Type == nAssign {
 		s.HasEqPart = true
 
 		return
 	}
 
-	// if s.EqPart == nil {
-	// 	s.Namelist = append(s.Namelist, el)
-	// 	return
+	// switch el.Token.Type {
+	// case nNumber:
+	// 	s.Explist.List = append(s.Explist.List, newExp(el))
 	// }
-
-	switch el.Token.Type {
-	case nNumber:
-		s.Explist.List = append(s.Explist.List, newExp(el))
-	}
 }
 
 func (s *assignmentStatement) AppendStatement(st statementIntf) {
@@ -62,5 +63,25 @@ func (s *assignmentStatement) AppendStatement(st statementIntf) {
 }
 
 func (s *assignmentStatement) Format(c *Config, p printer, w io.Writer) error {
+	if s.IsLocal {
+		if _, err := w.Write([]byte("local ")); err != nil {
+			return err
+		}
+	}
+
+	if err := s.VarList.Format(c, w); err != nil {
+		return err
+	}
+
+	if s.HasEqPart {
+		if _, err := w.Write([]byte(" = ")); err != nil {
+			return err
+		}
+	}
+
+	if err := s.Explist.Format(c, w); err != nil {
+		return err
+	}
+
 	return nil
 }

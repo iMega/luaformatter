@@ -1,5 +1,7 @@
 package formatter
 
+import "bytes"
+
 type labelStatement struct {
 	Element *element
 }
@@ -21,9 +23,9 @@ func (s *labelStatement) IsEnd(prev, cur *element) bool {
 }
 
 func (s *labelStatement) Append(el *element) {
-	if el.Token.Type == nLabel {
-		return
-	}
+	el.Token.Lexeme = bytes.Trim(el.Token.Lexeme, "::")
+	el.Token.Lexeme = bytes.TrimSpace(el.Token.Lexeme)
+	el.Token.Value = string(el.Token.Lexeme)
 
 	s.Element = el
 }

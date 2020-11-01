@@ -134,6 +134,9 @@ func newBlock(st statementIntf) Block {
 
 	case *returnStatement:
 		bl.Return = v
+
+	case *commentStatement:
+		bl.Statement = statement{Comment: v}
 	}
 
 	return bl

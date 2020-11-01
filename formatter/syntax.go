@@ -24,6 +24,7 @@ var (
 		},
 		nAssign: {
 			nNumber:   &explist{},
+			nID:       &explist{},
 			nFunction: &functionStatement{},
 		},
 		nFunction: {
@@ -78,6 +79,13 @@ var (
 		},
 		nUntil: {
 			nID: &exp{},
+		},
+		nLocal: {
+			nID:       &assignmentStatement{},
+			nFunction: &functionStatement{},
+		},
+		nComment: {
+			nThis: &commentStatement{},
 		},
 	}
 )

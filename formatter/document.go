@@ -98,6 +98,12 @@ func (b *Block) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
+	if s := b.Statement.Comment; s != nil {
+		if err := s.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -113,7 +119,8 @@ type statementIntf interface {
 type typeStatement int
 
 const (
-	tsAssignment = iota
+	tsNone = iota
+	tsAssignment
 	tsFunction
 	tsIf
 	tsReturn
@@ -136,6 +143,7 @@ type statement struct {
 	ForNumerical *forNumericalStatement
 	ForGeneric   *forGenericStatement
 	Function     *functionStatement
+	Comment      *commentStatement
 }
 
 func newStatement(st statementIntf) statement {

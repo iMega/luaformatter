@@ -37,7 +37,7 @@ func parse(code []byte) (*document, error) {
 				if cs == nil {
 					doc.AddBlock(newBlock(currentStatement))
 
-					el.Resolved = true
+					// el.Resolved = true
 					currentStatement = cs
 
 					break
@@ -48,12 +48,16 @@ func parse(code []byte) (*document, error) {
 		}
 
 		s := syntax
+		// prefixexp assignment or function call
 		if curElement.Token.Type == nID && currentStatement == nil {
 			s = map[tokenID]branch{
 				nID: {
 					nThis:        &prefixexpStatement{},
 					nParentheses: &funcCallStatement{},
 				},
+			}
+			if prevElement != nil && prevElement.Token.Type == nLocal {
+				s = syntax
 			}
 		}
 
@@ -77,6 +81,7 @@ func parse(code []byte) (*document, error) {
 		}
 
 		if st := getStatement(s, prevElement, curElement); st != nil {
+			isPrefixexpConvertAssignment := false
 			if currentStatement == nil {
 				chainSt.Append(st)
 
@@ -84,7 +89,6 @@ func parse(code []byte) (*document, error) {
 					st.Append(prevElement)
 				}
 			} else {
-				isPrefixexpConvertAssignment := false
 				if currentStatement.TypeOf() == tsPrefixexpStatement && st.TypeOf() == tsFuncCallStatement {
 					st.AppendStatement(chainSt.First())
 					chainSt.Reset()
@@ -105,21 +109,20 @@ func parse(code []byte) (*document, error) {
 				// 	chainSt.Reset()
 				// 	chainSt.Append(st)
 				// }
-
-				for inner := st.InnerStatement(prevElement, curElement); inner != nil; inner = st.InnerStatement(prevElement, curElement) {
-					if st.TypeOf() != inner.TypeOf() {
-						st.AppendStatement(inner)
-						chainSt.Append(inner)
-					}
-					st = inner
+			}
+			for inner := st.InnerStatement(prevElement, curElement); inner != nil; inner = st.InnerStatement(prevElement, curElement) {
+				if st.TypeOf() != inner.TypeOf() {
+					st.AppendStatement(inner)
+					chainSt.Append(inner)
 				}
+				st = inner
+			}
 
-				if isPrefixexpConvertAssignment {
-					st.AppendStatement(currentStatement)
-					// st.AppendStatement(chainSt.First())
-					// chainSt.Reset()
-					// chainSt.Append(st)
-				}
+			if isPrefixexpConvertAssignment {
+				st.AppendStatement(currentStatement)
+				// st.AppendStatement(chainSt.First())
+				// chainSt.Reset()
+				// chainSt.Append(st)
 			}
 
 			currentStatement = st

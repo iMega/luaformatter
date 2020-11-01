@@ -25,6 +25,8 @@ func newScanner(code []byte) (*scanner, error) {
 	lexer.Add([]byte("( |\t|\f|\r|\n)+"), skip)
 	lexer.Add([]byte(`--\[\[([^\]\]])*\]\]`), token(nCommentLong))
 	lexer.Add([]byte(`--( |\S)*`), token(nComment))
+	lexer.Add([]byte(`::([^::])*::`), token(nLabel))
+	// lexer.Add([]byte(`::\s*(\S+)\s*::`), token(nLabel))
 	lexer.Add([]byte(`\n\s*\n`), token(nLF))
 
 	if err := lexer.Compile(); err != nil {
@@ -213,7 +215,6 @@ var (
 		nComma:     `,`,
 		nStar:      `\*`,
 		nVararg:    `\.\.\.`,
-		nLabel:     "::",
 
 		// binop ::=  ‘+’ | ‘-’ | ‘*’ | ‘/’ | ‘//’ | ‘^’ | ‘%’ |
 		//      ‘&’ | ‘~’ | ‘|’ | ‘>>’ | ‘<<’ | ‘..’ |
