@@ -6,6 +6,7 @@ import (
 
 type document struct {
 	MaxWidth  int
+	Bod       statementIntf
 	Body      map[uint64]Block
 	QtyBlocks uint64
 }
@@ -80,8 +81,14 @@ func (b *Block) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
+	if st := b.Statement.If; st != nil {
+		if err := st.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
 	if s := b.Statement.FuncCall; s != nil {
-		if err := s.Format(c, w); err != nil {
+		if err := s.Format(c, p, w); err != nil {
 			return err
 		}
 	}
@@ -104,6 +111,12 @@ func (b *Block) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
+	if s := b.Statement.NewLine; s != nil {
+		if err := s.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -114,6 +127,7 @@ type statementIntf interface {
 	InnerStatement(prev, cur *element) statementIntf
 	IsEnd(prev, cur *element) bool
 	TypeOf() typeStatement
+	GetBody(prevSt statementIntf, cur *element) statementIntf
 }
 
 type typeStatement int
@@ -123,6 +137,7 @@ const (
 	tsAssignment
 	tsFunction
 	tsIf
+	tsBody
 	tsReturn
 	tsExp
 	tsExpList
@@ -144,6 +159,7 @@ type statement struct {
 	ForGeneric   *forGenericStatement
 	Function     *functionStatement
 	Comment      *commentStatement
+	NewLine      *newlineStatement
 }
 
 func newStatement(st statementIntf) statement {

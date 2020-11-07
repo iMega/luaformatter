@@ -1,8 +1,10 @@
 package formatter
 
+import "io"
+
 type ifStatement struct {
 	Exp        *exp
-	Body       []Block
+	Body       statementIntf
 	ElseIfPart []*elseifStatement
 	ElsePart   *elseStatement
 }
@@ -33,9 +35,57 @@ func (s *ifStatement) AppendStatement(st statementIntf) {
 		s.ElseIfPart = append(s.ElseIfPart, v)
 	case *elseStatement:
 		s.ElsePart = v
-	default:
-		s.Body = append(s.Body, newBlock(st))
+	case *prefixexpStatement:
+		return
+		// default:
+		// s.Body = append(s.Body, newBlock(st))
 	}
+}
+
+func (s *ifStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	if cur.Token.Type != nThen {
+		return prevSt
+	}
+
+	if s.Body == nil {
+		s.Body = new(body).New()
+	}
+
+	return s.Body
+}
+
+func (s *ifStatement) Format(c *Config, p printer, w io.Writer) error {
+	if _, err := w.Write([]byte("if ")); err != nil {
+		return err
+	}
+
+	if s.Exp != nil {
+		if err := s.Exp.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
+	if _, err := w.Write([]byte(" then")); err != nil {
+		return err
+	}
+
+	if err := newLine(w); err != nil {
+		return err
+	}
+
+	if st, ok := s.Body.(*body); ok {
+		pp := p
+		pp.Pad = p.Pad + 4
+		if err := st.Format(c, pp, w); err != nil {
+			return err
+		}
+	}
+
+	if _, err := w.Write([]byte("end")); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 type elseifStatement struct {
@@ -71,6 +121,10 @@ func (s *elseifStatement) AppendStatement(st statementIntf) {
 	s.Body = append(s.Body, newBlock(st))
 }
 
+func (s *elseifStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}
+
 type elseStatement struct {
 	Body []Block
 }
@@ -95,4 +149,8 @@ func (s *elseStatement) Append(el *element) {}
 
 func (s *elseStatement) AppendStatement(st statementIntf) {
 	s.Body = append(s.Body, newBlock(st))
+}
+
+func (s *elseStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
 }

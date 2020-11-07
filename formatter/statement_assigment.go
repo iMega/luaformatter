@@ -22,6 +22,12 @@ func (assignmentStatement) TypeOf() typeStatement {
 }
 
 func (s *assignmentStatement) IsEnd(prev, cur *element) bool {
+	if s.HasEqPart && s.VarList != nil && s.Explist != nil {
+		if len(s.VarList.List) == len(s.Explist.List) {
+			return true
+		}
+	}
+
 	return false
 }
 
@@ -62,6 +68,10 @@ func (s *assignmentStatement) AppendStatement(st statementIntf) {
 	}
 }
 
+func (s *assignmentStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}
+
 func (s *assignmentStatement) Format(c *Config, p printer, w io.Writer) error {
 	if s.IsLocal {
 		if _, err := w.Write([]byte("local ")); err != nil {
@@ -69,7 +79,7 @@ func (s *assignmentStatement) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
-	if err := s.VarList.Format(c, w); err != nil {
+	if err := s.VarList.Format(c, p, w); err != nil {
 		return err
 	}
 
@@ -79,7 +89,7 @@ func (s *assignmentStatement) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
-	if err := s.Explist.Format(c, w); err != nil {
+	if err := s.Explist.Format(c, p, w); err != nil {
 		return err
 	}
 

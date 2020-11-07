@@ -29,3 +29,7 @@ func (s *gotoStatement) Append(el *element) {
 }
 
 func (s *gotoStatement) AppendStatement(st statementIntf) {}
+
+func (s *gotoStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}

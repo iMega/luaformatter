@@ -19,7 +19,7 @@ func TestParseFunction(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			skip: true,
+			skip: false,
 			name: "empty function",
 			args: args{
 				code: []byte(`
@@ -29,32 +29,35 @@ end
 				),
 			},
 			want: &document{
-				Body: map[uint64]Block{
-					0: {
-						Statement: statement{
-							Function: &functionStatement{
-								Name: &element{
-									Token: &lexmachine.Token{
-										Type:        nID,
-										Value:       "a",
-										Lexeme:      []byte("a"),
-										TC:          10,
-										StartLine:   2,
-										StartColumn: 10,
-										EndLine:     2,
-										EndColumn:   10,
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Function: &functionStatement{
+									Name: &element{
+										Token: &lexmachine.Token{
+											Type:        nID,
+											Value:       "a",
+											Lexeme:      []byte("a"),
+											TC:          10,
+											StartLine:   2,
+											StartColumn: 10,
+											EndLine:     2,
+											EndColumn:   10,
+										},
 									},
 								},
 							},
 						},
 					},
+					Qty: 1,
 				},
-				QtyBlocks: 1,
 			},
 			wantErr: false,
 		},
 		{
-			skip: true,
+			skip: false,
 			name: "empty two function",
 			args: args{
 				code: []byte(`
@@ -67,45 +70,51 @@ end
 				),
 			},
 			want: &document{
-				Body: map[uint64]Block{
-					0: {
-						Statement: statement{
-							Function: &functionStatement{
-								Name: &element{
-									Token: &lexmachine.Token{
-										Type:        nID,
-										Value:       "a",
-										Lexeme:      []byte("a"),
-										TC:          10,
-										StartLine:   2,
-										StartColumn: 10,
-										EndLine:     2,
-										EndColumn:   10,
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Function: &functionStatement{
+									Name: &element{
+										Token: &lexmachine.Token{
+											Type:        nID,
+											Value:       "a",
+											Lexeme:      []byte("a"),
+											TC:          10,
+											StartLine:   2,
+											StartColumn: 10,
+											EndLine:     2,
+											EndColumn:   10,
+										},
+									},
+								},
+							},
+						},
+						1: {Statement: statement{
+							NewLine: &newlineStatement{},
+						}},
+						2: {
+							Statement: statement{
+								Function: &functionStatement{
+									Name: &element{
+										Token: &lexmachine.Token{
+											Type:        nID,
+											Value:       "b",
+											Lexeme:      []byte("b"),
+											TC:          28,
+											StartLine:   5,
+											StartColumn: 10,
+											EndLine:     5,
+											EndColumn:   10,
+										},
 									},
 								},
 							},
 						},
 					},
-					1: {
-						Statement: statement{
-							Function: &functionStatement{
-								Name: &element{
-									Token: &lexmachine.Token{
-										Type:        nID,
-										Value:       "b",
-										Lexeme:      []byte("b"),
-										TC:          28,
-										StartLine:   5,
-										StartColumn: 10,
-										EndLine:     5,
-										EndColumn:   10,
-									},
-								},
-							},
-						},
-					},
+					Qty: 3,
 				},
-				QtyBlocks: 2,
 			},
 			wantErr: false,
 		},
@@ -121,95 +130,98 @@ end
 				),
 			},
 			want: &document{
-				Body: map[uint64]Block{
-					0: {
-						Statement: statement{
-							Function: &functionStatement{
-								Name: &element{
-									Token: &lexmachine.Token{
-										Type:        nID,
-										Value:       "sum",
-										Lexeme:      []byte("sum"),
-										TC:          10,
-										StartLine:   2,
-										StartColumn: 10,
-										EndLine:     2,
-										EndColumn:   12,
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Function: &functionStatement{
+									Name: &element{
+										Token: &lexmachine.Token{
+											Type:        nID,
+											Value:       "sum",
+											Lexeme:      []byte("sum"),
+											TC:          10,
+											StartLine:   2,
+											StartColumn: 10,
+											EndLine:     2,
+											EndColumn:   12,
+										},
 									},
-								},
-								Parlist: &explist{
-									List: []*exp{
-										{
-											Element: &element{
-												Token: &lexmachine.Token{
-													Type:        nID,
-													Value:       "a",
-													Lexeme:      []byte("a"),
-													TC:          14,
-													StartLine:   2,
-													StartColumn: 14,
-													EndLine:     2,
-													EndColumn:   14,
+									Parlist: &explist{
+										List: []*exp{
+											{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nID,
+														Value:       "a",
+														Lexeme:      []byte("a"),
+														TC:          14,
+														StartLine:   2,
+														StartColumn: 14,
+														EndLine:     2,
+														EndColumn:   14,
+													},
+												},
+											},
+											{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nID,
+														Value:       "b",
+														Lexeme:      []byte("b"),
+														TC:          17,
+														StartLine:   2,
+														StartColumn: 17,
+														EndLine:     2,
+														EndColumn:   17,
+													},
 												},
 											},
 										},
-										{
-											Element: &element{
-												Token: &lexmachine.Token{
-													Type:        nID,
-													Value:       "b",
-													Lexeme:      []byte("b"),
-													TC:          17,
-													StartLine:   2,
-													StartColumn: 17,
-													EndLine:     2,
-													EndColumn:   17,
-												},
-											},
-										},
 									},
-								},
-								Body: []Block{
-									{
-										Return: &returnStatement{
-											Explist: &explist{
-												List: []*exp{
-													{
-														Element: &element{
-															Token: &lexmachine.Token{
-																Type:        nID,
-																Value:       "a",
-																Lexeme:      []byte("a"),
-																TC:          31,
-																StartLine:   3,
-																StartColumn: 12,
-																EndLine:     3,
-																EndColumn:   12,
-															},
-														},
-														Binop: &element{
-															Token: &lexmachine.Token{
-																Type:        nAddition,
-																Value:       "+",
-																Lexeme:      []byte("+"),
-																TC:          33,
-																StartLine:   3,
-																StartColumn: 14,
-																EndLine:     3,
-																EndColumn:   14,
-															},
-														},
-														Exp: &exp{
+									Body: []Block{
+										{
+											Return: &returnStatement{
+												Explist: &explist{
+													List: []*exp{
+														{
 															Element: &element{
 																Token: &lexmachine.Token{
 																	Type:        nID,
-																	Value:       "b",
-																	Lexeme:      []byte("b"),
-																	TC:          35,
+																	Value:       "a",
+																	Lexeme:      []byte("a"),
+																	TC:          31,
 																	StartLine:   3,
-																	StartColumn: 16,
+																	StartColumn: 12,
 																	EndLine:     3,
-																	EndColumn:   16,
+																	EndColumn:   12,
+																},
+															},
+															Binop: &element{
+																Token: &lexmachine.Token{
+																	Type:        nAddition,
+																	Value:       "+",
+																	Lexeme:      []byte("+"),
+																	TC:          33,
+																	StartLine:   3,
+																	StartColumn: 14,
+																	EndLine:     3,
+																	EndColumn:   14,
+																},
+															},
+															Exp: &exp{
+																Element: &element{
+																	Token: &lexmachine.Token{
+																		Type:        nID,
+																		Value:       "b",
+																		Lexeme:      []byte("b"),
+																		TC:          35,
+																		StartLine:   3,
+																		StartColumn: 16,
+																		EndLine:     3,
+																		EndColumn:   16,
+																	},
 																},
 															},
 														},
@@ -222,8 +234,8 @@ end
 							},
 						},
 					},
+					Qty: 1,
 				},
-				QtyBlocks: 1,
 			},
 			wantErr: false,
 		},

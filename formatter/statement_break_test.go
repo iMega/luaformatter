@@ -27,14 +27,17 @@ break
 				),
 			},
 			want: &document{
-				Body: map[uint64]Block{
-					0: {
-						Statement: statement{
-							Break: &breakStatement{},
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Break: &breakStatement{},
+							},
 						},
 					},
+					Qty: 1,
 				},
-				QtyBlocks: 1,
 			},
 			wantErr: false,
 		},

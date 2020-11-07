@@ -34,6 +34,10 @@ func (s *prefixexpStatement) InnerStatement(prev, cur *element) statementIntf {
 		return &funcCallStatement{}
 	}
 
+	if cur.Token.Type == nString {
+		return &funcCallStatement{}
+	}
+
 	return nil
 }
 
@@ -42,7 +46,31 @@ func (prefixexpStatement) TypeOf() typeStatement {
 }
 
 func (s *prefixexpStatement) IsEnd(prev, cur *element) bool {
-	return cur.Token.Type == nAssign
+	if cur.Token.Type == nString {
+		return false
+	}
+
+	if cur.Token.Type == nParentheses { // function call
+		return false
+	}
+
+	if cur.Token.Type == nSquareBracket { // function call
+		return false
+	}
+
+	if cur.Token.Type == nClosingSquareBracket { // function call
+		return false
+	}
+
+	if cur.Token.Type == nID { // function call
+		return false
+	}
+
+	if cur.Token.Type == nComma { // assignment statement
+		return false
+	}
+
+	return true //cur.Token.Type == nAssign
 }
 
 func (s *prefixexpStatement) Append(el *element) {
@@ -80,9 +108,13 @@ func (s *prefixexpStatement) AppendStatement(st statementIntf) {
 	}
 }
 
-func (s *prefixexpStatement) Format(c *Config, w io.Writer) error {
+func (s *prefixexpStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}
+
+func (s *prefixexpStatement) Format(c *Config, p printer, w io.Writer) error {
 	if st := s.Element; st != nil {
-		if err := st.Format(c, w); err != nil {
+		if err := st.Format(c, p, w); err != nil {
 			return err
 		}
 	}
@@ -92,7 +124,7 @@ func (s *prefixexpStatement) Format(c *Config, w io.Writer) error {
 			return err
 		}
 
-		if err := st.Format(c, w); err != nil {
+		if err := st.Format(c, p, w); err != nil {
 			return err
 		}
 
@@ -102,13 +134,13 @@ func (s *prefixexpStatement) Format(c *Config, w io.Writer) error {
 	}
 
 	if st := s.Prefixexp; st != nil {
-		if err := st.Format(c, w); err != nil {
+		if err := st.Format(c, p, w); err != nil {
 			return err
 		}
 	}
 
 	if st := s.FuncCall; st != nil {
-		if err := st.Format(c, w); err != nil {
+		if err := st.Format(c, p, w); err != nil {
 			return err
 		}
 	}

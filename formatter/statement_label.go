@@ -19,7 +19,7 @@ func (labelStatement) TypeOf() typeStatement {
 }
 
 func (s *labelStatement) IsEnd(prev, cur *element) bool {
-	return s.Element != nil && cur.Token.Type == nLabel
+	return true
 }
 
 func (s *labelStatement) Append(el *element) {
@@ -31,3 +31,7 @@ func (s *labelStatement) Append(el *element) {
 }
 
 func (s *labelStatement) AppendStatement(st statementIntf) {}
+
+func (s *labelStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}

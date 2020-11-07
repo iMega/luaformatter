@@ -44,3 +44,7 @@ func (s *repeatStatement) AppendStatement(st statementIntf) {
 
 	s.Body = append(s.Body, newBlock(st))
 }
+
+func (s *repeatStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}

@@ -28,27 +28,30 @@ func TestParseLabel(t *testing.T) {
 				),
 			},
 			want: &document{
-				Body: map[uint64]Block{
-					0: {
-						Statement: statement{
-							Label: &labelStatement{
-								Element: &element{
-									Token: &lexmachine.Token{
-										Type:        nLabel,
-										Value:       "label",
-										Lexeme:      []byte("label"),
-										TC:          1,
-										StartLine:   2,
-										StartColumn: 1,
-										EndLine:     2,
-										EndColumn:   11,
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Label: &labelStatement{
+									Element: &element{
+										Token: &lexmachine.Token{
+											Type:        nLabel,
+											Value:       "label",
+											Lexeme:      []byte("label"),
+											TC:          1,
+											StartLine:   2,
+											StartColumn: 1,
+											EndLine:     2,
+											EndColumn:   11,
+										},
 									},
 								},
 							},
 						},
 					},
+					Qty: 1,
 				},
-				QtyBlocks: 1,
 			},
 			wantErr: false,
 		},
@@ -64,27 +67,30 @@ func TestParseLabel(t *testing.T) {
 				),
 			},
 			want: &document{
-				Body: map[uint64]Block{
-					0: {
-						Statement: statement{
-							Label: &labelStatement{
-								Element: &element{
-									Token: &lexmachine.Token{
-										Type:        nLabel,
-										Value:       "label",
-										Lexeme:      []byte("label"),
-										TC:          1,
-										StartLine:   2,
-										StartColumn: 1,
-										EndLine:     4,
-										EndColumn:   2,
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Label: &labelStatement{
+									Element: &element{
+										Token: &lexmachine.Token{
+											Type:        nLabel,
+											Value:       "label",
+											Lexeme:      []byte("label"),
+											TC:          1,
+											StartLine:   2,
+											StartColumn: 1,
+											EndLine:     4,
+											EndColumn:   2,
+										},
 									},
 								},
 							},
 						},
 					},
+					Qty: 1,
 				},
-				QtyBlocks: 1,
 			},
 			wantErr: false,
 		},
@@ -104,45 +110,53 @@ func TestParseLabel(t *testing.T) {
 				),
 			},
 			want: &document{
-				Body: map[uint64]Block{
-					0: {
-						Statement: statement{
-							Label: &labelStatement{
-								Element: &element{
-									Token: &lexmachine.Token{
-										Type:        nLabel,
-										Value:       "label",
-										Lexeme:      []byte("label"),
-										TC:          1,
-										StartLine:   2,
-										StartColumn: 1,
-										EndLine:     4,
-										EndColumn:   2,
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Label: &labelStatement{
+									Element: &element{
+										Token: &lexmachine.Token{
+											Type:        nLabel,
+											Value:       "label",
+											Lexeme:      []byte("label"),
+											TC:          1,
+											StartLine:   2,
+											StartColumn: 1,
+											EndLine:     4,
+											EndColumn:   2,
+										},
+									},
+								},
+							},
+						},
+						1: {
+							Statement: statement{
+								NewLine: &newlineStatement{},
+							},
+						},
+						2: {
+							Statement: statement{
+								Label: &labelStatement{
+									Element: &element{
+										Token: &lexmachine.Token{
+											Type:        nLabel,
+											Value:       "label2",
+											Lexeme:      []byte("label2"),
+											TC:          20,
+											StartLine:   6,
+											StartColumn: 1,
+											EndLine:     8,
+											EndColumn:   2,
+										},
 									},
 								},
 							},
 						},
 					},
-					1: {
-						Statement: statement{
-							Label: &labelStatement{
-								Element: &element{
-									Token: &lexmachine.Token{
-										Type:        nLabel,
-										Value:       "label2",
-										Lexeme:      []byte("label2"),
-										TC:          20,
-										StartLine:   6,
-										StartColumn: 1,
-										EndLine:     8,
-										EndColumn:   2,
-									},
-								},
-							},
-						},
-					},
+					Qty: 3,
 				},
-				QtyBlocks: 2,
 			},
 			wantErr: false,
 		},

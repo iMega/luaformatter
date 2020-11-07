@@ -31,3 +31,7 @@ func (s *tableStatement) Append(el *element) {}
 func (s *tableStatement) AppendStatement(st statementIntf) {
 	// s.Body = append(s.Body, newBlock(st))
 }
+
+func (s *tableStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}

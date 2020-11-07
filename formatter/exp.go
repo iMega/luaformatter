@@ -50,6 +50,7 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 			nEquality:      false,
 			nSquareBracket: false,
 			nParentheses:   false,
+			nString:        false,
 		},
 		nAddition: {
 			nNumber: false,
@@ -60,6 +61,7 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 		},
 		nEquality: {
 			nNumber: false,
+			nString: false,
 		},
 		nSquareBracket: {
 			nString: false,
@@ -92,6 +94,10 @@ func (s *exp) Append(el *element) {
 	}
 
 	if el.Token.Type == nParentheses || el.Token.Type == nClosingParentheses {
+		return
+	}
+
+	if el.Token.Type == nSquareBracket || el.Token.Type == nClosingSquareBracket {
 		return
 	}
 
@@ -146,15 +152,39 @@ func (s *exp) AppendStatement(st statementIntf) {
 	}
 }
 
-func (s *exp) Format(c *Config, w io.Writer) error {
+func (s *exp) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}
+
+func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 	if st := s.Element; st != nil {
-		if err := st.Format(c, w); err != nil {
+		if err := st.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
+	if st := s.Binop; st != nil {
+		if err := space(w); err != nil {
+			return err
+		}
+
+		if err := st.Format(c, p, w); err != nil {
+			return err
+		}
+
+		if err := space(w); err != nil {
+			return err
+		}
+	}
+
+	if st := s.Exp; st != nil {
+		if err := st.Format(c, p, w); err != nil {
 			return err
 		}
 	}
 
 	if st := s.Prefixexp; st != nil {
-		if err := st.Format(c, w); err != nil {
+		if err := st.Format(c, p, w); err != nil {
 			return err
 		}
 	}

@@ -21,3 +21,7 @@ func (s *breakStatement) IsEnd(prev, cur *element) bool {
 func (s *breakStatement) Append(el *element) {}
 
 func (s *breakStatement) AppendStatement(st statementIntf) {}
+
+func (s *breakStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}

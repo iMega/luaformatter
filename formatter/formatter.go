@@ -21,10 +21,16 @@ func Format(c Config, b []byte, w io.Writer) error {
 		return err
 	}
 
+	if doc.Bod == nil {
+		return nil
+	}
+
 	p := printer{}
 
-	for _, b := range doc.Body {
-		b.Format(&c, p, w)
+	if st, ok := doc.Bod.(*body); ok {
+		if err := st.Format(&c, p, w); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -50,6 +56,12 @@ func (p printer) WritePad(w io.Writer) error {
 
 func newLine(w io.Writer) error {
 	_, err := w.Write([]byte(newLineSymbol))
+
+	return err
+}
+
+func space(w io.Writer) error {
+	_, err := w.Write([]byte(" "))
 
 	return err
 }
@@ -137,6 +149,9 @@ func newBlock(st statementIntf) Block {
 
 	case *commentStatement:
 		bl.Statement = statement{Comment: v}
+
+	case *newlineStatement:
+		bl.Statement = statement{NewLine: v}
 	}
 
 	return bl

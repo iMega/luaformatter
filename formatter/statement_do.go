@@ -25,3 +25,11 @@ func (s *doStatement) Append(el *element) {}
 func (s *doStatement) AppendStatement(st statementIntf) {
 	s.Body = append(s.Body, newBlock(st))
 }
+
+func (s *doStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	if cur.Token.Type != nDo {
+		return prevSt
+	}
+
+	return prevSt
+}

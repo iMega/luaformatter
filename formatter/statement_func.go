@@ -72,6 +72,10 @@ func (s *functionStatement) AppendStatement(st statementIntf) {
 	s.Body = append(s.Body, Block{Statement: newStatement(st)})
 }
 
+func (s *functionStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}
+
 func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 	if s.IsLocal {
 		if _, err := w.Write([]byte("local ")); err != nil {
@@ -84,7 +88,7 @@ func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	if s.Name != nil {
-		if err := s.Name.Format(c, w); err != nil {
+		if err := s.Name.Format(c, p, w); err != nil {
 			return err
 		}
 	}
@@ -94,7 +98,7 @@ func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	if st := s.Parlist; st != nil {
-		if err := st.Format(c, w); err != nil {
+		if err := st.Format(c, p, w); err != nil {
 			return err
 		}
 	}

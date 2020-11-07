@@ -50,6 +50,10 @@ func (s *returnStatement) AppendStatement(st statementIntf) {
 	s.Explist = el
 }
 
+func (s *returnStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}
+
 func (s *returnStatement) Format(c *Config, p printer, w io.Writer) error {
 	if _, err := w.Write([]byte("return")); err != nil {
 		return err
@@ -60,7 +64,7 @@ func (s *returnStatement) Format(c *Config, p printer, w io.Writer) error {
 			return err
 		}
 
-		if err := st.Format(c, w); err != nil {
+		if err := st.Format(c, p, w); err != nil {
 			return err
 		}
 	}

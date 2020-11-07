@@ -22,12 +22,11 @@ func newScanner(code []byte) (*scanner, error) {
 	}
 
 	lexer.Add([]byte(`([a-zA-Z_.][a-zA-Z0-9_.:]*)`), token(nID))
+	lexer.Add([]byte(`\n\s*\n`), token(nLF))
 	lexer.Add([]byte("( |\t|\f|\r|\n)+"), skip)
 	lexer.Add([]byte(`--\[\[([^\]\]])*\]\]`), token(nCommentLong))
 	lexer.Add([]byte(`--( |\S)*`), token(nComment))
 	lexer.Add([]byte(`::([^::])*::`), token(nLabel))
-	// lexer.Add([]byte(`::\s*(\S+)\s*::`), token(nLabel))
-	lexer.Add([]byte(`\n\s*\n`), token(nLF))
 
 	if err := lexer.Compile(); err != nil {
 		return nil, err
@@ -76,7 +75,7 @@ type element struct {
 	AddSpace bool
 }
 
-func (s *element) Format(c *Config, w io.Writer) error {
+func (s *element) Format(c *Config, p printer, w io.Writer) error {
 	_, err := w.Write(s.Token.Lexeme)
 
 	return err

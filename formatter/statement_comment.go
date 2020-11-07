@@ -36,16 +36,16 @@ func (s *commentStatement) Append(el *element) {
 
 func (s *commentStatement) AppendStatement(st statementIntf) {}
 
+func (s *commentStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}
+
 func (s *commentStatement) Format(c *Config, p printer, w io.Writer) error {
 	if _, err := w.Write([]byte("-- ")); err != nil {
 		return err
 	}
 
-	if err := s.Element.Format(c, w); err != nil {
-		return err
-	}
-
-	if err := newLine(w); err != nil {
+	if err := s.Element.Format(c, p, w); err != nil {
 		return err
 	}
 

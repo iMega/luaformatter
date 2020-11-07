@@ -42,10 +42,14 @@ func (s *explist) AppendStatement(st statementIntf) {
 	}
 }
 
-func (s *explist) Format(c *Config, w io.Writer) error {
+func (s *explist) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}
+
+func (s *explist) Format(c *Config, p printer, w io.Writer) error {
 	l := len(s.List)
 	for idx, e := range s.List {
-		if err := e.Format(c, w); err != nil {
+		if err := e.Format(c, p, w); err != nil {
 			return err
 		}
 

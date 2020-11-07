@@ -31,3 +31,7 @@ func (s *whileStatement) AppendStatement(st statementIntf) {
 		s.Do = v
 	}
 }
+
+func (s *whileStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+	return prevSt
+}

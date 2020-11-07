@@ -28,27 +28,30 @@ goto label
 				),
 			},
 			want: &document{
-				Body: map[uint64]Block{
-					0: {
-						Statement: statement{
-							Goto: &gotoStatement{
-								Element: &element{
-									Token: &lexmachine.Token{
-										Type:        nID,
-										Value:       "label",
-										Lexeme:      []byte("label"),
-										TC:          6,
-										StartLine:   2,
-										StartColumn: 6,
-										EndLine:     2,
-										EndColumn:   10,
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Goto: &gotoStatement{
+									Element: &element{
+										Token: &lexmachine.Token{
+											Type:        nID,
+											Value:       "label",
+											Lexeme:      []byte("label"),
+											TC:          6,
+											StartLine:   2,
+											StartColumn: 6,
+											EndLine:     2,
+											EndColumn:   10,
+										},
 									},
 								},
 							},
 						},
 					},
+					Qty: 1,
 				},
-				QtyBlocks: 1,
 			},
 			wantErr: false,
 		},
