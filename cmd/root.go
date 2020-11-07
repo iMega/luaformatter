@@ -93,9 +93,7 @@ var (
 					continue
 				}
 
-				// fmt.Println("--------------------------------")
-				formatter.Format(config, b, w)
-				if _, err := w.Write([]byte("\n")); err != nil {
+				if err := formatter.Format(config, b, w); err != nil {
 					fmt.Println(err)
 					os.Exit(1)
 				}
