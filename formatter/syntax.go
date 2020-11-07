@@ -56,6 +56,7 @@ var (
 			nID:     &exp{},
 		},
 		nEquality: {
+			nString: &exp{},
 			nNumber: &exp{},
 		},
 		nInequality: {
@@ -86,6 +87,9 @@ var (
 		},
 		nComment: {
 			nThis: &commentStatement{},
+		},
+		nLF: {
+			nThis: &newlineStatement{},
 		},
 	}
 )
