@@ -23,6 +23,8 @@ func (fakeStatements) IsEnd(prev, cur *element) bool { return false }
 
 func (fakeStatements) TypeOf() typeStatement { return 0 }
 
+func (fakeStatements) GetBody(prevSt statementIntf, cur *element) statementIntf { return nil }
+
 func Test_chainStatments_Prev(t *testing.T) {
 	tests := []struct {
 		name   string
@@ -44,7 +46,9 @@ func Test_chainStatments_Prev(t *testing.T) {
 
 				return &cs
 			},
-			want: nil,
+			want: &fakeStatements{
+				ID: 100,
+			},
 		},
 		{
 			name: "chain with two statements returns prev statement",
@@ -56,7 +60,7 @@ func Test_chainStatments_Prev(t *testing.T) {
 				return &cs
 			},
 			want: &fakeStatements{
-				ID: 100,
+				ID: 200,
 			},
 		},
 		{
@@ -70,7 +74,7 @@ func Test_chainStatments_Prev(t *testing.T) {
 				return cs
 			},
 			want: &fakeStatements{
-				ID: 200,
+				ID: 300,
 			},
 		},
 	}
