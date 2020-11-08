@@ -88,6 +88,18 @@ func (s *exp) HasSyntax(el element) bool {
 	return false
 }
 
+func isExp(el *element) bool {
+	exps := []int{nNil, nFalse, nTrue, nNumber, nString, nVararg, nFunction,
+		nID} // tableconstructor | exp binop exp | unop exp
+	for _, e := range exps {
+		if e == el.Token.Type {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (s *exp) Append(el *element) {
 	if el.Token.Type == nComma {
 		return
