@@ -244,7 +244,7 @@ end
 			wantErr: false,
 		},
 		{
-			skip: true,
+			skip: false,
 			name: "condition statement with elseif",
 			args: args{
 				code: []byte(`
@@ -313,13 +313,6 @@ end
 										},
 										Qty: 1,
 									},
-									// Body: &block{},
-									// 	{
-									// 		Statement: statement{
-									// 			Break: &breakStatement{},
-									// 		},
-									// 	},
-									// },
 									ElseIfPart: []*elseifStatement{
 										{
 											Exp: &exp{
@@ -362,12 +355,15 @@ end
 													},
 												},
 											},
-											Body: []Block{
-												{
-													Statement: statement{
-														Break: &breakStatement{},
+											Body: &body{
+												Blocks: map[uint64]block{
+													0: {
+														Statement: statement{
+															Break: &breakStatement{},
+														},
 													},
 												},
+												Qty: 1,
 											},
 										},
 									},
@@ -381,7 +377,7 @@ end
 			wantErr: false,
 		},
 		{
-			skip: true,
+			skip: false,
 			name: "condition statement with elseif and else",
 			args: args{
 				code: []byte(`
@@ -396,122 +392,134 @@ end
 				),
 			},
 			want: &document{
-				Body: map[uint64]Block{
-					0: {
-						Statement: statement{
-							If: &ifStatement{
-								Exp: &exp{
-									Element: &element{
-										Token: &lexmachine.Token{
-											Type:        nID,
-											Value:       "c",
-											Lexeme:      []byte("c"),
-											TC:          4,
-											StartLine:   2,
-											StartColumn: 4,
-											EndLine:     2,
-											EndColumn:   4,
-										},
-									},
-									Binop: &element{
-										Token: &lexmachine.Token{
-											Type:        nEquality,
-											Value:       keywords[nEquality],
-											Lexeme:      []byte(keywords[nEquality]),
-											TC:          6,
-											StartLine:   2,
-											StartColumn: 6,
-											EndLine:     2,
-											EndColumn:   7,
-										},
-									},
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								If: &ifStatement{
 									Exp: &exp{
 										Element: &element{
 											Token: &lexmachine.Token{
-												Type:        nNumber,
-												Value:       "5",
-												Lexeme:      []byte("5"),
-												TC:          9,
+												Type:        nID,
+												Value:       "c",
+												Lexeme:      []byte("c"),
+												TC:          4,
 												StartLine:   2,
-												StartColumn: 9,
+												StartColumn: 4,
 												EndLine:     2,
-												EndColumn:   9,
+												EndColumn:   4,
 											},
 										},
-									},
-								},
-								// Body: []Block{
-								// 	{
-								// 		Statement: statement{
-								// 			Break: &breakStatement{},
-								// 		},
-								// 	},
-								// },
-								ElseIfPart: []*elseifStatement{
-									{
+										Binop: &element{
+											Token: &lexmachine.Token{
+												Type:        nEquality,
+												Value:       keywords[nEquality],
+												Lexeme:      []byte(keywords[nEquality]),
+												TC:          6,
+												StartLine:   2,
+												StartColumn: 6,
+												EndLine:     2,
+												EndColumn:   7,
+											},
+										},
 										Exp: &exp{
 											Element: &element{
 												Token: &lexmachine.Token{
-													Type:        nID,
-													Value:       "d",
-													Lexeme:      []byte("d"),
-													TC:          33,
-													StartLine:   4,
-													StartColumn: 8,
-													EndLine:     4,
-													EndColumn:   8,
-												},
-											},
-											Binop: &element{
-												Token: &lexmachine.Token{
-													Type:        nEquality,
-													Value:       keywords[nEquality],
-													Lexeme:      []byte(keywords[nEquality]),
-													TC:          35,
-													StartLine:   4,
-													StartColumn: 10,
-													EndLine:     4,
-													EndColumn:   11,
-												},
-											},
-											Exp: &exp{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nNumber,
-														Value:       "6",
-														Lexeme:      []byte("6"),
-														TC:          38,
-														StartLine:   4,
-														StartColumn: 13,
-														EndLine:     4,
-														EndColumn:   13,
-													},
+													Type:        nNumber,
+													Value:       "5",
+													Lexeme:      []byte("5"),
+													TC:          9,
+													StartLine:   2,
+													StartColumn: 9,
+													EndLine:     2,
+													EndColumn:   9,
 												},
 											},
 										},
-										Body: []Block{
-											{
+									},
+									Body: &body{
+										Blocks: map[uint64]block{
+											0: {
 												Statement: statement{
 													Break: &breakStatement{},
 												},
 											},
 										},
+										Qty: 1,
 									},
-								},
-								ElsePart: &elseStatement{
-									Body: []Block{
+									ElseIfPart: []*elseifStatement{
 										{
-											Statement: statement{
-												Break: &breakStatement{},
+											Exp: &exp{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nID,
+														Value:       "d",
+														Lexeme:      []byte("d"),
+														TC:          33,
+														StartLine:   4,
+														StartColumn: 8,
+														EndLine:     4,
+														EndColumn:   8,
+													},
+												},
+												Binop: &element{
+													Token: &lexmachine.Token{
+														Type:        nEquality,
+														Value:       keywords[nEquality],
+														Lexeme:      []byte(keywords[nEquality]),
+														TC:          35,
+														StartLine:   4,
+														StartColumn: 10,
+														EndLine:     4,
+														EndColumn:   11,
+													},
+												},
+												Exp: &exp{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nNumber,
+															Value:       "6",
+															Lexeme:      []byte("6"),
+															TC:          38,
+															StartLine:   4,
+															StartColumn: 13,
+															EndLine:     4,
+															EndColumn:   13,
+														},
+													},
+												},
 											},
+											Body: &body{
+												Blocks: map[uint64]block{
+													0: {
+														Statement: statement{
+															Break: &breakStatement{},
+														},
+													},
+												},
+												Qty: 1,
+											},
+										},
+									},
+									ElsePart: &elseStatement{
+										Body: &body{
+											Blocks: map[uint64]block{
+												0: {
+													Statement: statement{
+														Break: &breakStatement{},
+													},
+												},
+											},
+											Qty: 1,
 										},
 									},
 								},
 							},
 						},
 					},
+					Qty: 1,
 				},
-				QtyBlocks: 1,
 			},
 			wantErr: false,
 		},

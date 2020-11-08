@@ -16,3 +16,5 @@ linters-settings:
     check-blank: false
 linters:
   enable-all: true
+  disable:
+    - exhaustivestruct

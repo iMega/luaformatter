@@ -1,3 +1,17 @@
+// Copyright © 2020 Dmitry Stoletov <info@imega.ru>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package formatter
 
 import "io"
@@ -90,7 +104,7 @@ func (s *ifStatement) Format(c *Config, p printer, w io.Writer) error {
 
 type elseifStatement struct {
 	Exp  *exp
-	Body []Block
+	Body statementIntf
 }
 
 func (elseifStatement) New() statementIntf {
@@ -114,19 +128,23 @@ func (s *elseifStatement) Append(el *element) {}
 func (s *elseifStatement) AppendStatement(st statementIntf) {
 	if v, ok := st.(*exp); ok {
 		s.Exp = v
-
-		return
 	}
-
-	s.Body = append(s.Body, newBlock(st))
 }
 
 func (s *elseifStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
-	return prevSt
+	if cur.Token.Type != nThen {
+		return prevSt
+	}
+
+	if s.Body == nil {
+		s.Body = new(body).New()
+	}
+
+	return s.Body
 }
 
 type elseStatement struct {
-	Body []Block
+	Body statementIntf
 }
 
 func (elseStatement) New() statementIntf {
@@ -147,10 +165,12 @@ func (s *elseStatement) IsEnd(prev, cur *element) bool {
 
 func (s *elseStatement) Append(el *element) {}
 
-func (s *elseStatement) AppendStatement(st statementIntf) {
-	s.Body = append(s.Body, newBlock(st))
-}
+func (s *elseStatement) AppendStatement(st statementIntf) {}
 
-func (s *elseStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
-	return prevSt
+func (s *elseStatement) GetBody(statementIntf, *element) statementIntf {
+	if s.Body == nil {
+		s.Body = new(body).New()
+	}
+
+	return s.Body
 }
