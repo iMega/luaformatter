@@ -20,7 +20,100 @@ func TestParseAssignment(t *testing.T) {
 	}{
 		{
 			skip: false,
-			name: "local assignment statement with one var",
+			name: "global assignment statement with two vars",
+			args: args{
+				code: []byte(`
+a, b = 1, 2
+`,
+				),
+			},
+			want: &document{
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Assignment: &assignmentStatement{
+									IsLocal: false,
+									VarList: &explist{
+										List: []*exp{
+											{
+												Prefixexp: &prefixexpStatement{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "a",
+															Lexeme:      []byte("a"),
+															TC:          1,
+															StartLine:   2,
+															StartColumn: 1,
+															EndLine:     2,
+															EndColumn:   1,
+														},
+													},
+												},
+											},
+											{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nID,
+														Value:       "b",
+														Lexeme:      []byte("b"),
+														TC:          4,
+														StartLine:   2,
+														StartColumn: 4,
+														EndLine:     2,
+														EndColumn:   4,
+													},
+												},
+											},
+										},
+									},
+									HasEqPart: true,
+									Explist: &explist{
+										List: []*exp{
+											{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nNumber,
+														Value:       "1",
+														Lexeme:      []byte("1"),
+														TC:          8,
+														StartLine:   2,
+														StartColumn: 8,
+														EndLine:     2,
+														EndColumn:   8,
+													},
+												},
+											},
+											{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nNumber,
+														Value:       "2",
+														Lexeme:      []byte("2"),
+														TC:          11,
+														StartLine:   2,
+														StartColumn: 11,
+														EndLine:     2,
+														EndColumn:   11,
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+					Qty: 1,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
+			name: "local assignment statement with define one var",
 			args: args{
 				code: []byte(`
 local a

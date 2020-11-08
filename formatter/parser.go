@@ -93,6 +93,15 @@ func parse(code []byte) (*document, error) {
 			}
 		}
 
+		// global assignment statement
+		if currentStatement.TypeOf() == tsPrefixexpStatement && curElement.Token.Type == nComma {
+			s = map[tokenID]branch{
+				nComma: {
+					nThis: &assignmentStatement{},
+				},
+			}
+		}
+
 		// if curElement.Token.Type == nID && currentStatement.TypeOf() == tsBody {
 		// 	s = map[tokenID]branch{
 		// 		nID: {

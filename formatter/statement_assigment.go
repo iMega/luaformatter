@@ -28,7 +28,11 @@ func (s *assignmentStatement) IsEnd(prev, cur *element) bool {
 		}
 	}
 
-	return false
+	if cur.Token.Type == nAssign {
+		return false
+	}
+
+	return !isExp(cur)
 }
 
 func (s *assignmentStatement) HasSyntax(el element) bool {
