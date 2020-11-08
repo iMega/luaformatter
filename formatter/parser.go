@@ -102,6 +102,15 @@ func parse(code []byte) (*document, error) {
 			}
 		}
 
+		// global assignment statement with one var
+		if currentStatement.TypeOf() == tsPrefixexpStatement && curElement.Token.Type == nAssign {
+			s = map[tokenID]branch{
+				nAssign: {
+					nThis: &assignmentStatement{},
+				},
+			}
+		}
+
 		// if curElement.Token.Type == nID && currentStatement.TypeOf() == tsBody {
 		// 	s = map[tokenID]branch{
 		// 		nID: {
@@ -159,10 +168,15 @@ func parse(code []byte) (*document, error) {
 		}
 
 		if st := getStatement(s, prevElement, curElement); st != nil {
+			var assignmentWithOneVar statementIntf
 			isPrefixexpConvertAssignment := false
 
 			if st.TypeOf() == tsAssignment && prevElement.Token.Type == nLocal {
 				st.Append(prevElement)
+			}
+
+			if st.TypeOf() == tsAssignment && curElement.Token.Type == nAssign {
+				assignmentWithOneVar = st
 			}
 
 			if currentStatement == nil {
@@ -212,6 +226,9 @@ func parse(code []byte) (*document, error) {
 
 			if isPrefixexpConvertAssignment {
 				st.AppendStatement(currentStatement)
+				if curElement.Token.Type == nAssign {
+					assignmentWithOneVar.Append(curElement)
+				}
 				// st.AppendStatement(chainSt.First())
 				// chainSt.Reset()
 				// chainSt.Append(st)

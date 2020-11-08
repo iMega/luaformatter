@@ -20,6 +20,70 @@ func TestParseAssignment(t *testing.T) {
 	}{
 		{
 			skip: false,
+			name: "global assignment statement with one var",
+			args: args{
+				code: []byte(`
+myvar = 1
+`,
+				),
+			},
+			want: &document{
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Assignment: &assignmentStatement{
+									VarList: &explist{
+										List: []*exp{
+											{
+												Prefixexp: &prefixexpStatement{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "myvar",
+															Lexeme:      []byte("myvar"),
+															TC:          1,
+															StartLine:   2,
+															StartColumn: 1,
+															EndLine:     2,
+															EndColumn:   5,
+														},
+													},
+												},
+											},
+										},
+									},
+									HasEqPart: true,
+									Explist: &explist{
+										List: []*exp{
+											{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nNumber,
+														Value:       "1",
+														Lexeme:      []byte("1"),
+														TC:          9,
+														StartLine:   2,
+														StartColumn: 9,
+														EndLine:     2,
+														EndColumn:   9,
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+					Qty: 1,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
 			name: "global assignment statement with two vars",
 			args: args{
 				code: []byte(`
