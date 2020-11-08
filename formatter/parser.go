@@ -57,10 +57,6 @@ func parse(code []byte) (*document, error) {
 				if cs == nil {
 					currentBody = doc.Bod
 					chainSt.Append(currentBody)
-					// currentBody.AppendStatement(currentStatement)
-					// doc.AddBlock(newBlock(currentStatement))
-
-					// el.Resolved = true
 					currentStatement = currentBody
 
 					break
@@ -111,15 +107,6 @@ func parse(code []byte) (*document, error) {
 			}
 		}
 
-		// if curElement.Token.Type == nID && currentStatement.TypeOf() == tsBody {
-		// 	s = map[tokenID]branch{
-		// 		nID: {
-		// 			nThis:        &prefixexpStatement{},
-		// 			nParentheses: &funcCallStatement{},
-		// 		},
-		// 	}
-		// }
-
 		if curElement.Token.Type == nParentheses && (prevElement != nil && prevElement.Token.Type == nID) {
 			s = map[tokenID]branch{
 				nID: {
@@ -135,13 +122,11 @@ func parse(code []byte) (*document, error) {
 			s = map[tokenID]branch{
 				nID: {
 					nString: &funcCallStatement{}, //local base = require "resty.core.base"
-					//nString: &prefixexpStatement{},
 				},
 			}
 			if currentStatement.TypeOf() == tsExp {
 				s = map[tokenID]branch{
 					nID: {
-						//nString: &funcCallStatement{}, //local base = require "resty.core.base"
 						nString: &prefixexpStatement{},
 					},
 				}
@@ -188,34 +173,23 @@ func parse(code []byte) (*document, error) {
 			} else {
 				if currentStatement.TypeOf() == tsPrefixexpStatement && st.TypeOf() == tsFuncCallStatement {
 					st.AppendStatement(chainSt.ExctractPrefixexp())
-					// chainSt.Reset()
 					if chainSt.Len() > 0 {
 						chainSt.Prev().AppendStatement(st)
 					}
 					chainSt.Append(st)
-				} else if st.TypeOf() == tsAssignment { //if currentStatement.TypeOf() == tsPrefixexpStatement && st.TypeOf() == tsAssignment {
+				} else if st.TypeOf() == tsAssignment {
 					isPrefixexpConvertAssignment = true
-					// st.AppendStatement()
 					currentStatement = chainSt.ExctractPrefixexp()
 					if chainSt.Len() > 0 {
 						chainSt.Prev().AppendStatement(st)
 					}
 					chainSt.Append(st)
-					// currentStatement = chainSt.First()
-					// chainSt.Reset()
-					// chainSt.Append(st)
-					// } else if currentStatement.TypeOf() == tsExp && st.TypeOf() == tsPrefixexpStatement {
-					// st.AppendStatement()
 				} else {
 					currentStatement.AppendStatement(st)
 					chainSt.Append(st)
 				}
-
-				// if currentStatement.TypeOf() == tsPrefixexpStatement && st.TypeOf() == tsExp {
-				// 	chainSt.Reset()
-				// 	chainSt.Append(st)
-				// }
 			}
+
 			for inner := st.InnerStatement(prevElement, curElement); inner != nil; inner = st.InnerStatement(prevElement, curElement) {
 				if st.TypeOf() != inner.TypeOf() {
 					st.AppendStatement(inner)
@@ -226,12 +200,10 @@ func parse(code []byte) (*document, error) {
 
 			if isPrefixexpConvertAssignment {
 				st.AppendStatement(currentStatement)
+
 				if curElement.Token.Type == nAssign {
 					assignmentWithOneVar.Append(curElement)
 				}
-				// st.AppendStatement(chainSt.First())
-				// chainSt.Reset()
-				// chainSt.Append(st)
 			}
 
 			currentStatement = st
@@ -244,15 +216,6 @@ func parse(code []byte) (*document, error) {
 		prevElement = curElement
 		curElement = nil
 	}
-
-	if chainSt.Len() > 0 {
-		// currentStatement = chainSt.First()
-	}
-
-	// if currentStatement != nil {
-	// 	doc.AddBlock(newBlock(currentStatement))
-	// 	currentStatement = nil
-	// }
 
 	return doc, nil
 }
