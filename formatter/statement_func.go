@@ -1,12 +1,14 @@
 package formatter
 
-import "io"
+import (
+	"io"
+)
 
 type functionStatement struct {
 	IsLocal     bool
 	Name        *element
 	Parlist     *explist
-	Body        []Block
+	Body        statementIntf
 	IsAnonymous bool
 }
 
@@ -62,18 +64,18 @@ func (s *functionStatement) AppendStatement(st statementIntf) {
 			return
 		}
 	}
-
-	if v, ok := st.(*returnStatement); ok {
-		s.Body = append(s.Body, Block{Return: v})
-
-		return
-	}
-
-	s.Body = append(s.Body, Block{Statement: newStatement(st)})
 }
 
 func (s *functionStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
-	return prevSt
+	if cur.Token.Type != nClosingParentheses {
+		return prevSt
+	}
+
+	if s.Body == nil {
+		s.Body = new(body).New()
+	}
+
+	return s.Body
 }
 
 func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
@@ -114,8 +116,8 @@ func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 	inner := printer{
 		Pad: p.Pad + c.IndentSize,
 	}
-	for _, b := range s.Body {
-		if err := b.Format(c, inner, w); err != nil {
+	if st, ok := s.Body.(*body); ok {
+		if err := st.Format(c, inner, w); err != nil {
 			return err
 		}
 	}

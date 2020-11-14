@@ -93,6 +93,10 @@ func (s *ifStatement) Format(c *Config, p printer, w io.Writer) error {
 		if err := st.Format(c, pp, w); err != nil {
 			return err
 		}
+
+		if err := newLine(w); err != nil {
+			return err
+		}
 	}
 
 	if _, err := w.Write([]byte("end")); err != nil {

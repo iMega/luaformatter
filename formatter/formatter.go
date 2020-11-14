@@ -33,6 +33,10 @@ func Format(c Config, b []byte, w io.Writer) error {
 		}
 	}
 
+	if err := newLine(w); err != nil {
+		return err
+	}
+
 	return nil
 }
 

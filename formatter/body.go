@@ -14,7 +14,9 @@
 
 package formatter
 
-import "io"
+import (
+	"io"
+)
 
 type body struct {
 	Blocks map[uint64]block
@@ -66,9 +68,19 @@ func (b *body) AppendStatement(st statementIntf) {
 
 func (b *body) Format(c *Config, p printer, w io.Writer) error {
 	for i := 0; i < int(b.Qty); i++ {
-		b := b.Blocks[uint64(i)]
-		if err := b.Format(c, p, w); err != nil {
+		st := b.Blocks[uint64(i)]
+		if err := st.Format(c, p, w); err != nil {
 			return err
+		}
+
+		if int(b.Qty)-1 == i {
+			continue
+		}
+
+		if s := st.Statement.NewLine; s == nil {
+			if err := newLine(w); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -120,10 +132,6 @@ func (b *block) Format(c *Config, p printer, w io.Writer) error {
 		if err := s.Format(c, p, w); err != nil {
 			return err
 		}
-	}
-
-	if s := b.Statement.NewLine; s == nil {
-		newLine(w)
 	}
 
 	return nil

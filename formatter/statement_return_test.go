@@ -268,6 +268,9 @@ return function () end
 										{
 											Func: &functionStatement{
 												IsAnonymous: true,
+												Body: &body{
+													Blocks: make(map[uint64]block),
+												},
 											},
 										},
 									},
@@ -300,11 +303,17 @@ return function () end, function () end
 										{
 											Func: &functionStatement{
 												IsAnonymous: true,
+												Body: &body{
+													Blocks: make(map[uint64]block),
+												},
 											},
 										},
 										{
 											Func: &functionStatement{
 												IsAnonymous: true,
+												Body: &body{
+													Blocks: make(map[uint64]block),
+												},
 											},
 										},
 									},

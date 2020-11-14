@@ -60,6 +60,9 @@ myvar = function() end
 											{
 												Func: &functionStatement{
 													IsAnonymous: true,
+													Body: &body{
+														Blocks: make(map[uint64]block),
+													},
 												},
 											},
 										},

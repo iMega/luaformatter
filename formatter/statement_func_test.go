@@ -47,6 +47,9 @@ end
 											EndColumn:   10,
 										},
 									},
+									Body: &body{
+										Blocks: make(map[uint64]block),
+									},
 								},
 							},
 						},
@@ -88,6 +91,9 @@ end
 											EndColumn:   10,
 										},
 									},
+									Body: &body{
+										Blocks: make(map[uint64]block),
+									},
 								},
 							},
 						},
@@ -108,6 +114,9 @@ end
 											EndLine:     5,
 											EndColumn:   10,
 										},
+									},
+									Body: &body{
+										Blocks: make(map[uint64]block),
 									},
 								},
 							},
@@ -180,47 +189,50 @@ end
 											},
 										},
 									},
-									Body: []Block{
-										{
-											Return: &returnStatement{
-												Explist: &explist{
-													List: []*exp{
-														{
-															Element: &element{
-																Token: &lexmachine.Token{
-																	Type:        nID,
-																	Value:       "a",
-																	Lexeme:      []byte("a"),
-																	TC:          31,
-																	StartLine:   3,
-																	StartColumn: 12,
-																	EndLine:     3,
-																	EndColumn:   12,
-																},
-															},
-															Binop: &element{
-																Token: &lexmachine.Token{
-																	Type:        nAddition,
-																	Value:       "+",
-																	Lexeme:      []byte("+"),
-																	TC:          33,
-																	StartLine:   3,
-																	StartColumn: 14,
-																	EndLine:     3,
-																	EndColumn:   14,
-																},
-															},
-															Exp: &exp{
+									Body: &body{
+										Qty: 1,
+										Blocks: map[uint64]block{
+											0: {
+												Return: &returnStatement{
+													Explist: &explist{
+														List: []*exp{
+															{
 																Element: &element{
 																	Token: &lexmachine.Token{
 																		Type:        nID,
-																		Value:       "b",
-																		Lexeme:      []byte("b"),
-																		TC:          35,
+																		Value:       "a",
+																		Lexeme:      []byte("a"),
+																		TC:          31,
 																		StartLine:   3,
-																		StartColumn: 16,
+																		StartColumn: 12,
 																		EndLine:     3,
-																		EndColumn:   16,
+																		EndColumn:   12,
+																	},
+																},
+																Binop: &element{
+																	Token: &lexmachine.Token{
+																		Type:        nAddition,
+																		Value:       "+",
+																		Lexeme:      []byte("+"),
+																		TC:          33,
+																		StartLine:   3,
+																		StartColumn: 14,
+																		EndLine:     3,
+																		EndColumn:   14,
+																	},
+																},
+																Exp: &exp{
+																	Element: &element{
+																		Token: &lexmachine.Token{
+																			Type:        nID,
+																			Value:       "b",
+																			Lexeme:      []byte("b"),
+																			TC:          35,
+																			StartLine:   3,
+																			StartColumn: 16,
+																			EndLine:     3,
+																			EndColumn:   16,
+																		},
 																	},
 																},
 															},
