@@ -60,8 +60,8 @@ func (s *assignmentStatement) Append(el *element) {
 
 func (s *assignmentStatement) AppendStatement(st statementIntf) {
 	switch v := st.(type) {
-	case *functionStatement:
-		s.Explist.List = append(s.Explist.List, newExp(v))
+	// case *functionStatement:
+	// s.Explist.List = append(s.Explist.List, newExp(v))
 
 	case *explist:
 		if s.HasEqPart {

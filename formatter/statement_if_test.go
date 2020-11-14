@@ -20,6 +20,301 @@ func TestParseIf(t *testing.T) {
 	}{
 		{
 			skip: false,
+			name: "condition statement with internal function",
+			args: args{
+				code: []byte(`
+local a = 1
+local b, c
+if a == 1 then
+    b = function()
+    end
+end
+c = b()
+print(c)
+`,
+				//         return 1
+				// elseif a == 2 then
+				//     b = function()
+				//         return 2
+				//     end
+				),
+			},
+			want: &document{
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Assignment: &assignmentStatement{
+									IsLocal: true,
+									VarList: &explist{
+										List: []*exp{
+											{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nID,
+														Value:       "a",
+														Lexeme:      []byte("a"),
+														TC:          7,
+														StartLine:   2,
+														StartColumn: 7,
+														EndLine:     2,
+														EndColumn:   7,
+													},
+												},
+											},
+										},
+									},
+									HasEqPart: true,
+									Explist: &explist{
+										List: []*exp{
+											{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nNumber,
+														Value:       "1",
+														Lexeme:      []byte("1"),
+														TC:          11,
+														StartLine:   2,
+														StartColumn: 11,
+														EndLine:     2,
+														EndColumn:   11,
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						1: {
+							Statement: statement{
+								Assignment: &assignmentStatement{
+									IsLocal: true,
+									VarList: &explist{
+										List: []*exp{
+											{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nID,
+														Value:       "b",
+														Lexeme:      []byte("b"),
+														TC:          19,
+														StartLine:   3,
+														StartColumn: 7,
+														EndLine:     3,
+														EndColumn:   7,
+													},
+												},
+											},
+											{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nID,
+														Value:       "c",
+														Lexeme:      []byte("c"),
+														TC:          22,
+														StartLine:   3,
+														StartColumn: 10,
+														EndLine:     3,
+														EndColumn:   10,
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						2: {
+							Statement: statement{
+								If: &ifStatement{
+									Exp: &exp{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "a",
+												Lexeme:      []byte("a"),
+												TC:          27,
+												StartLine:   4,
+												StartColumn: 4,
+												EndLine:     4,
+												EndColumn:   4,
+											},
+										},
+										Binop: &element{
+											Token: &lexmachine.Token{
+												Type:        nEquality,
+												Value:       keywords[nEquality],
+												Lexeme:      []byte(keywords[nEquality]),
+												TC:          29,
+												StartLine:   4,
+												StartColumn: 6,
+												EndLine:     4,
+												EndColumn:   7,
+											},
+										},
+										Exp: &exp{
+											Element: &element{
+												Token: &lexmachine.Token{
+													Type:        nNumber,
+													Value:       "1",
+													Lexeme:      []byte("1"),
+													TC:          32,
+													StartLine:   4,
+													StartColumn: 9,
+													EndLine:     4,
+													EndColumn:   9,
+												},
+											},
+										},
+									},
+									Body: &body{
+										Qty: 1,
+										Blocks: map[uint64]block{
+											0: {
+												Statement: statement{
+													Assignment: &assignmentStatement{
+														VarList: &explist{
+															List: []*exp{
+																{
+																	Prefixexp: &prefixexpStatement{
+																		Element: &element{
+																			Token: &lexmachine.Token{
+																				Type:        nID,
+																				Value:       "b",
+																				Lexeme:      []byte("b"),
+																				TC:          43,
+																				StartLine:   5,
+																				StartColumn: 5,
+																				EndLine:     5,
+																				EndColumn:   5,
+																			},
+																		},
+																	},
+																},
+															},
+														},
+														HasEqPart: true,
+														Explist: &explist{
+															List: []*exp{
+																{
+																	Func: &functionStatement{
+																		IsAnonymous: true,
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						3: {
+							Statement: statement{
+								Assignment: &assignmentStatement{
+									VarList: &explist{
+										List: []*exp{
+											{
+												Prefixexp: &prefixexpStatement{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "c",
+															Lexeme:      []byte("c"),
+															TC:          70,
+															StartLine:   8,
+															StartColumn: 1,
+															EndLine:     8,
+															EndColumn:   1,
+														},
+													},
+												},
+											},
+										},
+									},
+									HasEqPart: true,
+									Explist: &explist{
+										List: []*exp{
+											{
+												Prefixexp: &prefixexpStatement{
+													FuncCall: &funcCallStatement{
+														Prefixexp: &prefixexpStatement{
+															Element: &element{
+																Token: &lexmachine.Token{
+																	Type:        nID,
+																	Value:       "b",
+																	Lexeme:      []byte("b"),
+																	TC:          74,
+																	StartLine:   8,
+																	StartColumn: 5,
+																	EndLine:     8,
+																	EndColumn:   5,
+																},
+															},
+														},
+														Explist: &explist{
+															List: []*exp{
+																{},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						4: {
+							Statement: statement{
+								FuncCall: &funcCallStatement{
+									Prefixexp: &prefixexpStatement{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "print",
+												Lexeme:      []byte("print"),
+												TC:          78,
+												StartLine:   9,
+												StartColumn: 1,
+												EndLine:     9,
+												EndColumn:   5,
+											},
+										},
+									},
+									Explist: &explist{
+										List: []*exp{
+											{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nID,
+														Value:       "c",
+														Lexeme:      []byte("c"),
+														TC:          84,
+														StartLine:   9,
+														StartColumn: 7,
+														EndLine:     9,
+														EndColumn:   7,
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+					Qty: 5,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
 			name: "condition statement one var",
 			args: args{
 				code: []byte(`

@@ -14,6 +14,8 @@
 
 package formatter
 
+import "fmt"
+
 // Parse code.
 func parse(code []byte) (*document, error) {
 	var (
@@ -45,11 +47,11 @@ func parse(code []byte) (*document, error) {
 
 		curElement = &el
 
-		// if prevElement != nil {
-		// 	fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
-		// }
+		if prevElement != nil {
+			fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
+		}
 
-		// fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
+		fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
 
 		if currentStatement != nil {
 			for ok := currentStatement.IsEnd(prevElement, curElement); ok; ok = currentStatement.IsEnd(prevElement, curElement) {
@@ -177,6 +179,21 @@ func parse(code []byte) (*document, error) {
 						chainSt.Prev().AppendStatement(st)
 					}
 					chainSt.Append(st)
+				} else if currentStatement.TypeOf() == tsAssignment && st.TypeOf() == tsFunction {
+					// myvar = function() end
+					exl := &explist{}
+					currentStatement.AppendStatement(exl)
+					chainSt.Append(exl)
+
+					ex := &exp{}
+					exl.AppendStatement(ex)
+					chainSt.Append(ex)
+
+					currentStatement = ex
+
+					currentStatement.AppendStatement(st)
+					chainSt.Append(st)
+
 				} else if st.TypeOf() == tsAssignment {
 					isPrefixexpConvertAssignment = true
 					currentStatement = chainSt.ExctractPrefixexp()
@@ -202,7 +219,11 @@ func parse(code []byte) (*document, error) {
 				st.AppendStatement(currentStatement)
 
 				if curElement.Token.Type == nAssign {
+					for chst := chainSt.ExtractPrev(); chst.TypeOf() != assignmentWithOneVar.TypeOf(); chst = chainSt.ExtractPrev() {
+					}
+
 					assignmentWithOneVar.Append(curElement)
+					st = assignmentWithOneVar
 				}
 			}
 

@@ -12,10 +12,6 @@ func (cs *chainStatments) Reset() {
 	cs.chain = nil
 }
 
-// func (cs *chainStatments) Prepend(st statementIntf) {
-// 	cs.chain = append([]statementIntf{st}, cs.chain...)
-// }
-
 func (cs *chainStatments) ExtractPrev() statementIntf {
 	if len(cs.chain) == 0 {
 		return nil
