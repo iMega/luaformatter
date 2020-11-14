@@ -14,8 +14,6 @@
 
 package formatter
 
-import "fmt"
-
 // Parse code.
 func parse(code []byte) (*document, error) {
 	var (
@@ -47,11 +45,11 @@ func parse(code []byte) (*document, error) {
 
 		curElement = &el
 
-		if prevElement != nil {
-			fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
-		}
+		// if prevElement != nil {
+		// 	fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
+		// }
 
-		fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
+		// fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
 
 		if currentStatement != nil {
 			for ok := currentStatement.IsEnd(prevElement, curElement); ok; ok = currentStatement.IsEnd(prevElement, curElement) {
