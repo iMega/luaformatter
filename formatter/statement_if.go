@@ -88,13 +88,25 @@ func (s *ifStatement) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	if st, ok := s.Body.(*body); ok {
-		pp := p
-		pp.Pad = p.Pad + 4
-		if err := st.Format(c, pp, w); err != nil {
+		ip := p
+		ip.Pad = p.Pad + c.IndentSize
+		if err := st.Format(c, ip, w); err != nil {
 			return err
 		}
 
 		if err := newLine(w); err != nil {
+			return err
+		}
+	}
+
+	for _, i := range s.ElseIfPart {
+		if err := i.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
+	if st := s.ElsePart; st != nil {
+		if err := st.Format(c, p, w); err != nil {
 			return err
 		}
 	}
@@ -124,6 +136,10 @@ func (elseifStatement) TypeOf() typeStatement {
 }
 
 func (s *elseifStatement) IsEnd(prev, cur *element) bool {
+	if cur.Token.Type == nElseif {
+		return true
+	}
+
 	return cur.Token.Type == nEnd || cur.Token.Type == nElse
 }
 
@@ -145,6 +161,40 @@ func (s *elseifStatement) GetBody(prevSt statementIntf, cur *element) statementI
 	}
 
 	return s.Body
+}
+
+func (s *elseifStatement) Format(c *Config, p printer, w io.Writer) error {
+	if _, err := w.Write([]byte("elseif ")); err != nil {
+		return err
+	}
+
+	if s.Exp != nil {
+		if err := s.Exp.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
+	if _, err := w.Write([]byte(" then")); err != nil {
+		return err
+	}
+
+	if err := newLine(w); err != nil {
+		return err
+	}
+
+	if st, ok := s.Body.(*body); ok {
+		ip := p
+		ip.Pad = p.Pad + c.IndentSize
+		if err := st.Format(c, ip, w); err != nil {
+			return err
+		}
+
+		if err := newLine(w); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 type elseStatement struct {
@@ -177,4 +227,28 @@ func (s *elseStatement) GetBody(statementIntf, *element) statementIntf {
 	}
 
 	return s.Body
+}
+
+func (s *elseStatement) Format(c *Config, p printer, w io.Writer) error {
+	if _, err := w.Write([]byte("else")); err != nil {
+		return err
+	}
+
+	if err := newLine(w); err != nil {
+		return err
+	}
+
+	if st, ok := s.Body.(*body); ok {
+		ip := p
+		ip.Pad = p.Pad + c.IndentSize
+		if err := st.Format(c, ip, w); err != nil {
+			return err
+		}
+
+		if err := newLine(w); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

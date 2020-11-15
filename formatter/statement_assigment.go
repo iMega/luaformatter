@@ -93,8 +93,10 @@ func (s *assignmentStatement) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
-	if err := s.Explist.Format(c, p, w); err != nil {
-		return err
+	if st := s.Explist; st != nil {
+		if err := st.Format(c, p, w); err != nil {
+			return err
+		}
 	}
 
 	return nil

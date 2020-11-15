@@ -85,11 +85,15 @@ func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
-	if _, err := w.Write([]byte("function ")); err != nil {
+	if _, err := w.Write([]byte("function")); err != nil {
 		return err
 	}
 
 	if s.Name != nil {
+		if err := space(w); err != nil {
+			return err
+		}
+
 		if err := s.Name.Format(c, p, w); err != nil {
 			return err
 		}
@@ -123,6 +127,10 @@ func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	if err := newLine(w); err != nil {
+		return err
+	}
+
+	if err := p.WritePad(w); err != nil {
 		return err
 	}
 

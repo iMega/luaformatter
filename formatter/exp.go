@@ -183,6 +183,12 @@ func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
+	if st := s.Func; st != nil {
+		if err := st.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
 	if st := s.Binop; st != nil {
 		if err := space(w); err != nil {
 			return err
