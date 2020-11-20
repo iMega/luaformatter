@@ -35,10 +35,13 @@ end
 						0: {
 							Statement: statement{
 								Do: &doStatement{
-									Body: []Block{
-										{
-											Statement: statement{
-												Break: &breakStatement{},
+									Body: &body{
+										Qty: 1,
+										Blocks: map[uint64]block{
+											0: {
+												Statement: statement{
+													Break: &breakStatement{},
+												},
 											},
 										},
 									},

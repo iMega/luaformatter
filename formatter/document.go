@@ -143,6 +143,7 @@ const (
 	tsExpList
 	tsPrefixexpStatement
 	tsFuncCallStatement
+	tsField
 )
 
 type statement struct {
@@ -200,25 +201,9 @@ type functionCallStatement struct {
 	Args    *explist
 }
 
-type forNumericalStatement struct {
-	IDStatement *element
-	VarPart     varPart
-	LimitPart   exp
-	StepPart    *exp
-	doStatement
-}
-
 type varPart struct {
 	Element *element
 	Exp     exp
-}
-
-type forGenericStatement struct {
-	IDStatement *element
-	Namelist    namelist
-	InElement   element
-	Explist     explist
-	doStatement
 }
 
 type namelist []*element

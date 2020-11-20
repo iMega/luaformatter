@@ -142,6 +142,15 @@ func parse(code []byte) (*document, error) {
 			}
 		}
 
+		if currentStatement.TypeOf() == tsField {
+			s = map[tokenID]branch{
+				nAssign: {
+					nID:     &exp{},
+					nNumber: &exp{},
+				},
+			}
+		}
+
 		if currentStatement != nil && prevElement != nil {
 			if currentStatement.TypeOf() == tsFunction && prevElement.Token.Type == nParentheses {
 				s = map[tokenID]branch{

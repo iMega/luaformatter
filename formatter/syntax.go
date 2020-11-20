@@ -73,10 +73,11 @@ var (
 			nNumber: &exp{},
 		},
 		nComma: {
-			nID:       &exp{},
-			nNumber:   &exp{},
-			nFunction: &exp{},
-			nVararg:   &exp{},
+			nID:          &exp{},
+			nNumber:      &exp{},
+			nFunction:    &exp{},
+			nVararg:      &exp{},
+			nSubtraction: &exp{}, // for num
 		},
 		nDo: {
 			nThis: &doStatement{},
@@ -100,6 +101,10 @@ var (
 		},
 		nLF: {
 			nThis: &newlineStatement{},
+		},
+		nFor: {
+			nThis: &forNumericalStatement{},
+			nID:   &field{},
 		},
 	}
 )

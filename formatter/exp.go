@@ -73,6 +73,9 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 			nFunction: false, // b = function() end
 			nID:       false, // c = b()
 		},
+		nSubtraction: {
+			nNumber: false, // -1
+		},
 	}
 
 	v, ok := syntax[tokenID(prev.Token.Type)]

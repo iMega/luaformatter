@@ -14,32 +14,45 @@
 
 package formatter
 
-type tableStatement struct {
-	List []field
+type field struct {
+	Key   *exp
+	Val   *exp
+	Sqare bool
 }
 
-func (tableStatement) New() statementIntf {
-	return &tableStatement{}
+func (field) New() statementIntf {
+	return &field{}
 }
 
-func (tableStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (field) InnerStatement(prev, cur *element) statementIntf {
+	return &exp{}
 }
 
-func (tableStatement) TypeOf() typeStatement {
-	return tsIf
+func (field) TypeOf() typeStatement {
+	return tsField
 }
 
-func (s *tableStatement) IsEnd(prev, cur *element) bool {
-	return cur.Token.Type == nEnd
+func (s *field) IsEnd(prev, cur *element) bool {
+	return cur.Token.Type == nComma
 }
 
-func (s *tableStatement) Append(el *element) {}
+func (s *field) Append(el *element) {}
 
-func (s *tableStatement) AppendStatement(st statementIntf) {
-	// s.Body = append(s.Body, newBlock(st))
+func (s *field) AppendStatement(st statementIntf) {
+	v, ok := st.(*exp)
+	if !ok {
+		return
+	}
+
+	if s.Key == nil {
+		s.Key = v
+
+		return
+	}
+
+	s.Val = v
 }
 
-func (s *tableStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *field) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
 }
