@@ -151,6 +151,19 @@ func parse(code []byte) (*document, error) {
 			}
 		}
 
+		if currentStatement.TypeOf() == tsFieldList {
+			s = map[tokenID]branch{
+				nComma: {
+					nID:          &field{},
+					nNumber:      &field{},
+					nSubtraction: &field{},
+				},
+				nFor: {
+					nID: &field{},
+				},
+			}
+		}
+
 		if currentStatement != nil && prevElement != nil {
 			if currentStatement.TypeOf() == tsFunction && prevElement.Token.Type == nParentheses {
 				s = map[tokenID]branch{

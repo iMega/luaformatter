@@ -178,8 +178,8 @@ func newBloc(st statementIntf) block {
 	case *ifStatement:
 		bl.Statement = statement{If: v}
 
-	case *forNumericalStatement:
-		bl.Statement = statement{ForNumerical: v}
+	case *forStatement:
+		bl.Statement = statement{For: v}
 
 	case *returnStatement:
 		bl.Return = v

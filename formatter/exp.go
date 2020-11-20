@@ -116,6 +116,10 @@ func (s *exp) Append(el *element) {
 		return
 	}
 
+	if el.Token.Type == nIn {
+		return
+	}
+
 	if el.Token.Type == nParentheses || el.Token.Type == nClosingParentheses {
 		return
 	}

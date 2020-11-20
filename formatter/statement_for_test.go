@@ -33,74 +33,82 @@ for i=10,1,-1 do print(i) end
 					Blocks: map[uint64]block{
 						0: {
 							Statement: statement{
-								ForNumerical: &forNumericalStatement{
-									VarPart: &field{
-										Key: &exp{
-											Element: &element{
-												Token: &lexmachine.Token{
-													Type:        nID,
-													Value:       "i",
-													Lexeme:      []byte("i"),
-													TC:          5,
-													StartLine:   2,
-													StartColumn: 5,
-													EndLine:     2,
-													EndColumn:   5,
+								For: &forStatement{
+									FieldList: &fieldlist{
+										List: []*field{
+											{
+												Key: &exp{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "i",
+															Lexeme:      []byte("i"),
+															TC:          5,
+															StartLine:   2,
+															StartColumn: 5,
+															EndLine:     2,
+															EndColumn:   5,
+														},
+													},
+												},
+												Val: &exp{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nNumber,
+															Value:       "10",
+															Lexeme:      []byte("10"),
+															TC:          7,
+															StartLine:   2,
+															StartColumn: 7,
+															EndLine:     2,
+															EndColumn:   8,
+														},
+													},
 												},
 											},
-										},
-										Val: &exp{
-											Element: &element{
-												Token: &lexmachine.Token{
-													Type:        nNumber,
-													Value:       "10",
-													Lexeme:      []byte("10"),
-													TC:          7,
-													StartLine:   2,
-													StartColumn: 7,
-													EndLine:     2,
-													EndColumn:   8,
+											{
+												Key: &exp{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nNumber,
+															Value:       "1",
+															Lexeme:      []byte("1"),
+															TC:          10,
+															StartLine:   2,
+															StartColumn: 10,
+															EndLine:     2,
+															EndColumn:   10,
+														},
+													},
 												},
 											},
-										},
-									},
-									LimitPart: &exp{
-										Element: &element{
-											Token: &lexmachine.Token{
-												Type:        nNumber,
-												Value:       "1",
-												Lexeme:      []byte("1"),
-												TC:          10,
-												StartLine:   2,
-												StartColumn: 10,
-												EndLine:     2,
-												EndColumn:   10,
-											},
-										},
-									},
-									StepPart: &exp{
-										Element: &element{
-											Token: &lexmachine.Token{
-												Type:        nNumber,
-												Value:       "1",
-												Lexeme:      []byte("1"),
-												TC:          13,
-												StartLine:   2,
-												StartColumn: 13,
-												EndLine:     2,
-												EndColumn:   13,
-											},
-										},
-										Unop: &element{
-											Token: &lexmachine.Token{
-												Type:        nSubtraction,
-												Value:       "-",
-												Lexeme:      []byte("-"),
-												TC:          12,
-												StartLine:   2,
-												StartColumn: 12,
-												EndLine:     2,
-												EndColumn:   12,
+											{
+												Key: &exp{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nNumber,
+															Value:       "1",
+															Lexeme:      []byte("1"),
+															TC:          13,
+															StartLine:   2,
+															StartColumn: 13,
+															EndLine:     2,
+															EndColumn:   13,
+														},
+													},
+													Unop: &element{
+														Token: &lexmachine.Token{
+															Type:        nSubtraction,
+															Value:       "-",
+															Lexeme:      []byte("-"),
+															TC:          12,
+															StartLine:   2,
+															StartColumn: 12,
+															EndLine:     2,
+															EndColumn:   12,
+														},
+													},
+												},
 											},
 										},
 									},
@@ -143,6 +151,163 @@ for i=10,1,-1 do print(i) end
 																								StartColumn: 24,
 																								EndLine:     2,
 																								EndColumn:   24,
+																							},
+																						},
+																					},
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+					Qty: 1,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
+			name: "for generic statement",
+			args: args{
+				code: []byte(`
+for i, pkg in ipairs(packages) do print(i) end
+`,
+				),
+			},
+			want: &document{
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								For: &forStatement{
+									FieldList: &fieldlist{
+										List: []*field{
+											{
+												Key: &exp{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "i",
+															Lexeme:      []byte("i"),
+															TC:          5,
+															StartLine:   2,
+															StartColumn: 5,
+															EndLine:     2,
+															EndColumn:   5,
+														},
+													},
+												},
+											},
+											{
+												Key: &exp{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "pkg",
+															Lexeme:      []byte("pkg"),
+															TC:          8,
+															StartLine:   2,
+															StartColumn: 8,
+															EndLine:     2,
+															EndColumn:   10,
+														},
+													},
+												},
+											},
+										},
+									},
+									Explist: &explist{
+										List: []*exp{
+											{
+												Prefixexp: &prefixexpStatement{
+													FuncCall: &funcCallStatement{
+														Prefixexp: &prefixexpStatement{
+															Element: &element{
+																Token: &lexmachine.Token{
+																	Type:        nID,
+																	Value:       "ipairs",
+																	Lexeme:      []byte("ipairs"),
+																	TC:          15,
+																	StartLine:   2,
+																	StartColumn: 15,
+																	EndLine:     2,
+																	EndColumn:   20,
+																},
+															},
+														},
+														Explist: &explist{
+															List: []*exp{
+																{
+																	Element: &element{
+																		Token: &lexmachine.Token{
+																			Type:        nID,
+																			Value:       "packages",
+																			Lexeme:      []byte("packages"),
+																			TC:          22,
+																			StartLine:   2,
+																			StartColumn: 22,
+																			EndLine:     2,
+																			EndColumn:   29,
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									Body: &body{
+										Qty: 1,
+										Blocks: map[uint64]block{
+											0: {
+												Statement: statement{
+													Do: &doStatement{
+														&body{
+															Qty: 1,
+															Blocks: map[uint64]block{
+																0: {
+																	Statement: statement{
+																		FuncCall: &funcCallStatement{
+																			Prefixexp: &prefixexpStatement{
+																				Element: &element{
+																					Token: &lexmachine.Token{
+																						Type:        nID,
+																						Value:       "print",
+																						Lexeme:      []byte("print"),
+																						TC:          35,
+																						StartLine:   2,
+																						StartColumn: 35,
+																						EndLine:     2,
+																						EndColumn:   39,
+																					},
+																				},
+																			},
+																			Explist: &explist{
+																				List: []*exp{
+																					{
+																						Element: &element{
+																							Token: &lexmachine.Token{
+																								Type:        nID,
+																								Value:       "i",
+																								Lexeme:      []byte("i"),
+																								TC:          41,
+																								StartLine:   2,
+																								StartColumn: 41,
+																								EndLine:     2,
+																								EndColumn:   41,
 																							},
 																						},
 																					},

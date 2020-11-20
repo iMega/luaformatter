@@ -103,8 +103,11 @@ var (
 			nThis: &newlineStatement{},
 		},
 		nFor: {
-			nThis: &forNumericalStatement{},
+			nThis: &forStatement{},
 			nID:   &field{},
+		},
+		nIn: {
+			nID: &explist{},
 		},
 	}
 )

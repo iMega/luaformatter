@@ -143,24 +143,24 @@ const (
 	tsExpList
 	tsPrefixexpStatement
 	tsFuncCallStatement
+	tsFieldList
 	tsField
 )
 
 type statement struct {
-	Assignment   *assignmentStatement
-	FuncCall     *funcCallStatement
-	Label        *labelStatement
-	Break        *breakStatement
-	Goto         *gotoStatement
-	Do           *doStatement
-	While        *whileStatement
-	Repeat       *repeatStatement
-	If           *ifStatement
-	ForNumerical *forNumericalStatement
-	ForGeneric   *forGenericStatement
-	Function     *functionStatement
-	Comment      *commentStatement
-	NewLine      *newlineStatement
+	Assignment *assignmentStatement
+	FuncCall   *funcCallStatement
+	Label      *labelStatement
+	Break      *breakStatement
+	Goto       *gotoStatement
+	Do         *doStatement
+	While      *whileStatement
+	Repeat     *repeatStatement
+	If         *ifStatement
+	For        *forStatement
+	Function   *functionStatement
+	Comment    *commentStatement
+	NewLine    *newlineStatement
 }
 
 func newStatement(st statementIntf) statement {
@@ -185,7 +185,7 @@ func newStatement(st statementIntf) statement {
 	// 	stat.Repeat = v
 	// case *ifStatement:
 	// 	stat.If = v
-	// case *forNumericalStatement:
+	// case *forStatement:
 	// 	stat.ForNumerical = v
 	// case *forGenericStatement:
 	// 	stat.ForGeneric = v

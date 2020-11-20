@@ -33,7 +33,11 @@ func (field) TypeOf() typeStatement {
 }
 
 func (s *field) IsEnd(prev, cur *element) bool {
-	return cur.Token.Type == nComma
+	if cur.Token.Type == nIn {
+		return true
+	}
+
+	return cur.Token.Type == nComma || cur.Token.Type == nDo
 }
 
 func (s *field) Append(el *element) {}

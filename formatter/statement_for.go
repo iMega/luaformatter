@@ -14,45 +14,40 @@
 
 package formatter
 
-type forNumericalStatement struct {
-	VarPart   *field
-	LimitPart *exp
-	StepPart  *exp
+type forStatement struct {
+	FieldList *fieldlist
+	Explist   *explist
 	Body      statementIntf
 }
 
-func (forNumericalStatement) New() statementIntf {
-	return &forNumericalStatement{}
+func (forStatement) New() statementIntf {
+	return &forStatement{}
 }
 
-func (forNumericalStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (forStatement) InnerStatement(prev, cur *element) statementIntf {
+	return &fieldlist{}
 }
 
-func (forNumericalStatement) TypeOf() typeStatement {
+func (forStatement) TypeOf() typeStatement {
 	return tsIf
 }
 
-func (s *forNumericalStatement) IsEnd(prev, cur *element) bool {
+func (s *forStatement) IsEnd(prev, cur *element) bool {
 	return cur.Token.Type == nEnd
 }
 
-func (s *forNumericalStatement) Append(el *element) {}
+func (s *forStatement) Append(el *element) {}
 
-func (s *forNumericalStatement) AppendStatement(st statementIntf) {
+func (s *forStatement) AppendStatement(st statementIntf) {
 	switch v := st.(type) {
-	case *field:
-		s.VarPart = v
-	case *exp:
-		if s.LimitPart == nil {
-			s.LimitPart = v
-		} else {
-			s.StepPart = v
-		}
+	case *fieldlist:
+		s.FieldList = v
+	case *explist:
+		s.Explist = v
 	}
 }
 
-func (s *forNumericalStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *forStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	if cur.Token.Type != nDo {
 		return prevSt
 	}
@@ -62,12 +57,4 @@ func (s *forNumericalStatement) GetBody(prevSt statementIntf, cur *element) stat
 	}
 
 	return s.Body
-}
-
-type forGenericStatement struct {
-	IDStatement *element
-	Namelist    namelist
-	InElement   element
-	Explist     explist
-	doStatement
 }
