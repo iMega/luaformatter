@@ -20,6 +20,267 @@ func TestParseFor(t *testing.T) {
 	}{
 		{
 			skip: false,
+			name: "for generic statement",
+			args: args{
+				code: []byte(`
+for i, pkg in ipairs(packages) do
+    for name, version in pairs(pkg) do
+        print(version)
+    end
+end
+`,
+				),
+			},
+			want: &document{
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								For: &forStatement{
+									FieldList: &fieldlist{
+										List: []*field{
+											{
+												Key: &exp{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "i",
+															Lexeme:      []byte("i"),
+															TC:          5,
+															StartLine:   2,
+															StartColumn: 5,
+															EndLine:     2,
+															EndColumn:   5,
+														},
+													},
+												},
+											},
+											{
+												Key: &exp{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "pkg",
+															Lexeme:      []byte("pkg"),
+															TC:          8,
+															StartLine:   2,
+															StartColumn: 8,
+															EndLine:     2,
+															EndColumn:   10,
+														},
+													},
+												},
+											},
+										},
+									},
+									Explist: &explist{
+										List: []*exp{
+											{
+												Prefixexp: &prefixexpStatement{
+													FuncCall: &funcCallStatement{
+														Prefixexp: &prefixexpStatement{
+															Element: &element{
+																Token: &lexmachine.Token{
+																	Type:        nID,
+																	Value:       "ipairs",
+																	Lexeme:      []byte("ipairs"),
+																	TC:          15,
+																	StartLine:   2,
+																	StartColumn: 15,
+																	EndLine:     2,
+																	EndColumn:   20,
+																},
+															},
+														},
+														Explist: &explist{
+															List: []*exp{
+																{
+																	Element: &element{
+																		Token: &lexmachine.Token{
+																			Type:        nID,
+																			Value:       "packages",
+																			Lexeme:      []byte("packages"),
+																			TC:          22,
+																			StartLine:   2,
+																			StartColumn: 22,
+																			EndLine:     2,
+																			EndColumn:   29,
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									Body: &body{
+										Qty: 1,
+										Blocks: map[uint64]block{
+											0: {
+												Statement: statement{
+													Do: &doStatement{
+														Body: &body{
+															Qty: 1,
+															Blocks: map[uint64]block{
+																0: {
+																	Statement: statement{
+																		For: &forStatement{
+																			FieldList: &fieldlist{
+																				List: []*field{
+																					{
+																						Key: &exp{
+																							Element: &element{
+																								Token: &lexmachine.Token{
+																									Type:        nID,
+																									Value:       "name",
+																									Lexeme:      []byte("name"),
+																									TC:          43,
+																									StartLine:   3,
+																									StartColumn: 9,
+																									EndLine:     3,
+																									EndColumn:   12,
+																								},
+																							},
+																						},
+																					},
+																					{
+																						Key: &exp{
+																							Element: &element{
+																								Token: &lexmachine.Token{
+																									Type:        nID,
+																									Value:       "version",
+																									Lexeme:      []byte("version"),
+																									TC:          49,
+																									StartLine:   3,
+																									StartColumn: 15,
+																									EndLine:     3,
+																									EndColumn:   21,
+																								},
+																							},
+																						},
+																					},
+																				},
+																			},
+																			Explist: &explist{
+																				List: []*exp{
+																					{
+																						Prefixexp: &prefixexpStatement{
+																							FuncCall: &funcCallStatement{
+																								Prefixexp: &prefixexpStatement{
+																									Element: &element{
+																										Token: &lexmachine.Token{
+																											Type:        nID,
+																											Value:       "pairs",
+																											Lexeme:      []byte("pairs"),
+																											TC:          60,
+																											StartLine:   3,
+																											StartColumn: 26,
+																											EndLine:     3,
+																											EndColumn:   30,
+																										},
+																									},
+																								},
+																								Explist: &explist{
+																									List: []*exp{
+																										{
+																											Element: &element{
+																												Token: &lexmachine.Token{
+																													Type:        nID,
+																													Value:       "pkg",
+																													Lexeme:      []byte("pkg"),
+																													TC:          66,
+																													StartLine:   3,
+																													StartColumn: 32,
+																													EndLine:     3,
+																													EndColumn:   34,
+																												},
+																											},
+																										},
+																									},
+																								},
+																							},
+																						},
+																					},
+																				},
+																			},
+																			Body: &body{
+																				Qty: 1,
+																				Blocks: map[uint64]block{
+																					0: {
+																						Statement: statement{
+																							Do: &doStatement{
+																								Body: &body{
+																									Qty: 1,
+																									Blocks: map[uint64]block{
+																										0: {
+																											Statement: statement{
+																												FuncCall: &funcCallStatement{
+																													Prefixexp: &prefixexpStatement{
+																														Element: &element{
+																															Token: &lexmachine.Token{
+																																Type:        nID,
+																																Value:       "print",
+																																Lexeme:      []byte("print"),
+																																TC:          82,
+																																StartLine:   4,
+																																StartColumn: 9,
+																																EndLine:     4,
+																																EndColumn:   13,
+																															},
+																														},
+																													},
+																													Explist: &explist{
+																														List: []*exp{
+																															{
+																																Element: &element{
+																																	Token: &lexmachine.Token{
+																																		Type:        nID,
+																																		Value:       "version",
+																																		Lexeme:      []byte("version"),
+																																		TC:          88,
+																																		StartLine:   4,
+																																		StartColumn: 15,
+																																		EndLine:     4,
+																																		EndColumn:   21,
+																																	},
+																																},
+																															},
+																														},
+																													},
+																												},
+																											},
+																										},
+																									},
+																								},
+																							},
+																						},
+																					},
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+					Qty: 1,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
 			name: "for numerical statement",
 			args: args{
 				code: []byte(`

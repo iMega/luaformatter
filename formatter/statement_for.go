@@ -14,6 +14,10 @@
 
 package formatter
 
+import (
+	"io"
+)
+
 type forStatement struct {
 	FieldList *fieldlist
 	Explist   *explist
@@ -57,4 +61,50 @@ func (s *forStatement) GetBody(prevSt statementIntf, cur *element) statementIntf
 	}
 
 	return s.Body
+}
+
+func (s *forStatement) Format(c *Config, p printer, w io.Writer) error {
+	if _, err := w.Write([]byte("for ")); err != nil {
+		return err
+	}
+
+	if s.FieldList != nil {
+		if err := s.FieldList.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
+	if s.Explist != nil {
+		if _, err := w.Write([]byte(" in ")); err != nil {
+			return err
+		}
+
+		if err := s.Explist.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
+	if st, ok := s.Body.(*body); ok {
+		if err := space(w); err != nil {
+			return err
+		}
+
+		np := p
+		np.ParentStatement = s.TypeOf()
+		np.IgnoreFirstPad = true
+
+		if err := st.Format(c, np, w); err != nil {
+			return err
+		}
+	}
+
+	if err := p.WritePad(w); err != nil {
+		return err
+	}
+
+	if _, err := w.Write([]byte("end")); err != nil {
+		return err
+	}
+
+	return nil
 }

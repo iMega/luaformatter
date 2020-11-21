@@ -20,6 +20,48 @@ func TestParseFunction(t *testing.T) {
 	}{
 		{
 			skip: false,
+			name: "empty local function",
+			args: args{
+				code: []byte(`
+local function a()
+end
+`,
+				),
+			},
+			want: &document{
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Function: &functionStatement{
+									IsLocal: true,
+									Name: &element{
+										Token: &lexmachine.Token{
+											Type:        nID,
+											Value:       "a",
+											Lexeme:      []byte("a"),
+											TC:          16,
+											StartLine:   2,
+											StartColumn: 16,
+											EndLine:     2,
+											EndColumn:   16,
+										},
+									},
+									Body: &body{
+										Blocks: make(map[uint64]block),
+									},
+								},
+							},
+						},
+					},
+					Qty: 1,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
 			name: "empty function",
 			args: args{
 				code: []byte(`

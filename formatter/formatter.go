@@ -48,7 +48,9 @@ func DefaultConfig() Config {
 }
 
 type printer struct {
-	Pad uint8
+	Pad             uint8
+	ParentStatement typeStatement
+	IgnoreFirstPad  bool
 }
 
 func (p printer) WritePad(w io.Writer) error {

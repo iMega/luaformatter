@@ -88,9 +88,12 @@ func (b *body) Format(c *Config, p printer, w io.Writer) error {
 }
 
 func (b *block) Format(c *Config, p printer, w io.Writer) error {
-	if err := p.WritePad(w); err != nil {
-		return err
+	if !p.IgnoreFirstPad {
+		if err := p.WritePad(w); err != nil {
+			return err
+		}
 	}
+	p.IgnoreFirstPad = false
 
 	if s := b.Statement.Assignment; s != nil {
 		if err := s.Format(c, p, w); err != nil {
@@ -98,7 +101,19 @@ func (b *block) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
+	if st := b.Statement.Do; st != nil {
+		if err := st.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
 	if st := b.Statement.If; st != nil {
+		if err := st.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
+	if st := b.Statement.For; st != nil {
 		if err := st.Format(c, p, w); err != nil {
 			return err
 		}

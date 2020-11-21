@@ -1,5 +1,7 @@
 package formatter
 
+import "io"
+
 type fieldlist struct {
 	List []*field
 }
@@ -42,4 +44,20 @@ func (s *fieldlist) AppendStatement(st statementIntf) {
 
 func (s *fieldlist) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
+}
+
+func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
+	for i, v := range s.List {
+		if err := v.Format(c, p, w); err != nil {
+			return err
+		}
+
+		if i < len(s.List)-1 {
+			if _, err := w.Write([]byte(", ")); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }

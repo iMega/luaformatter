@@ -14,6 +14,8 @@
 
 package formatter
 
+import "io"
+
 type field struct {
 	Key   *exp
 	Val   *exp
@@ -59,4 +61,24 @@ func (s *field) AppendStatement(st statementIntf) {
 
 func (s *field) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
+}
+
+func (s *field) Format(c *Config, p printer, w io.Writer) error {
+	if err := s.Key.Format(c, p, w); err != nil {
+		return err
+	}
+
+	if s.Val == nil {
+		return nil
+	}
+
+	if _, err := w.Write([]byte(" = ")); err != nil {
+		return err
+	}
+
+	if err := s.Val.Format(c, p, w); err != nil {
+		return err
+	}
+
+	return nil
 }
