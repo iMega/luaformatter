@@ -14,6 +14,10 @@
 
 package formatter
 
+import (
+	"io"
+)
+
 type doStatement struct {
 	Body statementIntf
 }
@@ -44,4 +48,28 @@ func (s *doStatement) GetBody(prevSt statementIntf, cur *element) statementIntf 
 	}
 
 	return s.Body
+}
+
+func (s *doStatement) Format(c *Config, p printer, w io.Writer) error {
+	if _, err := w.Write([]byte("do")); err != nil {
+		return err
+	}
+
+	if err := newLine(w); err != nil {
+		return err
+	}
+
+	if st, ok := s.Body.(*body); ok {
+		ip := p
+		ip.Pad = p.Pad + 4
+		if err := st.Format(c, ip, w); err != nil {
+			return err
+		}
+
+		if err := newLine(w); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
