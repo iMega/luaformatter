@@ -111,6 +111,10 @@ func (s *ifStatement) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
+	if err := p.WritePad(w); err != nil {
+		return err
+	}
+
 	if _, err := w.Write([]byte("end")); err != nil {
 		return err
 	}

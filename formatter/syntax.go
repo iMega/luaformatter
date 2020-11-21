@@ -68,6 +68,7 @@ var (
 		nEquality: {
 			nString: &exp{},
 			nNumber: &exp{},
+			nID:     &exp{}, // if name == searched then
 		},
 		nInequality: {
 			nNumber: &exp{},

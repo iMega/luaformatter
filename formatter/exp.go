@@ -62,6 +62,7 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 		nEquality: {
 			nNumber: false,
 			nString: false,
+			nID:     false, // if name == searched then
 		},
 		nSquareBracket: {
 			nString: false,
