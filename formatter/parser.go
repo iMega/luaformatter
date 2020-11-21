@@ -186,6 +186,12 @@ func parse(code []byte) (*document, error) {
 				assignmentWithOneVar = st
 			}
 
+			if st.TypeOf() == tsFunction {
+				if prevElement != nil && prevElement.Token.Type == nLocal {
+					st.Append(prevElement)
+				}
+			}
+
 			if currentStatement == nil {
 				chainSt.Append(st)
 
