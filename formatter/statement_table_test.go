@@ -24,6 +24,161 @@ func TestParseTable(t *testing.T) {
 			args: args{
 				code: []byte(`
 table = {
+    ["1394-E"] = val1,
+    ["UTF-8"] = val2,
+    ["and"] = val2,
+}
+`,
+				),
+			},
+			want: &document{
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Assignment: &assignmentStatement{
+									VarList: &explist{
+										List: []*exp{
+											{
+												Prefixexp: &prefixexpStatement{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "table",
+															Lexeme:      []byte("table"),
+															TC:          1,
+															StartLine:   2,
+															StartColumn: 1,
+															EndLine:     2,
+															EndColumn:   5,
+														},
+													},
+												},
+											},
+										},
+									},
+									HasEqPart: true,
+									Explist: &explist{
+										List: []*exp{
+											{
+												Table: &tableStatement{
+													FieldList: &fieldlist{
+														List: []*field{
+															{
+																Square: true,
+																Key: &exp{
+																	Element: &element{
+																		Token: &lexmachine.Token{
+																			Type:        nString,
+																			Value:       `"1394-E"`,
+																			Lexeme:      []byte(`"1394-E"`),
+																			TC:          16,
+																			StartLine:   3,
+																			StartColumn: 6,
+																			EndLine:     3,
+																			EndColumn:   13,
+																		},
+																	},
+																},
+																Val: &exp{
+																	Element: &element{
+																		Token: &lexmachine.Token{
+																			Type:        nID,
+																			Value:       "val1",
+																			Lexeme:      []byte("val1"),
+																			TC:          28,
+																			StartLine:   3,
+																			StartColumn: 18,
+																			EndLine:     3,
+																			EndColumn:   21,
+																		},
+																	},
+																},
+															},
+															{
+																Square: true,
+																Key: &exp{
+																	Element: &element{
+																		Token: &lexmachine.Token{
+																			Type:        nString,
+																			Value:       `"UTF-8"`,
+																			Lexeme:      []byte(`"UTF-8"`),
+																			TC:          39,
+																			StartLine:   4,
+																			StartColumn: 6,
+																			EndLine:     4,
+																			EndColumn:   12,
+																		},
+																	},
+																},
+																Val: &exp{
+																	Element: &element{
+																		Token: &lexmachine.Token{
+																			Type:        nID,
+																			Value:       "val2",
+																			Lexeme:      []byte("val2"),
+																			TC:          50,
+																			StartLine:   4,
+																			StartColumn: 17,
+																			EndLine:     4,
+																			EndColumn:   20,
+																		},
+																	},
+																},
+															},
+															{
+																Square: true,
+																Key: &exp{
+																	Element: &element{
+																		Token: &lexmachine.Token{
+																			Type:        nString,
+																			Value:       `"and"`,
+																			Lexeme:      []byte(`"and"`),
+																			TC:          61,
+																			StartLine:   5,
+																			StartColumn: 6,
+																			EndLine:     5,
+																			EndColumn:   10,
+																		},
+																	},
+																},
+																Val: &exp{
+																	Element: &element{
+																		Token: &lexmachine.Token{
+																			Type:        nID,
+																			Value:       "val2",
+																			Lexeme:      []byte("val2"),
+																			TC:          70,
+																			StartLine:   5,
+																			StartColumn: 15,
+																			EndLine:     5,
+																			EndColumn:   18,
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+					Qty: 1,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
+			name: "table statement",
+			args: args{
+				code: []byte(`
+table = {
     name = "Jack",
     ["1394-E"] = val1,
     ["UTF-8"] = val2,

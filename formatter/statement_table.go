@@ -53,6 +53,20 @@ func (s *tableStatement) Format(c *Config, p printer, w io.Writer) error {
 		return err
 	}
 
+	if s.FieldList != nil {
+		if len(s.FieldList.List) > 0 {
+			if err := newLine(w); err != nil {
+				return err
+			}
+		}
+
+		p.ParentStatement = s.TypeOf()
+		p.Pad = p.Pad + c.IndentSize
+		if err := s.FieldList.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
 	if _, err := w.Write([]byte("}")); err != nil {
 		return err
 	}

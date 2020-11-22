@@ -164,7 +164,8 @@ func parse(code []byte) (*document, error) {
 					nID: &field{},
 				},
 				nCurlyBracket: {
-					nID: &field{},
+					nID:            &field{},
+					nSquareBracket: &field{}, // table = {["and"] = v}
 				},
 			}
 		}
@@ -183,15 +184,15 @@ func parse(code []byte) (*document, error) {
 			var assignmentWithOneVar statementIntf
 			isPrefixexpConvertAssignment := false
 
-			if st.TypeOf() == tsAssignment && prevElement.Token.Type == nLocal {
+			if st.TypeOf() == tsAssignment && prevElement.Token.Type == nLocal { // local a
 				st.Append(prevElement)
 			}
 
-			if st.TypeOf() == tsAssignment && curElement.Token.Type == nAssign {
+			if st.TypeOf() == tsAssignment && curElement.Token.Type == nAssign { // a = 1
 				assignmentWithOneVar = st
 			}
 
-			if st.TypeOf() == tsField && curElement.Token.Type == nSquareBracket {
+			if st.TypeOf() == tsField && curElement.Token.Type == nSquareBracket { // ["and"] = 100,
 				st.Append(curElement)
 			}
 

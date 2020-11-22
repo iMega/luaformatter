@@ -19,15 +19,15 @@ func (fieldlist) TypeOf() typeStatement {
 }
 
 func (s *fieldlist) IsEnd(prev, cur *element) bool {
-	if cur.Token.Type == nComma || prev.Token.Type == nComma {
-		return false
-	}
-
 	if cur.Token.Type == nIn {
 		return true
 	}
 
-	if cur.Token.Type == nDo || cur.Token.Type == nClosingCurlyBracket {
+	if cur.Token.Type == nDo {
+		return true
+	}
+
+	if cur.Token.Type == nClosingCurlyBracket {
 		return true
 	}
 
@@ -48,12 +48,30 @@ func (s *fieldlist) GetBody(prevSt statementIntf, cur *element) statementIntf {
 
 func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 	for i, v := range s.List {
+		if p.ParentStatement == tsTable {
+			if err := p.WritePad(w); err != nil {
+				return err
+			}
+		}
+
 		if err := v.Format(c, p, w); err != nil {
 			return err
 		}
 
-		if i < len(s.List)-1 {
-			if _, err := w.Write([]byte(", ")); err != nil {
+		if p.ParentStatement != tsTable {
+			if i < len(s.List)-1 {
+				if _, err := w.Write([]byte(", ")); err != nil {
+					return err
+				}
+			}
+		}
+
+		if p.ParentStatement == tsTable {
+			if _, err := w.Write([]byte(",")); err != nil {
+				return err
+			}
+
+			if err := newLine(w); err != nil {
 				return err
 			}
 		}

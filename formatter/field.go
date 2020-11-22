@@ -68,8 +68,20 @@ func (s *field) GetBody(prevSt statementIntf, cur *element) statementIntf {
 }
 
 func (s *field) Format(c *Config, p printer, w io.Writer) error {
+	if s.Square {
+		if _, err := w.Write([]byte("[")); err != nil {
+			return err
+		}
+	}
+
 	if err := s.Key.Format(c, p, w); err != nil {
 		return err
+	}
+
+	if s.Square {
+		if _, err := w.Write([]byte("]")); err != nil {
+			return err
+		}
 	}
 
 	if s.Val == nil {
