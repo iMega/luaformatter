@@ -1,3 +1,17 @@
+// Copyright © 2020 Dmitry Stoletov <info@imega.ru>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package formatter
 
 import (
@@ -6,7 +20,7 @@ import (
 
 type exp struct {
 	Element   *element           // nil | false | true | Numeral | LiteralString | ‘...’
-	Table     *tableconstructor  // {
+	Table     *tableStatement    // {
 	Func      *functionStatement // function
 	Binop     *element
 	Unop      *element
@@ -98,7 +112,7 @@ func (s *exp) HasSyntax(el element) bool {
 
 func isExp(el *element) bool {
 	exps := []int{nNil, nFalse, nTrue, nNumber, nString, nVararg, nFunction,
-		nID} // tableconstructor | exp binop exp | unop exp
+		nID, nCurlyBracket} // tableconstructor | exp binop exp | unop exp
 	for _, e := range exps {
 		if e == el.Token.Type {
 			return true
@@ -164,8 +178,8 @@ func (s *exp) Append(el *element) {
 
 func (s *exp) AppendStatement(st statementIntf) {
 	switch v := st.(type) {
-	// case *tableconstructor:
-	// s.Table = v
+	case *tableStatement:
+		s.Table = v
 	case *functionStatement:
 		s.Func = v
 	case *exp:
@@ -186,6 +200,12 @@ func (s *exp) GetBody(prevSt statementIntf, cur *element) statementIntf {
 
 func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 	if st := s.Element; st != nil {
+		if err := st.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
+	if st := s.Table; st != nil {
 		if err := st.Format(c, p, w); err != nil {
 			return err
 		}

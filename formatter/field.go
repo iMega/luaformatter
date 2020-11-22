@@ -17,9 +17,9 @@ package formatter
 import "io"
 
 type field struct {
-	Key   *exp
-	Val   *exp
-	Sqare bool
+	Key    *exp
+	Val    *exp
+	Square bool
 }
 
 func (field) New() statementIntf {
@@ -42,7 +42,11 @@ func (s *field) IsEnd(prev, cur *element) bool {
 	return cur.Token.Type == nComma || cur.Token.Type == nDo
 }
 
-func (s *field) Append(el *element) {}
+func (s *field) Append(el *element) {
+	if el.Token.Type == nSquareBracket {
+		s.Square = true
+	}
+}
 
 func (s *field) AppendStatement(st statementIntf) {
 	v, ok := st.(*exp)

@@ -147,6 +147,7 @@ func parse(code []byte) (*document, error) {
 				nAssign: {
 					nID:     &exp{},
 					nNumber: &exp{},
+					nString: &exp{}, // = "string"
 				},
 			}
 		}
@@ -154,11 +155,15 @@ func parse(code []byte) (*document, error) {
 		if currentStatement.TypeOf() == tsFieldList {
 			s = map[tokenID]branch{
 				nComma: {
-					nID:          &field{},
-					nNumber:      &field{},
-					nSubtraction: &field{},
+					nID:            &field{},
+					nNumber:        &field{},
+					nSubtraction:   &field{},
+					nSquareBracket: &field{},
 				},
 				nFor: {
+					nID: &field{},
+				},
+				nCurlyBracket: {
 					nID: &field{},
 				},
 			}
@@ -186,7 +191,11 @@ func parse(code []byte) (*document, error) {
 				assignmentWithOneVar = st
 			}
 
-			if st.TypeOf() == tsFunction {
+			if st.TypeOf() == tsField && curElement.Token.Type == nSquareBracket {
+				st.Append(curElement)
+			}
+
+			if st.TypeOf() == tsFunction { // local function a()
 				if prevElement != nil && prevElement.Token.Type == nLocal {
 					st.Append(prevElement)
 				}
@@ -207,6 +216,21 @@ func parse(code []byte) (*document, error) {
 					chainSt.Append(st)
 				} else if currentStatement.TypeOf() == tsAssignment && st.TypeOf() == tsFunction {
 					// myvar = function() end
+					exl := &explist{}
+					currentStatement.AppendStatement(exl)
+					chainSt.Append(exl)
+
+					ex := &exp{}
+					exl.AppendStatement(ex)
+					chainSt.Append(ex)
+
+					currentStatement = ex
+
+					currentStatement.AppendStatement(st)
+					chainSt.Append(st)
+
+				} else if currentStatement.TypeOf() == tsAssignment && st.TypeOf() == tsTable {
+					// table = {}
 					exl := &explist{}
 					currentStatement.AppendStatement(exl)
 					chainSt.Append(exl)

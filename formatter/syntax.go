@@ -33,9 +33,10 @@ var (
 			nComma:       &assignmentStatement{},
 		},
 		nAssign: {
-			nNumber:   &explist{},
-			nID:       &explist{},
-			nFunction: &functionStatement{},
+			nNumber:       &explist{},
+			nID:           &explist{},
+			nFunction:     &functionStatement{},
+			nCurlyBracket: &tableStatement{},
 		},
 		nFunction: {
 			nThis: &functionStatement{},

@@ -14,8 +14,10 @@
 
 package formatter
 
+import "io"
+
 type tableStatement struct {
-	List []field
+	FieldList *fieldlist
 }
 
 func (tableStatement) New() statementIntf {
@@ -23,23 +25,37 @@ func (tableStatement) New() statementIntf {
 }
 
 func (tableStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+	return &fieldlist{}
 }
 
 func (tableStatement) TypeOf() typeStatement {
-	return tsIf
+	return tsTable
 }
 
 func (s *tableStatement) IsEnd(prev, cur *element) bool {
-	return cur.Token.Type == nEnd
+	return cur.Token.Type == nClosingCurlyBracket
 }
 
 func (s *tableStatement) Append(el *element) {}
 
 func (s *tableStatement) AppendStatement(st statementIntf) {
-	// s.Body = append(s.Body, newBlock(st))
+	if v, ok := st.(*fieldlist); ok {
+		s.FieldList = v
+	}
 }
 
 func (s *tableStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
+}
+
+func (s *tableStatement) Format(c *Config, p printer, w io.Writer) error {
+	if _, err := w.Write([]byte("{")); err != nil {
+		return err
+	}
+
+	if _, err := w.Write([]byte("}")); err != nil {
+		return err
+	}
+
+	return nil
 }
