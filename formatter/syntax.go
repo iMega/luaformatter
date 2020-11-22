@@ -36,7 +36,7 @@ var (
 			nNumber:       &explist{},
 			nID:           &explist{},
 			nFunction:     &functionStatement{},
-			nCurlyBracket: &tableStatement{},
+			nCurlyBracket: &tableStatement{}, // table = {}
 		},
 		nFunction: {
 			nThis: &functionStatement{},
@@ -65,6 +65,9 @@ var (
 		nAddition: {
 			nNumber: &exp{},
 			nID:     &exp{},
+		},
+		nLessThan: {
+			nNumber: &exp{}, // alignment < 100
 		},
 		nEquality: {
 			nString: &exp{},

@@ -65,6 +65,7 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 			nSquareBracket: false,
 			nParentheses:   false,
 			nString:        false,
+			nLessThan:      false, // alignment < 100
 		},
 		nAddition: {
 			nNumber: false,
@@ -90,6 +91,9 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 		},
 		nSubtraction: {
 			nNumber: false, // -1
+		},
+		nLessThan: {
+			nNumber: false, // alignment < 100
 		},
 	}
 
