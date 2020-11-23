@@ -16,6 +16,7 @@ package formatter
 
 import (
 	"io"
+	"sort"
 )
 
 type exp struct {
@@ -54,46 +55,62 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 
 	var syntax = map[tokenID]map[tokenID]bool{
 		nNumber: {
-			nAddition:   false,
-			nInequality: false,
-			nEquality:   false,
+			nAddition:   false, // 3 +
+			nInequality: false, // 3 ~=
+			nEquality:   false, // 3 ==
+			nAnd:        false, // 3 and
+			nOr:         false, // 3 or
 		},
 		nID: {
-			nAddition:      false,
-			nInequality:    false,
-			nEquality:      false,
-			nSquareBracket: false,
-			nParentheses:   false,
-			nString:        false,
-			nLessThan:      false, // alignment < 100
+			nAddition:      false, // id +
+			nInequality:    false, // id ~=
+			nEquality:      false, // id ==
+			nSquareBracket: false, // id[
+			nParentheses:   false, // id(
+			nString:        false, // id "string"
+			nLessThan:      false, // id <
+			nGreaterThan:   false, // id >
+			nAnd:           false, // id and
+		},
+		nAnd: {
+			nLength: false, // and #
+		},
+		nOr: {
+			nLength: false, // or #
 		},
 		nAddition: {
-			nNumber: false,
-			nID:     false,
+			nNumber: false, // + 3
+			nID:     false, // + id
 		},
 		nInequality: {
-			nNumber: false,
+			nNumber: false, // ~= 3
 		},
 		nEquality: {
-			nNumber: false,
-			nString: false,
-			nID:     false, // if name == searched then
+			nNumber: false, // == 3
+			nString: false, // == "string"
+			nID:     false, // == id
 		},
 		nSquareBracket: {
-			nString: false,
+			nString: false, // ["string"
 		},
 		nParentheses: {
-			nID: false,
+			nID: false, // (id
 		},
 		nAssign: {
-			nFunction: false, // b = function() end
-			nID:       false, // c = b()
+			nFunction: false, // = function
+			nID:       false, // = id
 		},
 		nSubtraction: {
-			nNumber: false, // -1
+			nNumber: false, // -3
 		},
 		nLessThan: {
-			nNumber: false, // alignment < 100
+			nNumber: false, // < 3
+		},
+		nGreaterThan: {
+			nNumber: false, // > 3
+		},
+		nLength: {
+			nID: false, // #id
 		},
 	}
 
@@ -115,15 +132,27 @@ func (s *exp) HasSyntax(el element) bool {
 }
 
 func isExp(el *element) bool {
-	exps := []int{nNil, nFalse, nTrue, nNumber, nString, nVararg, nFunction,
-		nID, nCurlyBracket} // tableconstructor | exp binop exp | unop exp
-	for _, e := range exps {
-		if e == el.Token.Type {
-			return true
-		}
-	}
+	exps := []int{
+		nID,           // 1
+		nFalse,        // 11
+		nFunction,     // 13
+		nNil,          // 18
+		nTrue,         // 22
+		nCurlyBracket, // 31
+		nNumber,       // 38
+		nString,       // 39
+		nVararg,       // 41
 
-	return false
+		// unop
+		nSubtraction,        // 47
+		nBitwiseExclusiveOR, // 55
+		nLength,             // 58
+		nNot,                // 65
+	} //  exp binop exp
+
+	idx := sort.SearchInts(exps, el.Token.Type)
+
+	return idx < len(exps) && exps[idx] == el.Token.Type
 }
 
 func (s *exp) Append(el *element) {
@@ -203,6 +232,12 @@ func (s *exp) GetBody(prevSt statementIntf, cur *element) statementIntf {
 }
 
 func (s *exp) Format(c *Config, p printer, w io.Writer) error {
+	if st := s.Unop; st != nil {
+		if err := st.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
 	if st := s.Element; st != nil {
 		if err := st.Format(c, p, w); err != nil {
 			return err

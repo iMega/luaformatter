@@ -36,6 +36,7 @@ var (
 			nNumber:       &explist{}, // var = 1
 			nID:           &explist{}, // var1 = var
 			nString:       &explist{}, // var = ""
+			nLength:       &explist{}, // var = #var1
 			nFunction:     &functionStatement{},
 			nCurlyBracket: &tableStatement{}, // table = {}
 		},
@@ -47,10 +48,13 @@ var (
 			nFunction: &explist{},
 			nID:       &explist{},
 			nNumber:   &explist{},
+			nFalse:    &explist{},
+			nTrue:     &explist{},
 		},
 		nIf: {
-			nThis: &ifStatement{},
-			nID:   &exp{},
+			nThis:   &ifStatement{},
+			nID:     &exp{}, // if id
+			nLength: &exp{}, // if #
 		},
 		nElseif: {
 			nThis: &elseifStatement{},
@@ -69,6 +73,9 @@ var (
 		},
 		nLessThan: {
 			nNumber: &exp{}, // alignment < 100
+		},
+		nGreaterThan: {
+			nNumber: &exp{}, // name > 3
 		},
 		nEquality: {
 			nString: &exp{},
@@ -114,6 +121,12 @@ var (
 		},
 		nIn: {
 			nID: &explist{},
+		},
+		nAnd: {
+			nLength: &exp{}, // and #
+		},
+		nOr: {
+			nLength: &exp{}, // or #
 		},
 	}
 )
