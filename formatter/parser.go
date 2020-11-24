@@ -51,18 +51,20 @@ func parse(code []byte) (*document, error) {
 
 		// fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
 
-		if currentStatement != nil {
-			for ok := currentStatement.IsEnd(prevElement, curElement); ok; ok = currentStatement.IsEnd(prevElement, curElement) {
-				cs := chainSt.ExtractPrev()
-				if cs == nil {
-					currentBody = doc.Bod
-					chainSt.Append(currentBody)
-					currentStatement = currentBody
+		for isBlockEnd, ok := currentStatement.IsEnd(prevElement, curElement); ok; isBlockEnd, ok = currentStatement.IsEnd(prevElement, curElement) {
+			cs := chainSt.ExtractPrev()
+			if cs == nil {
+				currentBody = doc.Bod
+				chainSt.Append(currentBody)
+				currentStatement = currentBody
 
-					break
-				}
+				break
+			}
 
-				currentStatement = cs
+			currentStatement = cs
+
+			if isBlockEnd {
+				break
 			}
 		}
 

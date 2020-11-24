@@ -34,12 +34,12 @@ func (field) TypeOf() typeStatement {
 	return tsField
 }
 
-func (s *field) IsEnd(prev, cur *element) bool {
+func (s *field) IsEnd(prev, cur *element) (bool, bool) {
 	if cur.Token.Type == nIn {
-		return true
+		return false, true
 	}
 
-	return cur.Token.Type == nComma || cur.Token.Type == nDo
+	return false, cur.Token.Type == nComma || cur.Token.Type == nDo
 }
 
 func (s *field) Append(el *element) {

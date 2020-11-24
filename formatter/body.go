@@ -39,20 +39,20 @@ func (body) InnerStatement(prev, cur *element) statementIntf {
 
 func (body) TypeOf() typeStatement { return tsBody }
 
-func (b *body) IsEnd(prev, cur *element) bool {
+func (b *body) IsEnd(prev, cur *element) (bool, bool) {
 	if cur.Token.Type == nEnd {
-		return true
+		return false, true
 	}
 
 	if cur.Token.Type == nElseif {
-		return true
+		return false, true
 	}
 
 	if cur.Token.Type == nElse {
-		return true
+		return false, true
 	}
 
-	return false
+	return false, false
 }
 
 func (b *body) Append(el *element) {}
@@ -89,8 +89,10 @@ func (b *body) Format(c *Config, p printer, w io.Writer) error {
 
 func (b *block) Format(c *Config, p printer, w io.Writer) error {
 	if !p.IgnoreFirstPad {
-		if err := p.WritePad(w); err != nil {
-			return err
+		if b.Statement.NewLine == nil {
+			if err := p.WritePad(w); err != nil {
+				return err
+			}
 		}
 	}
 	p.IgnoreFirstPad = false

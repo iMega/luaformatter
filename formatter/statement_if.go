@@ -35,8 +35,12 @@ func (ifStatement) TypeOf() typeStatement {
 	return tsIf
 }
 
-func (s *ifStatement) IsEnd(prev, cur *element) bool {
-	return cur.Token.Type == nEnd
+func (s *ifStatement) IsEnd(prev, cur *element) (bool, bool) {
+	if cur.Token.Type == nEnd {
+		return true, true
+	}
+
+	return false, false
 }
 
 func (s *ifStatement) Append(el *element) {}
@@ -139,12 +143,12 @@ func (elseifStatement) TypeOf() typeStatement {
 	return tsIf
 }
 
-func (s *elseifStatement) IsEnd(prev, cur *element) bool {
+func (s *elseifStatement) IsEnd(prev, cur *element) (bool, bool) {
 	if cur.Token.Type == nElseif {
-		return true
+		return false, true
 	}
 
-	return cur.Token.Type == nEnd || cur.Token.Type == nElse
+	return false, cur.Token.Type == nEnd || cur.Token.Type == nElse
 }
 
 func (s *elseifStatement) Append(el *element) {}
@@ -217,8 +221,8 @@ func (elseStatement) TypeOf() typeStatement {
 	return tsIf
 }
 
-func (s *elseStatement) IsEnd(prev, cur *element) bool {
-	return cur.Token.Type == nEnd
+func (s *elseStatement) IsEnd(prev, cur *element) (bool, bool) {
+	return false, cur.Token.Type == nEnd
 }
 
 func (s *elseStatement) Append(el *element) {}

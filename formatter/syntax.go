@@ -68,8 +68,12 @@ var (
 		nGoto:  {nThis: &gotoStatement{}},
 		nBreak: {nThis: &breakStatement{}},
 		nAddition: {
-			nNumber: &exp{},
-			nID:     &exp{},
+			nNumber: &exp{}, // + 3
+			nID:     &exp{}, // + id
+		},
+		nConcat: {
+			nID:     &exp{}, // .. id
+			nString: &exp{}, // .. "string"
 		},
 		nLessThan: {
 			nNumber: &exp{}, // alignment < 100

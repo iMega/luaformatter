@@ -1,3 +1,17 @@
+// Copyright © 2020 Dmitry Stoletov <info@imega.ru>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package formatter
 
 import (
@@ -22,7 +36,7 @@ func newScanner(code []byte) (*scanner, error) {
 	}
 
 	lexer.Add([]byte(`([a-zA-Z_.][a-zA-Z0-9_.:]*)`), token(nID))
-	lexer.Add([]byte(`\n\s*\n`), token(nLF))
+	lexer.Add([]byte(`\s*\n\s*\n\s*`), token(nLF))
 	lexer.Add([]byte("( |\t|\f|\r|\n)+"), skip)
 	lexer.Add([]byte(`--\[\[([^\]\]])*\]\]`), token(nCommentLong))
 	lexer.Add([]byte(`--( |\S)*`), token(nComment))
@@ -172,6 +186,9 @@ const (
 	// Length Operator
 	nLength
 
+	// Concatenation
+	nConcat
+
 	// Relational Operators
 	nEquality
 	nInequality
@@ -247,6 +264,9 @@ var (
 
 		// Length Operator
 		nLength: "#",
+
+		// Concatenation
+		nConcat: `\.\.`,
 
 		// Relational Operators
 		nEquality:       "==",
@@ -327,6 +347,9 @@ var (
 
 		// Length Operator
 		nLength: "nLength",
+
+		// Concatenation
+		nConcat: "nConcat",
 
 		// Relational Operators
 		nEquality:       "nEquality",

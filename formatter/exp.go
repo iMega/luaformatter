@@ -48,9 +48,9 @@ func (exp) TypeOf() typeStatement {
 	return tsExp
 }
 
-func (s *exp) IsEnd(prev, cur *element) bool {
+func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 	if cur.Token.Type == nEnd {
-		return true
+		return false, true
 	}
 
 	var syntax = map[tokenID]map[tokenID]bool{
@@ -94,7 +94,8 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 			nString: false, // ["string"
 		},
 		nParentheses: {
-			nID: false, // (id
+			nID:     false, // (id
+			nString: false, // ("string"
 		},
 		nAssign: {
 			nFunction: false, // = function
@@ -112,19 +113,26 @@ func (s *exp) IsEnd(prev, cur *element) bool {
 		nLength: {
 			nID: false, // #id
 		},
+		nClosingParentheses: {
+			nConcat: false, // ) ..
+		},
+		nConcat: {
+			nID:     false, // .. id
+			nString: false, // .. "string"
+		},
 	}
 
 	v, ok := syntax[tokenID(prev.Token.Type)]
 	if !ok {
-		return true
+		return false, true
 	}
 
 	res, ok := v[tokenID(cur.Token.Type)]
 	if !ok {
-		return true
+		return false, true
 	}
 
-	return res
+	return false, res
 }
 
 func (s *exp) HasSyntax(el element) bool {

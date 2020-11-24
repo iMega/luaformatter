@@ -32,15 +32,15 @@ func (returnStatement) TypeOf() typeStatement {
 	return tsReturn
 }
 
-func (s *returnStatement) IsEnd(prev, cur *element) bool {
+func (s *returnStatement) IsEnd(prev, cur *element) (bool, bool) {
 	if nReturn == cur.Token.Type {
-		return false
+		return false, false
 	}
 
 	branch := getsyntax(syntax, tokenID(nReturn))
 	_, ok := branch[cur.Token.Type]
 
-	return !ok
+	return false, !ok
 }
 
 func (s *returnStatement) HasSyntax(el element) bool {

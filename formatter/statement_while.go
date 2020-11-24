@@ -31,8 +31,8 @@ func (whileStatement) TypeOf() typeStatement {
 	return tsIf
 }
 
-func (s *whileStatement) IsEnd(prev, cur *element) bool {
-	return cur.Token.Type == nEnd
+func (s *whileStatement) IsEnd(prev, cur *element) (bool, bool) {
+	return false, cur.Token.Type == nEnd
 }
 
 func (s *whileStatement) Append(el *element) {}

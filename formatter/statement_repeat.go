@@ -31,20 +31,20 @@ func (repeatStatement) TypeOf() typeStatement {
 	return tsIf
 }
 
-func (s *repeatStatement) IsEnd(prev, cur *element) bool {
+func (s *repeatStatement) IsEnd(prev, cur *element) (bool, bool) {
 	if prev != nil && prev.Token.Type == nRepeat {
-		return false
+		return false, false
 	}
 
 	if cur.Token.Type == nUntil {
-		return false
+		return false, false
 	}
 
 	if prev != nil && prev.Token.Type == nUntil {
-		return false
+		return false, false
 	}
 
-	return true
+	return false, true
 }
 
 func (s *repeatStatement) Append(el *element) {}

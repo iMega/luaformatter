@@ -19,7 +19,7 @@ func (fakeStatements) Append(*element) {}
 
 func (fakeStatements) AppendStatement(statementIntf) {}
 
-func (fakeStatements) IsEnd(prev, cur *element) bool { return false }
+func (fakeStatements) IsEnd(prev, cur *element) (bool, bool) { return false, false }
 
 func (fakeStatements) TypeOf() typeStatement { return 0 }
 

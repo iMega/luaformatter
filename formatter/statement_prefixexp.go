@@ -53,36 +53,36 @@ func (prefixexpStatement) TypeOf() typeStatement {
 	return tsPrefixexpStatement
 }
 
-func (s *prefixexpStatement) IsEnd(prev, cur *element) bool {
+func (s *prefixexpStatement) IsEnd(prev, cur *element) (bool, bool) {
 	if cur.Token.Type == nString {
-		return false
+		return false, false
 	}
 
 	if cur.Token.Type == nParentheses { // function call
-		return false
+		return false, false
 	}
 
 	if cur.Token.Type == nSquareBracket { // function call
-		return false
+		return false, false
 	}
 
 	if cur.Token.Type == nClosingSquareBracket { // function call
-		return false
+		return false, false
 	}
 
 	if cur.Token.Type == nID { // function call
-		return false
+		return false, false
 	}
 
 	if cur.Token.Type == nComma { // assignment statement
-		return false
+		return false, false
 	}
 
 	if prev != nil && prev.Token.Type == nID && cur.Token.Type == nAssign {
-		return false
+		return false, false
 	}
 
-	return true //cur.Token.Type == nAssign
+	return false, true //cur.Token.Type == nAssign
 }
 
 func (s *prefixexpStatement) Append(el *element) {

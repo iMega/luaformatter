@@ -34,8 +34,8 @@ func (doStatement) TypeOf() typeStatement {
 	return tsIf
 }
 
-func (s *doStatement) IsEnd(prev, cur *element) bool {
-	return cur.Token.Type == nEnd
+func (s *doStatement) IsEnd(prev, cur *element) (bool, bool) {
+	return false, cur.Token.Type == nEnd
 }
 
 func (s *doStatement) Append(el *element) {}
