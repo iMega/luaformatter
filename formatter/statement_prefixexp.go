@@ -78,6 +78,10 @@ func (s *prefixexpStatement) IsEnd(prev, cur *element) (bool, bool) {
 		return false, false
 	}
 
+	if cur.Token.Type == nDot { // prefixexpStatement
+		return false, false
+	}
+
 	if prev != nil && prev.Token.Type == nID && cur.Token.Type == nAssign {
 		return false, false
 	}
@@ -95,6 +99,10 @@ func (s *prefixexpStatement) Append(el *element) {
 	}
 
 	if el.Token.Type == nClosingParentheses {
+		return
+	}
+
+	if el.Token.Type == nDot {
 		return
 	}
 

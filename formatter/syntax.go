@@ -28,9 +28,10 @@ var (
 			nThis: &prefixexpStatement{},
 		},
 		nClosingSquareBracket: {
-			nID:          &prefixexpStatement{},
-			nParentheses: &funcCallStatement{},
-			nComma:       &assignmentStatement{},
+			// nID:          &prefixexpStatement{},
+			nDot:         &prefixexpStatement{},  // ].
+			nParentheses: &funcCallStatement{},   // ](
+			nComma:       &assignmentStatement{}, // ],
 		},
 		nAssign: {
 			nNumber:       &explist{}, // var = 1

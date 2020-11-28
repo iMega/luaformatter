@@ -81,11 +81,11 @@ r["ff"]["dd"].name.name2["ee"]()
 													Element: &element{
 														Token: &lexmachine.Token{
 															Type:        nID,
-															Value:       ".name.name2",
-															Lexeme:      []byte(".name.name2"),
-															TC:          14,
+															Value:       "name.name2",
+															Lexeme:      []byte("name.name2"),
+															TC:          15,
 															StartLine:   2,
-															StartColumn: 14,
+															StartColumn: 15,
 															EndLine:     2,
 															EndColumn:   24,
 														},
@@ -190,11 +190,11 @@ a["bb"]["cc"].dd.ee["ff"], g["hh"] = 1, 2
 																Element: &element{
 																	Token: &lexmachine.Token{
 																		Type:        nID,
-																		Value:       ".dd.ee",
-																		Lexeme:      []byte(".dd.ee"),
-																		TC:          14,
+																		Value:       "dd.ee",
+																		Lexeme:      []byte("dd.ee"),
+																		TC:          15,
 																		StartLine:   2,
-																		StartColumn: 14,
+																		StartColumn: 15,
 																		EndLine:     2,
 																		EndColumn:   19,
 																	},

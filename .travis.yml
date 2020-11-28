@@ -11,3 +11,6 @@ jobs:
     os: linux
     script:
       - make release TAG=`echo $TRAVIS_COMMIT | cut -c -7`
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
