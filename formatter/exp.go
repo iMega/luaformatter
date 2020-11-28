@@ -120,6 +120,9 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 			nID:     false, // .. id
 			nString: false, // .. "string"
 		},
+		nString: {
+			nConcat: false, // "string" ..
+		},
 	}
 
 	v, ok := syntax[tokenID(prev.Token.Type)]
@@ -264,6 +267,12 @@ func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
+	if st := s.Prefixexp; st != nil {
+		if err := st.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
 	if st := s.Binop; st != nil {
 		if err := space(w); err != nil {
 			return err
@@ -279,12 +288,6 @@ func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	if st := s.Exp; st != nil {
-		if err := st.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if st := s.Prefixexp; st != nil {
 		if err := st.Format(c, p, w); err != nil {
 			return err
 		}

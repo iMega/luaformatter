@@ -103,6 +103,7 @@ func (s *prefixexpStatement) Append(el *element) {
 	}
 
 	if el.Token.Type == nDot {
+		s.FieldAccessor = el
 		return
 	}
 
@@ -110,6 +111,10 @@ func (s *prefixexpStatement) Append(el *element) {
 		return
 	}
 
+	if s.FieldAccessor != nil && s.FieldAccessor.Token.Type == nDot { // .id
+		s.FieldAccessor = el
+		return
+	}
 	s.Element = el
 }
 
@@ -149,6 +154,16 @@ func (s *prefixexpStatement) Format(c *Config, p printer, w io.Writer) error {
 		}
 
 		if _, err := w.Write([]byte("]")); err != nil {
+			return err
+		}
+	}
+
+	if st := s.FieldAccessor; st != nil {
+		if _, err := w.Write([]byte(".")); err != nil {
+			return err
+		}
+
+		if err := st.Format(c, p, w); err != nil {
 			return err
 		}
 	}

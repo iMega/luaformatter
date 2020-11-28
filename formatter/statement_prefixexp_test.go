@@ -78,7 +78,7 @@ r["ff"]["dd"].name.name2["ee"]()
 													},
 												},
 												Prefixexp: &prefixexpStatement{
-													Element: &element{
+													FieldAccessor: &element{
 														Token: &lexmachine.Token{
 															Type:        nID,
 															Value:       "name.name2",
@@ -187,7 +187,7 @@ a["bb"]["cc"].dd.ee["ff"], g["hh"] = 1, 2
 																},
 															},
 															Prefixexp: &prefixexpStatement{
-																Element: &element{
+																FieldAccessor: &element{
 																	Token: &lexmachine.Token{
 																		Type:        nID,
 																		Value:       "dd.ee",
