@@ -20,6 +20,143 @@ func TestParseAssignment(t *testing.T) {
 	}{
 		{
 			skip: false,
+			name: "local assignment statement with one funccall",
+			args: args{
+				code: []byte(`
+local data = get_data("KRP") .. tostring(area_number)
+`,
+				),
+			},
+			want: &document{
+				Body: make(map[uint64]Block),
+				Bod: &body{
+					Blocks: map[uint64]block{
+						0: {
+							Statement: statement{
+								Assignment: &assignmentStatement{
+									IsLocal: true,
+									VarList: &explist{
+										List: []*exp{
+											{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nID,
+														Value:       "data",
+														Lexeme:      []byte("data"),
+														TC:          7,
+														StartLine:   2,
+														StartColumn: 7,
+														EndLine:     2,
+														EndColumn:   10,
+													},
+												},
+											},
+										},
+									},
+									HasEqPart: true,
+									Explist: &explist{
+										List: []*exp{
+											{
+												Prefixexp: &prefixexpStatement{
+													FuncCall: &funcCallStatement{
+														Prefixexp: &prefixexpStatement{
+															Element: &element{
+																Token: &lexmachine.Token{
+																	Type:        nID,
+																	Value:       "get_data",
+																	Lexeme:      []byte("get_data"),
+																	TC:          14,
+																	StartLine:   2,
+																	StartColumn: 14,
+																	EndLine:     2,
+																	EndColumn:   21,
+																},
+															},
+														},
+														Explist: &explist{
+															List: []*exp{
+																{
+																	Element: &element{
+																		Token: &lexmachine.Token{
+																			Type:        nString,
+																			Value:       `"KRP"`,
+																			Lexeme:      []byte(`"KRP"`),
+																			TC:          23,
+																			StartLine:   2,
+																			StartColumn: 23,
+																			EndLine:     2,
+																			EndColumn:   27,
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+												Binop: &element{
+													Token: &lexmachine.Token{
+														Type:        nConcat,
+														Value:       "..",
+														Lexeme:      []byte(".."),
+														TC:          30,
+														StartLine:   2,
+														StartColumn: 30,
+														EndLine:     2,
+														EndColumn:   31,
+													},
+												},
+												Exp: &exp{
+													Prefixexp: &prefixexpStatement{
+														FuncCall: &funcCallStatement{
+															Prefixexp: &prefixexpStatement{
+																Element: &element{
+																	Token: &lexmachine.Token{
+																		Type:        nID,
+																		Value:       "tostring",
+																		Lexeme:      []byte("tostring"),
+																		TC:          33,
+																		StartLine:   2,
+																		StartColumn: 33,
+																		EndLine:     2,
+																		EndColumn:   40,
+																	},
+																},
+															},
+															Explist: &explist{
+																List: []*exp{
+																	{
+																		Element: &element{
+																			Token: &lexmachine.Token{
+																				Type:        nID,
+																				Value:       "area_number",
+																				Lexeme:      []byte("area_number"),
+																				TC:          42,
+																				StartLine:   2,
+																				StartColumn: 42,
+																				EndLine:     2,
+																				EndColumn:   52,
+																			},
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+					Qty: 1,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
 			name: "global assignment statement with one function",
 			args: args{
 				code: []byte(`

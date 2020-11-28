@@ -36,6 +36,10 @@ func (funcCallStatement) TypeOf() typeStatement {
 }
 
 func (s *funcCallStatement) IsEnd(prev, cur *element) (bool, bool) {
+	if cur.Token.Type == nClosingParentheses {
+		return true, true
+	}
+
 	return false, true
 }
 

@@ -70,8 +70,8 @@ func (s *prefixexpStatement) IsEnd(prev, cur *element) (bool, bool) {
 		return false, false
 	}
 
-	if cur.Token.Type == nID { // function call
-		return false, false
+	if prev != nil && prev.Token.Type == nDot && cur.Token.Type == nID { // function call
+		return false, false // .id
 	}
 
 	if cur.Token.Type == nComma { // assignment statement
