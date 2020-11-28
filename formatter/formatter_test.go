@@ -21,45 +21,62 @@ func TestFormat(t *testing.T) {
 			args: args{
 				c: DefaultConfig(),
 				b: []byte(`
-a = 1
+a = b
+a = ""
+a = 0
 local a
+local a, b
 local a = b
+local a, b = c, d
+local a = b()
+local a = b({})
+local a = b({
+    c = d,
+})
+local a = b.c({
+    d = e,
+})
+local a = b("1")
+local a = b("")
 `),
 			},
 			wantW: `
-a = 1
+a = b
+a = ""
+a = 0
 local a
+local a, b
 local a = b
+local a, b = c, d
+local a = b()
+local a = b({})
+local a = b({
+    c = d,
+})
+local a = b.c({
+    d = e,
+})
+local a = b("1")
+local a = b("")
 `,
 			wantErr: false,
 		},
 		{
-			name: "function call statement with empty table",
+			name: "function call statement",
 			args: args{
 				c: DefaultConfig(),
 				b: []byte(`
+a()
 a{}
 a({})
-b""
+a""
 `),
 			},
 			wantW: `
+a()
 a({})
 a({})
-b("")
-`,
-			wantErr: false,
-		},
-		{
-			name: "function call statement with table",
-			args: args{
-				c: DefaultConfig(),
-				b: []byte("a{b=1}"),
-			},
-			wantW: `
-a({
-    b = 1,
-})
+a("")
 `,
 			wantErr: false,
 		},
