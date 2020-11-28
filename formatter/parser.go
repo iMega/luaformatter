@@ -123,7 +123,8 @@ func parse(code []byte) (*document, error) {
 		if curElement.Token.Type == nString && (prevElement != nil && prevElement.Token.Type == nID) {
 			s = map[tokenID]branch{
 				nID: {
-					nString: &funcCallStatement{}, //local base = require "resty.core.base"
+					nString:       &funcCallStatement{}, //local base = require "resty.core.base"
+					nCurlyBracket: &funcCallStatement{}, //local base = require {}
 				},
 			}
 			if currentStatement.TypeOf() == tsExp {
@@ -132,6 +133,14 @@ func parse(code []byte) (*document, error) {
 						nString: &prefixexpStatement{},
 					},
 				}
+			}
+		}
+
+		if curElement.Token.Type == nCurlyBracket && (prevElement != nil && prevElement.Token.Type == nID) {
+			s = map[tokenID]branch{
+				nID: {
+					nCurlyBracket: &funcCallStatement{}, //local base = require {}
+				},
 			}
 		}
 

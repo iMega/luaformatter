@@ -37,8 +37,8 @@ func (exp) InnerStatement(prev, cur *element) statementIntf {
 	switch cur.Token.Type {
 	case nFunction:
 		return &functionStatement{}
-		// case nTable:
-		// return &tableconstructor{}
+	case nCurlyBracket:
+		return &tableStatement{}
 	}
 
 	return nil
@@ -67,6 +67,7 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 			nEquality:      false, // id ==
 			nSquareBracket: false, // id[
 			nParentheses:   false, // id(
+			nCurlyBracket:  false, // id {
 			nString:        false, // id "string"
 			nLessThan:      false, // id <
 			nGreaterThan:   false, // id >
@@ -94,8 +95,9 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 			nString: false, // ["string"
 		},
 		nParentheses: {
-			nID:     false, // (id
-			nString: false, // ("string"
+			nID:           false, // (id
+			nString:       false, // ("string"
+			nCurlyBracket: false, // ({
 		},
 		nAssign: {
 			nFunction: false, // = function

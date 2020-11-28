@@ -46,6 +46,10 @@ func (s *prefixexpStatement) InnerStatement(prev, cur *element) statementIntf {
 		return &funcCallStatement{}
 	}
 
+	if cur.Token.Type == nCurlyBracket {
+		return &funcCallStatement{}
+	}
+
 	return nil
 }
 
@@ -55,6 +59,10 @@ func (prefixexpStatement) TypeOf() typeStatement {
 
 func (s *prefixexpStatement) IsEnd(prev, cur *element) (bool, bool) {
 	if cur.Token.Type == nString {
+		return false, false
+	}
+
+	if cur.Token.Type == nCurlyBracket { // function_call {
 		return false, false
 	}
 

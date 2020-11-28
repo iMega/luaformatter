@@ -133,6 +133,9 @@ var (
 		nOr: {
 			nLength: &exp{}, // or #
 		},
+		nCurlyBracket: {
+			nThis: &tableStatement{},
+		},
 	}
 )
 
