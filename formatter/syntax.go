@@ -85,25 +85,42 @@ var (
 		nFloatDivision: {
 			nNumber: &exp{}, // / 3
 		},
-		nBitwiseAND:         {nNumber: &exp{}}, // & 3
-		nModulo:             {nNumber: &exp{}}, // % 3
-		nExponentiation:     {nNumber: &exp{}}, // ^ 3
-		nLessThan:           {nNumber: &exp{}}, // < 3
-		nLeftShift:          {nNumber: &exp{}}, // << 3
-		nLessOrEqual:        {nNumber: &exp{}}, // <= 3
-		nGreaterThan:        {nNumber: &exp{}}, // > 3
-		nGreaterOrEqual:     {nNumber: &exp{}}, // >= 3
+		nBitwiseAND:     {nNumber: &exp{}}, // & 3
+		nModulo:         {nNumber: &exp{}}, // % 3
+		nExponentiation: {nNumber: &exp{}}, // ^ 3
+		nLessThan: {
+			nNumber: &exp{}, // < 3
+			nString: &exp{}, // < "string"
+		},
+		nLeftShift: {nNumber: &exp{}}, // << 3
+		nLessOrEqual: {
+			nNumber: &exp{}, // <= 3
+			nString: &exp{}, // <= ""
+		},
+		nGreaterThan: {
+			nNumber: &exp{}, // > 3
+			nString: &exp{}, // > ""
+		},
+		nGreaterOrEqual: {
+			nNumber: &exp{}, // >= 3
+			nString: &exp{}, // >= ""
+		},
 		nRightShift:         {nNumber: &exp{}}, // >> 3
 		nBitwiseOR:          {nNumber: &exp{}}, // | 3
 		nBitwiseExclusiveOR: {nNumber: &exp{}}, // ~ 3
-		nInequality:         {nNumber: &exp{}}, // ~= 3
+		nInequality: {
+			nNumber: &exp{}, // ~= 3
+			nString: &exp{}, // ~= ""
+		},
 		nAnd: {
 			nNumber: &exp{}, // and 3
 			nLength: &exp{}, // and #
+			nString: &exp{}, // and ""
 		},
 		nOr: {
 			nNumber: &exp{}, // or 3
 			nLength: &exp{}, // or #
+			nString: &exp{}, // or ""
 		},
 		nConcat: {
 			nID:     &exp{}, // .. id
