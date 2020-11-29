@@ -134,14 +134,19 @@ func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 	inner := printer{
 		Pad: p.Pad + c.IndentSize,
 	}
-	if st, ok := s.Body.(*body); ok {
+	st, ok := s.Body.(*body)
+	if ok {
 		if err := st.Format(c, inner, w); err != nil {
 			return err
 		}
 	}
 
-	if err := newLine(w); err != nil {
-		return err
+	if st.Qty > 0 {
+		// a = function()
+		// end
+		if err := newLine(w); err != nil {
+			return err
+		}
 	}
 
 	if err := p.WritePad(w); err != nil {

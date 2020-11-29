@@ -130,7 +130,8 @@ func parse(code []byte) (*document, error) {
 			if currentStatement.TypeOf() == tsExp {
 				s = map[tokenID]branch{
 					nID: {
-						nString: &prefixexpStatement{},
+						nString:       &prefixexpStatement{}, // id = id "string"
+						nCurlyBracket: &prefixexpStatement{},
 					},
 				}
 			}
@@ -142,6 +143,14 @@ func parse(code []byte) (*document, error) {
 					nCurlyBracket: &funcCallStatement{}, //local base = require {}
 				},
 			}
+			if currentStatement.TypeOf() == tsExp {
+				s = map[tokenID]branch{
+					nID: {
+						nString:       &prefixexpStatement{}, // id = id "string"
+						nCurlyBracket: &prefixexpStatement{},
+					},
+				}
+			}
 		}
 
 		if curElement.Token.Type == nParentheses && currentStatement.TypeOf() == tsExp {
@@ -152,6 +161,14 @@ func parse(code []byte) (*document, error) {
 				},
 			}
 		}
+
+		// if curElement.Token.Type == nCurlyBracket && currentStatement.TypeOf() == tsExp {
+		// 	s = map[tokenID]branch{
+		// 		nCurlyBracket: {
+		// 			nThis: &prefixexpStatement{},
+		// 		},
+		// 	}
+		// }
 
 		if currentStatement.TypeOf() == tsField {
 			s = map[tokenID]branch{

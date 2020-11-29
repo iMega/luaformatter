@@ -155,7 +155,6 @@ const (
 	nBranch
 	nNumber
 	nString
-	nStar
 	nVararg
 	nThis
 	nLabel
@@ -235,7 +234,6 @@ var (
 		nAssign:    `=`,
 		nComma:     `,`,
 		nDot:       `\.`,
-		nStar:      `\*`,
 		nVararg:    `\.\.\.`,
 
 		// binop ::=  ‘+’ | ‘-’ | ‘*’ | ‘/’ | ‘//’ | ‘^’ | ‘%’ |
@@ -322,7 +320,6 @@ var (
 		nComma:       `nComma`,
 		nDot:         `nDot`,
 		nAssign:      `nAssign`,
-		nStar:        `nStar`,
 		nVararg:      `nVararg`,
 		nLabel:       "::",
 

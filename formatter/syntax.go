@@ -34,10 +34,14 @@ var (
 			nComma:       &assignmentStatement{}, // ],
 		},
 		nAssign: {
+			nSubtraction:  &explist{}, // var = -
 			nNumber:       &explist{}, // var = 1
 			nID:           &explist{}, // var1 = var
 			nString:       &explist{}, // var = ""
 			nLength:       &explist{}, // var = #var1
+			nFalse:        &explist{}, // var = false
+			nNil:          &explist{}, // var = nil
+			nTrue:         &explist{}, // var = true
 			nFunction:     &functionStatement{},
 			nCurlyBracket: &tableStatement{}, // table = {}
 		},
@@ -72,23 +76,44 @@ var (
 			nNumber: &exp{}, // + 3
 			nID:     &exp{}, // + id
 		},
+		nSubtraction: {
+			nNumber: &exp{}, // - 3
+		},
+		nMultiplication: {
+			nNumber: &exp{}, // * 3
+		},
+		nFloatDivision: {
+			nNumber: &exp{}, // / 3
+		},
+		nBitwiseAND:         {nNumber: &exp{}}, // & 3
+		nModulo:             {nNumber: &exp{}}, // % 3
+		nExponentiation:     {nNumber: &exp{}}, // ^ 3
+		nLessThan:           {nNumber: &exp{}}, // < 3
+		nLeftShift:          {nNumber: &exp{}}, // << 3
+		nLessOrEqual:        {nNumber: &exp{}}, // <= 3
+		nGreaterThan:        {nNumber: &exp{}}, // > 3
+		nGreaterOrEqual:     {nNumber: &exp{}}, // >= 3
+		nRightShift:         {nNumber: &exp{}}, // >> 3
+		nBitwiseOR:          {nNumber: &exp{}}, // | 3
+		nBitwiseExclusiveOR: {nNumber: &exp{}}, // ~ 3
+		nInequality:         {nNumber: &exp{}}, // ~= 3
+		nAnd: {
+			nNumber: &exp{}, // and 3
+			nLength: &exp{}, // and #
+		},
+		nOr: {
+			nNumber: &exp{}, // or 3
+			nLength: &exp{}, // or #
+		},
 		nConcat: {
 			nID:     &exp{}, // .. id
 			nString: &exp{}, // .. "string"
-		},
-		nLessThan: {
-			nNumber: &exp{}, // alignment < 100
-		},
-		nGreaterThan: {
-			nNumber: &exp{}, // name > 3
+			nNumber: &exp{}, // .. 3
 		},
 		nEquality: {
 			nString: &exp{},
-			nNumber: &exp{},
+			nNumber: &exp{}, // == 3
 			nID:     &exp{}, // if name == searched then
-		},
-		nInequality: {
-			nNumber: &exp{},
 		},
 		nComma: {
 			nID:          &exp{},
@@ -126,12 +151,6 @@ var (
 		},
 		nIn: {
 			nID: &explist{},
-		},
-		nAnd: {
-			nLength: &exp{}, // and #
-		},
-		nOr: {
-			nLength: &exp{}, // or #
 		},
 		nCurlyBracket: {
 			nThis: &tableStatement{},

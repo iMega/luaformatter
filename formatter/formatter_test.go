@@ -21,9 +21,38 @@ func TestFormat(t *testing.T) {
 			args: args{
 				c: DefaultConfig(),
 				b: []byte(`
-a = b
+a = -1
 a = ""
+a = "" .. ""
+a = {}
+a = #b
 a = 0
+a = 1 - 1
+a = 1 .. 1
+a = 1 * 1
+a = 1 / 1
+a = 1 & 1
+a = 1 % 1
+a = 1 ^ 1
+a = 1 + 1
+a = 1 < 1
+a = 1 << 1
+a = 1 <= 1
+a = 1 == 1
+a = 1 > 1
+a = 1 >= 1
+a = 1 >> 1
+a = 1 | 1
+a = 1 ~ 1
+a = 1 ~= 1
+a = 1 and 1
+a = 1 or 1
+a = b
+a = false
+a = function()
+end
+a = nil
+a = true
 local a
 local a, b
 local a = b
@@ -41,9 +70,38 @@ local a = b("")
 `),
 			},
 			wantW: `
-a = b
+a = -1
 a = ""
+a = "" .. ""
+a = {}
+a = #b
 a = 0
+a = 1 - 1
+a = 1 .. 1
+a = 1 * 1
+a = 1 / 1
+a = 1 & 1
+a = 1 % 1
+a = 1 ^ 1
+a = 1 + 1
+a = 1 < 1
+a = 1 << 1
+a = 1 <= 1
+a = 1 == 1
+a = 1 > 1
+a = 1 >= 1
+a = 1 >> 1
+a = 1 | 1
+a = 1 ~ 1
+a = 1 ~= 1
+a = 1 and 1
+a = 1 or 1
+a = b
+a = false
+a = function()
+end
+a = nil
+a = true
 local a
 local a, b
 local a = b
@@ -77,6 +135,55 @@ a()
 a({})
 a({})
 a("")
+`,
+			wantErr: false,
+		},
+		{
+			name: "for statement",
+			args: args{
+				c: DefaultConfig(),
+				b: []byte(`
+for a in b do
+end
+for a in b do
+    -- comment
+end
+for a, b in c do
+end
+for a, b in c(d) do
+end
+for a = 1, 1 do
+end
+for a = 1, 1 do
+    -- comment
+end
+for a = 1, 1, -1 do
+end
+for a = 1, 1, -1 do
+    -- comment
+end
+`),
+			},
+			wantW: `
+for a in b do
+end
+for a in b do
+    -- comment
+end
+for a, b in c do
+end
+for a, b in c(d) do
+end
+for a = 1, 1 do
+end
+for a = 1, 1 do
+    -- comment
+end
+for a = 1, 1, -1 do
+end
+for a = 1, 1, -1 do
+    -- comment
+end
 `,
 			wantErr: false,
 		},

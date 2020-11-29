@@ -19,7 +19,7 @@ func TestParseFor(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			skip: false,
+			skip: true,
 			name: "for generic statement",
 			args: args{
 				code: []byte(`
@@ -345,16 +345,18 @@ for i=10,1,-1 do print(i) end
 											},
 											{
 												Key: &exp{
-													Element: &element{
-														Token: &lexmachine.Token{
-															Type:        nNumber,
-															Value:       "1",
-															Lexeme:      []byte("1"),
-															TC:          13,
-															StartLine:   2,
-															StartColumn: 13,
-															EndLine:     2,
-															EndColumn:   13,
+													Exp: &exp{
+														Element: &element{
+															Token: &lexmachine.Token{
+																Type:        nNumber,
+																Value:       "1",
+																Lexeme:      []byte("1"),
+																TC:          13,
+																StartLine:   2,
+																StartColumn: 13,
+																EndLine:     2,
+																EndColumn:   13,
+															},
 														},
 													},
 													Unop: &element{

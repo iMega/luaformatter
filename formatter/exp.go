@@ -53,13 +53,35 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 		return false, true
 	}
 
+	if isExp(prev) && isBinop(cur) {
+		return false, false
+	}
+
+	if isBinop(prev) && isExp(cur) {
+		return false, false
+	}
+
 	var syntax = map[tokenID]map[tokenID]bool{
 		nNumber: {
-			nAddition:   false, // 3 +
-			nInequality: false, // 3 ~=
-			nEquality:   false, // 3 ==
-			nAnd:        false, // 3 and
-			nOr:         false, // 3 or
+			nSubtraction:        false, // 3 -
+			nConcat:             false, // 3 ..
+			nMultiplication:     false, // 3 *
+			nFloatDivision:      false, // 3 /
+			nBitwiseAND:         false, // 3 &
+			nModulo:             false, // 3 %
+			nExponentiation:     false, // 3 ^
+			nAddition:           false, // 3 +
+			nLessThan:           false, // 3 <
+			nLeftShift:          false, // 3 <<
+			nLessOrEqual:        false, // 3 <=
+			nEquality:           false, // 3 ==
+			nGreaterThan:        false, // 3 >
+			nGreaterOrEqual:     false, // 3 >=
+			nBitwiseOR:          false, // 3 |
+			nBitwiseExclusiveOR: false, // 3 ~
+			nInequality:         false, // 3 ~=
+			nAnd:                false, // 3 and
+			nOr:                 false, // 3 or
 		},
 		nID: {
 			nAddition:      false, // id +
@@ -109,6 +131,12 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 		nLessThan: {
 			nNumber: false, // < 3
 		},
+		nMultiplication: {
+			nNumber: false, // * 3
+		},
+		nFloatDivision: {
+			nNumber: false, // / 3
+		},
 		nGreaterThan: {
 			nNumber: false, // > 3
 		},
@@ -142,6 +170,35 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 
 func (s *exp) HasSyntax(el element) bool {
 	return false
+}
+
+func isBinop(el *element) bool {
+	binop := []int{
+		nAnd,                // 44
+		nOr,                 // 45
+		nAddition,           // 46
+		nSubtraction,        // 47
+		nMultiplication,     // 48
+		nFloatDivision,      // 49
+		nModulo,             // 51
+		nExponentiation,     // 52
+		nBitwiseAND,         // 53
+		nBitwiseOR,          // 54
+		nBitwiseExclusiveOR, // 55
+		nLeftShift,          // 56
+		nRightShift,         // 57
+		nConcat,             // 59
+		nEquality,           // 60
+		nInequality,         // 61
+		nLessThan,           // 62
+		nGreaterThan,        // 63
+		nLessOrEqual,        // 64
+		nGreaterOrEqual,     // 65
+	}
+
+	idx := sort.SearchInts(binop, el.Token.Type)
+
+	return idx < len(binop) && binop[idx] == el.Token.Type
 }
 
 func isExp(el *element) bool {
