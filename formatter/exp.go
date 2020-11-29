@@ -16,7 +16,6 @@ package formatter
 
 import (
 	"io"
-	"sort"
 )
 
 type exp struct {
@@ -60,6 +59,8 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 	if isBinop(prev) && isExp(cur) {
 		return false, false
 	}
+
+	// return false, true
 
 	var syntax = map[tokenID]map[tokenID]bool{
 		nNumber: {
@@ -196,9 +197,7 @@ func isBinop(el *element) bool {
 		nGreaterOrEqual,     // 65
 	}
 
-	idx := sort.SearchInts(binop, el.Token.Type)
-
-	return idx < len(binop) && binop[idx] == el.Token.Type
+	return binarySearch(binop, el.Token.Type)
 }
 
 func isExp(el *element) bool {
@@ -220,29 +219,21 @@ func isExp(el *element) bool {
 		nNot,                // 65
 	} //  exp binop exp
 
-	idx := sort.SearchInts(exps, el.Token.Type)
-
-	return idx < len(exps) && exps[idx] == el.Token.Type
+	return binarySearch(exps, el.Token.Type)
 }
 
 func (s *exp) Append(el *element) {
-	if el.Token.Type == nComma {
-		return
+	types := []int{
+		nIn,                   // 16
+		nParentheses,          // 27
+		nClosingParentheses,   // 28
+		nSquareBracket,        // 29
+		nClosingSquareBracket, // 30
+		nClosingCurlyBracket,  // 32
+		nAssign,               // 33
+		nComma,                // 34
 	}
-
-	if el.Token.Type == nAssign {
-		return
-	}
-
-	if el.Token.Type == nIn {
-		return
-	}
-
-	if el.Token.Type == nParentheses || el.Token.Type == nClosingParentheses {
-		return
-	}
-
-	if el.Token.Type == nSquareBracket || el.Token.Type == nClosingSquareBracket {
+	if binarySearch(types, el.Token.Type) {
 		return
 	}
 

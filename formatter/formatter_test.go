@@ -187,6 +187,31 @@ end
 `,
 			wantErr: false,
 		},
+		{
+			name: "table statement",
+			args: args{
+				c: DefaultConfig(),
+				b: []byte(`
+a = {}
+a = {
+    b = c
+}
+a = {
+    b = c,
+}
+`),
+			},
+			wantW: `
+a = {}
+a = {
+    b = c,
+}
+a = {
+    b = c,
+}
+`,
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

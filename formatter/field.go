@@ -39,6 +39,10 @@ func (s *field) IsEnd(prev, cur *element) (bool, bool) {
 		return false, true
 	}
 
+	if cur.Token.Type == nClosingCurlyBracket {
+		return false, true
+	}
+
 	return false, cur.Token.Type == nComma || cur.Token.Type == nDo
 }
 

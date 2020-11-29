@@ -33,7 +33,11 @@ func (tableStatement) TypeOf() typeStatement {
 }
 
 func (s *tableStatement) IsEnd(prev, cur *element) (bool, bool) {
-	return false, cur.Token.Type == nClosingCurlyBracket
+	if cur.Token.Type == nClosingCurlyBracket {
+		return true, true
+	}
+
+	return false, false
 }
 
 func (s *tableStatement) Append(el *element) {}
