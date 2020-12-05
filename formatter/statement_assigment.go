@@ -90,6 +90,15 @@ func (s *assignmentStatement) GetBody(prevSt statementIntf, cur *element) statem
 	return prevSt
 }
 
+func (s *assignmentStatement) GetStatement(prev, cur *element) statementIntf {
+	// if cur.Token.Type == nAssign {
+	if isExp(cur) {
+		return &explist{}
+	}
+	// }
+	return nil
+}
+
 func (s *assignmentStatement) Format(c *Config, p printer, w io.Writer) error {
 	if s.IsLocal {
 		if _, err := w.Write([]byte("local ")); err != nil {

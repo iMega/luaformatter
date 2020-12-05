@@ -207,8 +207,13 @@ func parse(code []byte) (*document, error) {
 				}
 			}
 		}
-
-		if st := getStatement(s, prevElement, curElement); st != nil {
+		_ = s
+		//
+		if st := currentStatement.GetStatement(prevElement, curElement); st != nil {
+			// if st := getStatement(s, prevElement, curElement); st != nil {
+			// if stNew != nil && stNew.TypeOf() == st.TypeOf() {
+			// 	fmt.Printf("=== %d \n", stNew.TypeOf())
+			// }
 			var assignmentWithOneVar statementIntf
 			isPrefixexpConvertAssignment := false
 

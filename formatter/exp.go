@@ -292,6 +292,42 @@ func (s *exp) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
 }
 
+func (s *exp) GetStatement(prev, cur *element) statementIntf {
+	if prev != nil {
+		switch prev.Token.Type {
+		case nID:
+			if cur.Token.Type == nString {
+				return &prefixexpStatement{}
+			}
+			// 		if cur.Token.Type == nParentheses {
+			// 			return &funcCallStatement{}
+			// 		}
+		}
+	}
+
+	if cur.Token.Type == nParentheses {
+		return &prefixexpStatement{}
+	}
+
+	if cur.Token.Type == nSquareBracket {
+		return &prefixexpStatement{}
+	}
+
+	if cur.Token.Type == nCurlyBracket {
+		return &tableStatement{}
+	}
+
+	// if isExp(prev) && isBinop(cur) {
+	// 	return false, false
+	// }
+
+	if isBinop(prev) && isExp(cur) {
+		return &exp{}
+	}
+
+	return nil
+}
+
 func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 	if st := s.Unop; st != nil {
 		if err := st.Format(c, p, w); err != nil {

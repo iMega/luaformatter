@@ -19,7 +19,7 @@ func TestParseWhile(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			skip: false,
+			skip: true,
 			name: "while statement",
 			args: args{
 				code: []byte(`

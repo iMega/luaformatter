@@ -47,3 +47,7 @@ func (s *gotoStatement) AppendStatement(st statementIntf) {}
 func (s *gotoStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
 }
+
+func (s *gotoStatement) GetStatement(prev, cur *element) statementIntf {
+	return nil
+}

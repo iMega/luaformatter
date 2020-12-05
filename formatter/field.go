@@ -71,6 +71,14 @@ func (s *field) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
 }
 
+func (s *field) GetStatement(prev, cur *element) statementIntf {
+	if isExp(cur) {
+		return &exp{}
+	}
+
+	return nil
+}
+
 func (s *field) Format(c *Config, p printer, w io.Writer) error {
 	if s.Square {
 		if _, err := w.Write([]byte("[")); err != nil {

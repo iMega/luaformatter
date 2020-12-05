@@ -19,7 +19,7 @@ func TestParseFor(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			skip: true,
+			skip: false,
 			name: "for generic statement",
 			args: args{
 				code: []byte(`

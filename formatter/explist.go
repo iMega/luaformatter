@@ -60,6 +60,14 @@ func (s *explist) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
 }
 
+func (s *explist) GetStatement(prev, cur *element) statementIntf {
+	if prev != nil && prev.Token.Type == nComma && isExp(cur) {
+		return &exp{}
+	}
+
+	return nil
+}
+
 func (s *explist) Format(c *Config, p printer, w io.Writer) error {
 	l := len(s.List)
 	for idx, e := range s.List {

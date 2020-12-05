@@ -66,6 +66,72 @@ func (b *body) AppendStatement(st statementIntf) {
 	b.Qty++
 }
 
+func (b *body) GetStatement(prev, cur *element) statementIntf {
+	if prev != nil && prev.Token.Type == nLocal {
+		switch cur.Token.Type {
+		case nID:
+			return &assignmentStatement{}
+		case nFunction:
+			return &functionStatement{}
+		}
+	}
+
+	switch cur.Token.Type {
+	case nID:
+		return &prefixexpStatement{}
+
+	case nFor:
+		return &forStatement{}
+
+	case nFunction:
+		return &functionStatement{}
+
+	case nReturn:
+		return &returnStatement{}
+
+	case nIf:
+		return &ifStatement{}
+
+	case nElseif:
+		return &elseifStatement{}
+
+	case nElse:
+		return &elseStatement{}
+
+	case nLabel:
+		return &labelStatement{}
+
+	case nGoto:
+		return &gotoStatement{}
+
+	case nBreak:
+		return &breakStatement{}
+
+	case nDo:
+		return &doStatement{}
+
+	case nWhile:
+		return &whileStatement{}
+
+	case nRepeat:
+		return &repeatStatement{}
+
+	case nComment:
+		return &commentStatement{}
+
+	case nLF:
+		return &newlineStatement{}
+
+	case nCurlyBracket:
+		return &tableStatement{}
+
+	case nSquareBracket:
+		return &prefixexpStatement{}
+	}
+
+	return nil
+}
+
 func (b *body) Format(c *Config, p printer, w io.Writer) error {
 	for i := 0; i < int(b.Qty); i++ {
 		st := b.Blocks[uint64(i)]

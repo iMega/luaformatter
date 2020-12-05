@@ -92,6 +92,14 @@ func (s *functionStatement) GetBody(prevSt statementIntf, cur *element) statemen
 	return s.Body
 }
 
+func (s *functionStatement) GetStatement(prev, cur *element) statementIntf {
+	if prev != nil && prev.Token.Type == nParentheses {
+		return &explist{}
+	}
+
+	return nil
+}
+
 func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 	if s.IsLocal {
 		if _, err := w.Write([]byte("local ")); err != nil {

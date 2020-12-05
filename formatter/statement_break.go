@@ -39,3 +39,7 @@ func (s *breakStatement) AppendStatement(st statementIntf) {}
 func (s *breakStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
 }
+
+func (s *breakStatement) GetStatement(prev, cur *element) statementIntf {
+	return nil
+}

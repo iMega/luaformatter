@@ -63,6 +63,26 @@ func (s *forStatement) GetBody(prevSt statementIntf, cur *element) statementIntf
 	return s.Body
 }
 
+func (s *forStatement) GetStatement(prev, cur *element) statementIntf {
+	if cur.Token.Type == nFor {
+		return &forStatement{}
+	}
+
+	// if cur.Token.Type == nIn {
+	// 	return &explist{}
+	// }
+
+	if prev != nil && prev.Token.Type == nIn {
+		return &explist{}
+	}
+
+	if isExp(cur) {
+		return &field{}
+	}
+
+	return nil
+}
+
 func (s *forStatement) Format(c *Config, p printer, w io.Writer) error {
 	if _, err := w.Write([]byte("for ")); err != nil {
 		return err

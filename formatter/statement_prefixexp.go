@@ -145,6 +145,34 @@ func (s *prefixexpStatement) GetBody(prevSt statementIntf, cur *element) stateme
 	return prevSt
 }
 
+func (s *prefixexpStatement) GetStatement(prev, cur *element) statementIntf {
+	if cur.Token.Type == nAssign {
+		return &assignmentStatement{}
+	}
+
+	if cur.Token.Type == nComma {
+		return &assignmentStatement{}
+	}
+
+	if cur.Token.Type == nParentheses || cur.Token.Type == nString {
+		return &funcCallStatement{}
+	}
+
+	if cur.Token.Type == nCurlyBracket {
+		return &funcCallStatement{}
+	}
+
+	if cur.Token.Type == nSquareBracket {
+		return &prefixexpStatement{}
+	}
+
+	if cur.Token.Type == nDot {
+		return &prefixexpStatement{}
+	}
+
+	return nil
+}
+
 func (s *prefixexpStatement) Format(c *Config, p printer, w io.Writer) error {
 	if st := s.Element; st != nil {
 		if err := st.Format(c, p, w); err != nil {

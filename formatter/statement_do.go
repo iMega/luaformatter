@@ -50,6 +50,10 @@ func (s *doStatement) GetBody(prevSt statementIntf, cur *element) statementIntf 
 	return s.Body
 }
 
+func (s *doStatement) GetStatement(prev, cur *element) statementIntf {
+	return nil
+}
+
 func (s *doStatement) Format(c *Config, p printer, w io.Writer) error {
 	if _, err := w.Write([]byte("do")); err != nil {
 		return err

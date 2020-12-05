@@ -72,6 +72,26 @@ func (s *ifStatement) GetBody(prevSt statementIntf, cur *element) statementIntf 
 	return s.Body
 }
 
+func (s *ifStatement) GetStatement(prev, cur *element) statementIntf {
+	if cur.Token.Type == nIf {
+		return &ifStatement{}
+	}
+
+	if cur.Token.Type == nElseif {
+		return &elseifStatement{}
+	}
+
+	if cur.Token.Type == nElse {
+		return &elseStatement{}
+	}
+
+	if isExp(cur) {
+		return &exp{}
+	}
+
+	return nil
+}
+
 func (s *ifStatement) Format(c *Config, p printer, w io.Writer) error {
 	if _, err := w.Write([]byte("if ")); err != nil {
 		return err
@@ -171,6 +191,18 @@ func (s *elseifStatement) GetBody(prevSt statementIntf, cur *element) statementI
 	return s.Body
 }
 
+func (s *elseifStatement) GetStatement(prev, cur *element) statementIntf {
+	if cur.Token.Type == nElseif {
+		return &elseifStatement{}
+	}
+
+	if isExp(cur) {
+		return &exp{}
+	}
+
+	return nil
+}
+
 func (s *elseifStatement) Format(c *Config, p printer, w io.Writer) error {
 	if _, err := w.Write([]byte("elseif ")); err != nil {
 		return err
@@ -235,6 +267,10 @@ func (s *elseStatement) GetBody(statementIntf, *element) statementIntf {
 	}
 
 	return s.Body
+}
+
+func (s *elseStatement) GetStatement(prev, cur *element) statementIntf {
+	return nil
 }
 
 func (s *elseStatement) Format(c *Config, p printer, w io.Writer) error {

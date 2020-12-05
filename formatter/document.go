@@ -142,6 +142,7 @@ type statementIntf interface {
 	IsEnd(prev, cur *element) (bool, bool)
 	TypeOf() typeStatement
 	GetBody(prevSt statementIntf, cur *element) statementIntf
+	GetStatement(prev, cur *element) statementIntf
 }
 
 type typeStatement int

@@ -52,6 +52,10 @@ func (s *tableStatement) GetBody(prevSt statementIntf, cur *element) statementIn
 	return prevSt
 }
 
+func (s *tableStatement) GetStatement(prev, cur *element) statementIntf {
+	return nil
+}
+
 func (s *tableStatement) Format(c *Config, p printer, w io.Writer) error {
 	if _, err := w.Write([]byte("{")); err != nil {
 		return err

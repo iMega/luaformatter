@@ -59,6 +59,10 @@ func (s *funcCallStatement) GetBody(prevSt statementIntf, cur *element) statemen
 	return prevSt
 }
 
+func (s *funcCallStatement) GetStatement(prev, cur *element) statementIntf {
+	return nil
+}
+
 func (s *funcCallStatement) Format(c *Config, p printer, w io.Writer) error {
 	if st := s.Prefixexp; st != nil {
 		if err := st.Format(c, p, w); err != nil {

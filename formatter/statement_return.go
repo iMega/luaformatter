@@ -43,10 +43,6 @@ func (s *returnStatement) IsEnd(prev, cur *element) (bool, bool) {
 	return false, !ok
 }
 
-func (s *returnStatement) HasSyntax(el element) bool {
-	return false
-}
-
 func (s *returnStatement) Append(el *element) {
 	if el == nil || el.Token.Type == nReturn {
 		return
@@ -66,6 +62,18 @@ func (s *returnStatement) AppendStatement(st statementIntf) {
 
 func (s *returnStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
+}
+
+func (s *returnStatement) GetStatement(prev, cur *element) statementIntf {
+	if cur.Token.Type == nReturn {
+		return &returnStatement{}
+	}
+
+	if isExp(cur) {
+		return &explist{}
+	}
+
+	return nil
 }
 
 func (s *returnStatement) Format(c *Config, p printer, w io.Writer) error {

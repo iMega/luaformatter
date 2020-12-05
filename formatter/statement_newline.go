@@ -44,6 +44,10 @@ func (s *newlineStatement) GetBody(prevSt statementIntf, cur *element) statement
 	return prevSt
 }
 
+func (s *newlineStatement) GetStatement(prev, cur *element) statementIntf {
+	return nil
+}
+
 func (s *newlineStatement) Format(c *Config, p printer, w io.Writer) error {
 	return newLine(w)
 }

@@ -49,3 +49,7 @@ func (s *whileStatement) AppendStatement(st statementIntf) {
 func (s *whileStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
 }
+
+func (s *whileStatement) GetStatement(prev, cur *element) statementIntf {
+	return nil
+}

@@ -19,7 +19,7 @@ func TestParseRepeat(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			skip: false,
+			skip: true,
 			name: "repeat statement",
 			args: args{
 				code: []byte(`

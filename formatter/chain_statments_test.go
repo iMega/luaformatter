@@ -25,6 +25,8 @@ func (fakeStatements) TypeOf() typeStatement { return 0 }
 
 func (fakeStatements) GetBody(prevSt statementIntf, cur *element) statementIntf { return nil }
 
+func (fakeStatements) GetStatement(prev, cur *element) statementIntf { return nil }
+
 func Test_chainStatments_Prev(t *testing.T) {
 	tests := []struct {
 		name   string

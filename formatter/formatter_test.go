@@ -3,6 +3,8 @@ package formatter
 import (
 	"bytes"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFormat(t *testing.T) {
@@ -237,8 +239,10 @@ a = {
 				t.Errorf("Format() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if gotW := w.String(); gotW != tt.wantW {
-				t.Errorf("Format() = \n%v, want \n%v", gotW, tt.wantW)
+
+			gotW := w.String()
+			if !assert.Equal(t, gotW, tt.wantW) {
+				t.Error("failed to format")
 			}
 		})
 	}

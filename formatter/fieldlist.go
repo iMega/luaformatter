@@ -25,6 +25,9 @@ func (fieldlist) New() statementIntf {
 }
 
 func (fieldlist) InnerStatement(prev, cur *element) statementIntf {
+	// fieldlist always returns a field. need will add
+	// it will need to be added to the innerStatement.
+	// return &field{}
 	return nil
 }
 
@@ -58,6 +61,23 @@ func (s *fieldlist) AppendStatement(st statementIntf) {
 
 func (s *fieldlist) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
+}
+
+func (s *fieldlist) GetStatement(prev, cur *element) statementIntf {
+	if cur.Token.Type == nID {
+		return &field{} // fieldlist always returns a field. need will add
+		// it will need to be added to the innerStatement
+	}
+
+	if cur.Token.Type == nSquareBracket {
+		return &field{Square: true}
+	}
+
+	if prev != nil && prev.Token.Type == nComma {
+		return &field{}
+	}
+	// return &field{}
+	return nil
 }
 
 func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {

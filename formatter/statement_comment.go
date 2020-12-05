@@ -54,6 +54,10 @@ func (s *commentStatement) GetBody(prevSt statementIntf, cur *element) statement
 	return prevSt
 }
 
+func (s *commentStatement) GetStatement(prev, cur *element) statementIntf {
+	return nil
+}
+
 func (s *commentStatement) Format(c *Config, p printer, w io.Writer) error {
 	if _, err := w.Write([]byte("-- ")); err != nil {
 		return err

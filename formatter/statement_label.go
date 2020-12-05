@@ -49,3 +49,7 @@ func (s *labelStatement) AppendStatement(st statementIntf) {}
 func (s *labelStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
 }
+
+func (s *labelStatement) GetStatement(prev, cur *element) statementIntf {
+	return nil
+}
