@@ -1,6 +1,7 @@
 package formatter
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -727,6 +728,68 @@ local base = require "resty.core.base"
 
 			if !assert.Equal(t, got, tt.want) {
 				t.Errorf("Parse() = \n%v, want \n%v", got, tt.want)
+			}
+		})
+	}
+}
+
+type failWriter struct{}
+
+func (failWriter) Write(p []byte) (int, error) {
+	return 0, errors.New("")
+}
+
+func Test_assignmentStatement_Format(t *testing.T) {
+	type fields struct {
+		IsLocal   bool
+		VarList   *explist
+		HasEqPart bool
+		Explist   *explist
+	}
+	type args struct {
+		c *Config
+		p printer
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantW   string
+		wantErr bool
+	}{
+		{
+			name: "failed to write",
+			fields: fields{
+				IsLocal: true,
+			},
+			args:    args{},
+			wantW:   "",
+			wantErr: true,
+		},
+		{
+			name: "failed to write",
+			fields: fields{
+				VarList: &explist{
+					List: []*exp{{}, {}},
+				},
+			},
+			args:    args{},
+			wantW:   "",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &assignmentStatement{
+				IsLocal:   tt.fields.IsLocal,
+				VarList:   tt.fields.VarList,
+				HasEqPart: tt.fields.HasEqPart,
+				Explist:   tt.fields.Explist,
+			}
+			w := &failWriter{}
+			if err := s.Format(tt.args.c, tt.args.p, w); (err != nil) != tt.wantErr {
+				t.Errorf("assignmentStatement.Format() error = %v, wantErr %v", err, tt.wantErr)
+				return
 			}
 		})
 	}
