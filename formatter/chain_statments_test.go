@@ -9,8 +9,6 @@ type fakeStatements struct {
 	ID int
 }
 
-func (fakeStatements) New() statementIntf { return nil }
-
 func (fakeStatements) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }

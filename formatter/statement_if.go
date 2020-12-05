@@ -23,10 +23,6 @@ type ifStatement struct {
 	ElsePart   *elseStatement
 }
 
-func (ifStatement) New() statementIntf {
-	return &ifStatement{}
-}
-
 func (ifStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }
@@ -151,10 +147,6 @@ type elseifStatement struct {
 	Body statementIntf
 }
 
-func (elseifStatement) New() statementIntf {
-	return &elseifStatement{}
-}
-
 func (elseifStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }
@@ -239,10 +231,6 @@ func (s *elseifStatement) Format(c *Config, p printer, w io.Writer) error {
 
 type elseStatement struct {
 	Body statementIntf
-}
-
-func (elseStatement) New() statementIntf {
-	return &elseStatement{}
 }
 
 func (elseStatement) InnerStatement(prev, cur *element) statementIntf {

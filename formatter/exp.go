@@ -28,10 +28,6 @@ type exp struct {
 	Prefixexp *prefixexpStatement
 }
 
-func (exp) New() statementIntf {
-	return &exp{}
-}
-
 func (exp) InnerStatement(prev, cur *element) statementIntf {
 	switch cur.Token.Type {
 	case nFunction:

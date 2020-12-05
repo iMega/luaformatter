@@ -29,8 +29,7 @@ local data = get_data("KRP") .. tostring(area_number)
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Statement: statement{
@@ -166,8 +165,7 @@ myvar = function() end
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Statement: statement{
@@ -224,8 +222,7 @@ myvar = 1
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Statement: statement{
@@ -288,8 +285,7 @@ a, b = 1, 2
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Statement: statement{
@@ -381,8 +377,7 @@ local a
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Statement: statement{
@@ -425,8 +420,7 @@ local a = b
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Statement: statement{
@@ -488,8 +482,7 @@ local a, b
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Statement: statement{
@@ -546,8 +539,7 @@ local a, b = c, d
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Statement: statement{
@@ -637,8 +629,7 @@ local base = require "resty.core.base"
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Statement: statement{

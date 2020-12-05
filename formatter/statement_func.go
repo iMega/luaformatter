@@ -26,10 +26,6 @@ type functionStatement struct {
 	IsAnonymous bool
 }
 
-func (functionStatement) New() statementIntf {
-	return &functionStatement{}
-}
-
 func (functionStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }
@@ -46,10 +42,6 @@ func (s *functionStatement) IsEnd(prev, cur *element) (bool, bool) {
 	}
 
 	return false, false
-}
-
-func (s *functionStatement) HasSyntax(el element) bool {
-	return false
 }
 
 func (s *functionStatement) Append(el *element) {

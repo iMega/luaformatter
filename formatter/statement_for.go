@@ -24,10 +24,6 @@ type forStatement struct {
 	Body      statementIntf
 }
 
-func (forStatement) New() statementIntf {
-	return &forStatement{}
-}
-
 func (forStatement) InnerStatement(prev, cur *element) statementIntf {
 	return &fieldlist{}
 }

@@ -19,10 +19,6 @@ type whileStatement struct {
 	Do  *doStatement
 }
 
-func (whileStatement) New() statementIntf {
-	return &whileStatement{}
-}
-
 func (whileStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }

@@ -22,10 +22,6 @@ type doStatement struct {
 	Body statementIntf
 }
 
-func (doStatement) New() statementIntf {
-	return &doStatement{}
-}
-
 func (doStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }

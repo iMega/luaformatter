@@ -20,10 +20,6 @@ import (
 
 type newlineStatement struct{}
 
-func (newlineStatement) New() statementIntf {
-	return &newlineStatement{}
-}
-
 func (newlineStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }

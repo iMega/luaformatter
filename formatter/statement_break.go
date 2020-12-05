@@ -16,10 +16,6 @@ package formatter
 
 type breakStatement struct{}
 
-func (breakStatement) New() statementIntf {
-	return &breakStatement{}
-}
-
 func (breakStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }

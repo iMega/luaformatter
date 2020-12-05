@@ -23,10 +23,6 @@ type funcCallStatement struct {
 	Explist   *explist
 }
 
-func (funcCallStatement) New() statementIntf {
-	return &funcCallStatement{}
-}
-
 func (funcCallStatement) InnerStatement(prev, cur *element) statementIntf {
 	return &explist{}
 }

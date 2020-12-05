@@ -20,10 +20,6 @@ type labelStatement struct {
 	Element *element
 }
 
-func (labelStatement) New() statementIntf {
-	return &labelStatement{}
-}
-
 func (labelStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }

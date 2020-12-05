@@ -23,10 +23,6 @@ type commentStatement struct {
 	Element *element
 }
 
-func (commentStatement) New() statementIntf {
-	return &commentStatement{}
-}
-
 func (commentStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }

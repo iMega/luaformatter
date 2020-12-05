@@ -30,8 +30,7 @@ end
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Statement: statement{

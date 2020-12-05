@@ -35,13 +35,13 @@ func Format(c Config, b []byte, w io.Writer) error {
 		return err
 	}
 
-	if doc.Bod == nil {
+	if doc.Body == nil {
 		return nil
 	}
 
 	p := printer{}
 
-	if st, ok := doc.Bod.(*body); ok {
+	if st, ok := doc.Body.(*body); ok {
 		if err := st.Format(&c, p, w); err != nil {
 			return err
 		}
@@ -84,43 +84,6 @@ func space(w io.Writer) error {
 	_, err := w.Write([]byte(" "))
 
 	return err
-}
-
-func statementAppend(st statementIntf, elOrSt interface{}) {
-	switch v := elOrSt.(type) {
-	case *element:
-		st.Append(v)
-	case statementIntf:
-		st.AppendStatement(v)
-	}
-}
-
-func hasExplist(st statementIntf) bool {
-	switch st.(type) {
-	case *assignmentStatement:
-		return true
-
-	case *returnStatement:
-		return true
-	}
-
-	return false
-}
-
-func getLastElement(chain []*element) *element {
-	if len(chain) == 0 {
-		return nil
-	}
-
-	return chain[len(chain)-1]
-}
-
-func getLastStatement(chain []statementIntf) statementIntf {
-	if len(chain) == 0 {
-		return nil
-	}
-
-	return chain[len(chain)-1]
 }
 
 func newBlock(st statementIntf) Block {

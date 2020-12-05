@@ -23,10 +23,6 @@ type assignmentStatement struct {
 	Explist   *explist
 }
 
-func (assignmentStatement) New() statementIntf {
-	return &assignmentStatement{}
-}
-
 func (assignmentStatement) InnerStatement(prev, cur *element) statementIntf {
 	return &explist{}
 }
@@ -47,10 +43,6 @@ func (s *assignmentStatement) IsEnd(prev, cur *element) (bool, bool) {
 	}
 
 	return false, !isExp(cur)
-}
-
-func (s *assignmentStatement) HasSyntax(el element) bool {
-	return false
 }
 
 func (s *assignmentStatement) Append(el *element) {

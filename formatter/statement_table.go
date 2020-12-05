@@ -20,10 +20,6 @@ type tableStatement struct {
 	FieldList *fieldlist
 }
 
-func (tableStatement) New() statementIntf {
-	return &tableStatement{}
-}
-
 func (tableStatement) InnerStatement(prev, cur *element) statementIntf {
 	return &fieldlist{}
 }

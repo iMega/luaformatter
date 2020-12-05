@@ -20,10 +20,6 @@ type explist struct {
 	List []*exp // separator ,
 }
 
-func (explist) New() statementIntf {
-	return &explist{}
-}
-
 func (explist) InnerStatement(prev, cur *element) statementIntf {
 	return &exp{}
 }
@@ -42,10 +38,6 @@ func (s *explist) IsEnd(prev, cur *element) (bool, bool) {
 	}
 
 	return false, true
-}
-
-func (s *explist) HasSyntax(el element) bool {
-	return false
 }
 
 func (s *explist) Append(el *element) {}

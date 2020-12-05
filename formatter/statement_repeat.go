@@ -19,10 +19,6 @@ type repeatStatement struct {
 	Exp  *exp
 }
 
-func (repeatStatement) New() statementIntf {
-	return &repeatStatement{}
-}
-
 func (repeatStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }

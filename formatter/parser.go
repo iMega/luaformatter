@@ -30,9 +30,9 @@ func parse(code []byte) (*document, error) {
 		return nil, err
 	}
 
-	doc := NewDocument()
+	doc := &document{}
 	b := new(body).New()
-	doc.Bod = b
+	doc.Body = b
 	chainSt.Append(b)
 	currentBody = b
 	currentStatement = b
@@ -54,7 +54,7 @@ func parse(code []byte) (*document, error) {
 		for isBlockEnd, ok := currentStatement.IsEnd(prevElement, curElement); ok; isBlockEnd, ok = currentStatement.IsEnd(prevElement, curElement) {
 			cs := chainSt.ExtractPrev()
 			if cs == nil {
-				currentBody = doc.Bod
+				currentBody = doc.Body
 				chainSt.Append(currentBody)
 				currentStatement = currentBody
 
@@ -77,143 +77,7 @@ func parse(code []byte) (*document, error) {
 			}
 		}
 
-		s := syntax
-		// prefixexp assignment or function call
-		if curElement.Token.Type == nID && currentStatement.TypeOf() == tsBody {
-			s = map[tokenID]branch{
-				nID: {
-					nThis:        &prefixexpStatement{},
-					nParentheses: &funcCallStatement{},
-				},
-			}
-			if prevElement != nil && prevElement.Token.Type == nLocal {
-				s = syntax
-			}
-		}
-
-		// global assignment statement
-		if currentStatement.TypeOf() == tsPrefixexpStatement && curElement.Token.Type == nComma {
-			s = map[tokenID]branch{
-				nComma: {
-					nThis: &assignmentStatement{},
-				},
-			}
-		}
-
-		// global assignment statement with one var
-		if currentStatement.TypeOf() == tsPrefixexpStatement && curElement.Token.Type == nAssign {
-			s = map[tokenID]branch{
-				nAssign: {
-					nThis: &assignmentStatement{},
-				},
-			}
-		}
-
-		if curElement.Token.Type == nParentheses && (prevElement != nil && prevElement.Token.Type == nID) {
-			s = map[tokenID]branch{
-				nID: {
-					nParentheses: &funcCallStatement{},
-				},
-			}
-			if currentStatement.TypeOf() == tsFunction {
-				s = syntax
-			}
-		}
-
-		if curElement.Token.Type == nString && (prevElement != nil && prevElement.Token.Type == nID) {
-			s = map[tokenID]branch{
-				nID: {
-					nString:       &funcCallStatement{}, //local base = require "resty.core.base"
-					nCurlyBracket: &funcCallStatement{}, //local base = require {}
-				},
-			}
-			if currentStatement.TypeOf() == tsExp {
-				s = map[tokenID]branch{
-					nID: {
-						nString:       &prefixexpStatement{}, // id = id "string"
-						nCurlyBracket: &prefixexpStatement{},
-					},
-				}
-			}
-		}
-
-		if curElement.Token.Type == nCurlyBracket && (prevElement != nil && prevElement.Token.Type == nID) {
-			s = map[tokenID]branch{
-				nID: {
-					nCurlyBracket: &funcCallStatement{}, //local base = require {}
-				},
-			}
-			if currentStatement.TypeOf() == tsExp {
-				s = map[tokenID]branch{
-					nID: {
-						nString:       &prefixexpStatement{}, // id = id "string"
-						nCurlyBracket: &prefixexpStatement{},
-					},
-				}
-			}
-		}
-
-		if curElement.Token.Type == nParentheses && currentStatement.TypeOf() == tsExp {
-			s = map[tokenID]branch{
-				nParentheses: {
-					nThis: &prefixexpStatement{},
-					// nParentheses: &funcCallStatement{},
-				},
-			}
-		}
-
-		// if curElement.Token.Type == nCurlyBracket && currentStatement.TypeOf() == tsExp {
-		// 	s = map[tokenID]branch{
-		// 		nCurlyBracket: {
-		// 			nThis: &prefixexpStatement{},
-		// 		},
-		// 	}
-		// }
-
-		if currentStatement.TypeOf() == tsField {
-			s = map[tokenID]branch{
-				nAssign: {
-					nID:     &exp{},
-					nNumber: &exp{},
-					nString: &exp{}, // = "string"
-				},
-			}
-		}
-
-		if currentStatement.TypeOf() == tsFieldList {
-			s = map[tokenID]branch{
-				nComma: {
-					nID:            &field{},
-					nNumber:        &field{},
-					nSubtraction:   &field{},
-					nSquareBracket: &field{},
-				},
-				nFor: {
-					nID: &field{},
-				},
-				nCurlyBracket: {
-					nID:            &field{},
-					nSquareBracket: &field{}, // table = {["and"] = v}
-				},
-			}
-		}
-
-		if currentStatement != nil && prevElement != nil {
-			if currentStatement.TypeOf() == tsFunction && prevElement.Token.Type == nParentheses {
-				s = map[tokenID]branch{
-					nParentheses: {
-						nID: &explist{},
-					},
-				}
-			}
-		}
-		_ = s
-		//
 		if st := currentStatement.GetStatement(prevElement, curElement); st != nil {
-			// if st := getStatement(s, prevElement, curElement); st != nil {
-			// if stNew != nil && stNew.TypeOf() == st.TypeOf() {
-			// 	fmt.Printf("=== %d \n", stNew.TypeOf())
-			// }
 			var assignmentWithOneVar statementIntf
 			isPrefixexpConvertAssignment := false
 
@@ -235,60 +99,24 @@ func parse(code []byte) (*document, error) {
 				}
 			}
 
-			if currentStatement == nil {
+			if currentStatement.TypeOf() == tsPrefixexpStatement && st.TypeOf() == tsFuncCallStatement {
+				st.AppendStatement(chainSt.ExctractPrefixexp())
+				if chainSt.Len() > 0 {
+					chainSt.Prev().AppendStatement(st)
+				}
 				chainSt.Append(st)
 
-				if prevElement != nil {
-					st.Append(prevElement)
+			} else if st.TypeOf() == tsAssignment {
+				isPrefixexpConvertAssignment = true
+				currentStatement = chainSt.ExctractPrefixexp()
+				if chainSt.Len() > 0 {
+					chainSt.Prev().AppendStatement(st)
 				}
+				chainSt.Append(st)
+
 			} else {
-				if currentStatement.TypeOf() == tsPrefixexpStatement && st.TypeOf() == tsFuncCallStatement {
-					st.AppendStatement(chainSt.ExctractPrefixexp())
-					if chainSt.Len() > 0 {
-						chainSt.Prev().AppendStatement(st)
-					}
-					chainSt.Append(st)
-				} else if currentStatement.TypeOf() == tsAssignment && st.TypeOf() == tsFunction {
-					// myvar = function() end
-					exl := &explist{}
-					currentStatement.AppendStatement(exl)
-					chainSt.Append(exl)
-
-					ex := &exp{}
-					exl.AppendStatement(ex)
-					chainSt.Append(ex)
-
-					currentStatement = ex
-
-					currentStatement.AppendStatement(st)
-					chainSt.Append(st)
-
-				} else if currentStatement.TypeOf() == tsAssignment && st.TypeOf() == tsTable {
-					// table = {}
-					exl := &explist{}
-					currentStatement.AppendStatement(exl)
-					chainSt.Append(exl)
-
-					ex := &exp{}
-					exl.AppendStatement(ex)
-					chainSt.Append(ex)
-
-					currentStatement = ex
-
-					currentStatement.AppendStatement(st)
-					chainSt.Append(st)
-
-				} else if st.TypeOf() == tsAssignment {
-					isPrefixexpConvertAssignment = true
-					currentStatement = chainSt.ExctractPrefixexp()
-					if chainSt.Len() > 0 {
-						chainSt.Prev().AppendStatement(st)
-					}
-					chainSt.Append(st)
-				} else {
-					currentStatement.AppendStatement(st)
-					chainSt.Append(st)
-				}
+				currentStatement.AppendStatement(st)
+				chainSt.Append(st)
 			}
 
 			for inner := st.InnerStatement(prevElement, curElement); inner != nil; inner = st.InnerStatement(prevElement, curElement) {
@@ -314,49 +142,11 @@ func parse(code []byte) (*document, error) {
 			currentStatement = st
 		}
 
-		if currentStatement != nil {
-			currentStatement.Append(curElement)
-		}
+		currentStatement.Append(curElement)
 
 		prevElement = curElement
 		curElement = nil
 	}
 
 	return doc, nil
-}
-
-func getStatement(s map[tokenID]branch, prev, cur *element) statementIntf {
-	var branch branch
-
-	if cur.Resolved {
-		return nil
-	}
-
-	if prev != nil && prev.Token.Type == nReturn {
-		branch = getsyntax(s, tokenID(nReturn))
-		if cb, ok := branch[cur.Token.Type]; ok {
-			return cb.New()
-		}
-	}
-
-	if prev != nil && prev.Token.Type == nComma {
-		branch = getsyntax(s, tokenID(nComma))
-		if cb, ok := branch[cur.Token.Type]; ok {
-			return cb.New()
-		}
-	}
-
-	branch = getsyntax(s, tokenID(cur.Token.Type))
-	if cb, ok := branch[nThis]; ok {
-		return cb.New()
-	}
-
-	if prev != nil {
-		branch = getsyntax(s, tokenID(prev.Token.Type))
-		if cb, ok := branch[cur.Token.Type]; ok {
-			return cb.New()
-		}
-	}
-
-	return nil
 }

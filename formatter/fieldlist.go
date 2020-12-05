@@ -20,10 +20,6 @@ type fieldlist struct {
 	List []*field
 }
 
-func (fieldlist) New() statementIntf {
-	return &fieldlist{}
-}
-
 func (fieldlist) InnerStatement(prev, cur *element) statementIntf {
 	// fieldlist always returns a field. need will add
 	// it will need to be added to the innerStatement.

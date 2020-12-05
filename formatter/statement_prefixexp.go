@@ -28,10 +28,6 @@ type prefixexpStatement struct {
 	IsVar            bool
 }
 
-func (prefixexpStatement) New() statementIntf {
-	return &prefixexpStatement{}
-}
-
 func (s *prefixexpStatement) InnerStatement(prev, cur *element) statementIntf {
 	if cur.Token.Type == nSquareBracket {
 		// s.IsVar = true

@@ -20,10 +20,6 @@ type returnStatement struct {
 	Explist *explist
 }
 
-func (returnStatement) New() statementIntf {
-	return &returnStatement{}
-}
-
 func (returnStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }

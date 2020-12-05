@@ -19,64 +19,14 @@ import (
 )
 
 type document struct {
-	MaxWidth  int
-	Bod       statementIntf
-	Body      map[uint64]Block
-	QtyBlocks uint64
+	MaxWidth int
+	Body     statementIntf
 }
-
-func NewDocument() *document {
-	return &document{
-		Body: make(map[uint64]Block),
-	}
-}
-
-func (d *document) AddBlock(b Block) {
-	d.Body[d.QtyBlocks] = b
-	d.QtyBlocks++
-}
-
-type varlist []element // separator ,
 
 func newExp(elOrStat interface{}) *exp {
 	e := &exp{}
 
 	return e
-}
-
-type tableconstructor struct {
-	FieldList fieldList
-	Separator int
-}
-
-type fieldList struct {
-	sqareField sqareField
-	Field      field
-	Exp        exp
-}
-
-type sqareField struct {
-	ExpKey exp
-	ExpVal exp
-}
-
-type functiondef struct {
-	StartElement *element
-	Parlist      parlist
-	EndElement   *element
-}
-
-type parlist []*element
-
-type binop struct {
-	FirstExp  *exp
-	Operator  element
-	SecondExp exp
-}
-
-type unop struct {
-	Operator *element
-	Exp      *exp
 }
 
 type Block struct {
@@ -135,7 +85,6 @@ func (b *Block) Format(c *Config, p printer, w io.Writer) error {
 }
 
 type statementIntf interface {
-	New() statementIntf
 	Append(*element)
 	AppendStatement(statementIntf)
 	InnerStatement(prev, cur *element) statementIntf
@@ -178,51 +127,6 @@ type statement struct {
 	Comment    *commentStatement
 	NewLine    *newlineStatement
 }
-
-func newStatement(st statementIntf) statement {
-	stat := statement{}
-
-	switch v := st.(type) {
-	case *assignmentStatement:
-		stat.Assignment = v
-	// case *functionCallStatement:
-	// 	stat.FunctionCall = v
-	// case *labelStatement:
-	// 	stat.Label = v
-	// case *breakStatement:
-	// 	stat.Break = v
-	// case *gotoStatement:
-	// 	stat.Goto = v
-	// case *doStatement:
-	// 	stat.Do = v
-	// case *whileStatement:
-	// 	stat.While = v
-	// case *repeatStatement:
-	// 	stat.Repeat = v
-	// case *ifStatement:
-	// 	stat.If = v
-	// case *forStatement:
-	// 	stat.ForNumerical = v
-	// case *forGenericStatement:
-	// 	stat.ForGeneric = v
-	case *functionStatement:
-		stat.Function = v
-	}
-
-	return stat
-}
-
-type functionCallStatement struct {
-	Element *element
-	Args    *explist
-}
-
-type varPart struct {
-	Element *element
-	Exp     exp
-}
-
-type namelist []*element
 
 // chunk ::= block
 // block ::= {stat} [retstat]

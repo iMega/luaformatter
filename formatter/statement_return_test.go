@@ -28,8 +28,7 @@ return io.write(string.format(fmt, unpack(arg)))
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Return: &returnStatement{
@@ -155,8 +154,7 @@ return
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Return: &returnStatement{},
@@ -177,8 +175,7 @@ return 1+2, b
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Return: &returnStatement{
@@ -258,8 +255,7 @@ return function () end
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Return: &returnStatement{
@@ -293,8 +289,7 @@ return function () end, function () end
 				),
 			},
 			want: &document{
-				Body: make(map[uint64]Block),
-				Bod: &body{
+				Body: &body{
 					Blocks: map[uint64]block{
 						0: {
 							Return: &returnStatement{

@@ -18,10 +18,6 @@ type gotoStatement struct {
 	Element *element
 }
 
-func (gotoStatement) New() statementIntf {
-	return &gotoStatement{}
-}
-
 func (gotoStatement) InnerStatement(prev, cur *element) statementIntf {
 	return nil
 }
