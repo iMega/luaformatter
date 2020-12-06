@@ -49,10 +49,6 @@ func (s *ifStatement) AppendStatement(st statementIntf) {
 		s.ElseIfPart = append(s.ElseIfPart, v)
 	case *elseStatement:
 		s.ElsePart = v
-	case *prefixexpStatement:
-		return
-		// default:
-		// s.Body = append(s.Body, newBlock(st))
 	}
 }
 
@@ -152,7 +148,7 @@ func (elseifStatement) InnerStatement(prev, cur *element) statementIntf {
 }
 
 func (elseifStatement) TypeOf() typeStatement {
-	return tsIf
+	return tsNone
 }
 
 func (s *elseifStatement) IsEnd(prev, cur *element) (bool, bool) {
@@ -238,7 +234,7 @@ func (elseStatement) InnerStatement(prev, cur *element) statementIntf {
 }
 
 func (elseStatement) TypeOf() typeStatement {
-	return tsIf
+	return tsNone
 }
 
 func (s *elseStatement) IsEnd(prev, cur *element) (bool, bool) {

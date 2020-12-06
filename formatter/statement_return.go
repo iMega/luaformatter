@@ -44,7 +44,7 @@ func (s *returnStatement) Append(el *element) {
 		return
 	}
 
-	s.Explist.List = append(s.Explist.List, newExp(el))
+	//s.Explist.List = append(s.Explist.List, newExp(el))
 }
 
 func (s *returnStatement) AppendStatement(st statementIntf) {

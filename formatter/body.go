@@ -52,6 +52,10 @@ func (b *body) IsEnd(prev, cur *element) (bool, bool) {
 		return false, true
 	}
 
+	if cur.Token.Type == nUntil {
+		return false, true
+	}
+
 	return false, false
 }
 
@@ -62,7 +66,7 @@ func (b *body) AppendStatement(st statementIntf) {
 		return
 	}
 
-	b.Blocks[b.Qty] = newBloc(st)
+	b.Blocks[b.Qty] = newBlock(st)
 	b.Qty++
 }
 
@@ -220,7 +224,7 @@ func (b *block) Format(c *Config, p printer, w io.Writer) error {
 	return nil
 }
 
-func newBloc(st statementIntf) block {
+func newBlock(st statementIntf) block {
 	bl := block{}
 
 	switch v := st.(type) {
@@ -280,4 +284,20 @@ func newBloc(st statementIntf) block {
 type block struct {
 	Statement statement
 	Return    *returnStatement
+}
+
+type statement struct {
+	Assignment *assignmentStatement
+	FuncCall   *funcCallStatement
+	Label      *labelStatement
+	Break      *breakStatement
+	Goto       *gotoStatement
+	Do         *doStatement
+	While      *whileStatement
+	Repeat     *repeatStatement
+	If         *ifStatement
+	For        *forStatement
+	Function   *functionStatement
+	Comment    *commentStatement
+	NewLine    *newlineStatement
 }

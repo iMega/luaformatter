@@ -78,9 +78,10 @@ func (s *scanner) Next() bool {
 		return false
 	}
 
-	token := t.(*lexmachine.Token)
-	s.el = element{
-		Token: token,
+	if token, ok := t.(*lexmachine.Token); ok {
+		s.el = element{
+			Token: token,
+		}
 	}
 
 	return true

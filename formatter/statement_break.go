@@ -21,7 +21,7 @@ func (breakStatement) InnerStatement(prev, cur *element) statementIntf {
 }
 
 func (breakStatement) TypeOf() typeStatement {
-	return tsIf
+	return tsNone
 }
 
 func (s *breakStatement) IsEnd(prev, cur *element) (bool, bool) {

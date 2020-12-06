@@ -19,7 +19,7 @@ func TestParseRepeat(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			skip: true,
+			skip: false,
 			name: "repeat statement",
 			args: args{
 				code: []byte(`
@@ -35,12 +35,15 @@ until a
 						0: {
 							Statement: statement{
 								Repeat: &repeatStatement{
-									Body: []Block{
-										{
-											Statement: statement{
-												Break: &breakStatement{},
+									Body: &body{
+										Blocks: map[uint64]block{
+											0: {
+												Statement: statement{
+													Break: &breakStatement{},
+												},
 											},
 										},
+										Qty: 1,
 									},
 									Exp: &exp{
 										Element: &element{

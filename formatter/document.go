@@ -14,74 +14,9 @@
 
 package formatter
 
-import (
-	"io"
-)
-
 type document struct {
 	MaxWidth int
 	Body     statementIntf
-}
-
-func newExp(elOrStat interface{}) *exp {
-	e := &exp{}
-
-	return e
-}
-
-type Block struct {
-	Statement statement
-	Return    *returnStatement
-}
-
-func (b *Block) Format(c *Config, p printer, w io.Writer) error {
-	if err := p.WritePad(w); err != nil {
-		return err
-	}
-
-	if s := b.Statement.Assignment; s != nil {
-		if err := s.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if st := b.Statement.If; st != nil {
-		if err := st.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if s := b.Statement.FuncCall; s != nil {
-		if err := s.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if s := b.Statement.Function; s != nil {
-		if err := s.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if s := b.Return; s != nil {
-		if err := s.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if s := b.Statement.Comment; s != nil {
-		if err := s.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if s := b.Statement.NewLine; s != nil {
-		if err := s.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 type statementIntf interface {
@@ -110,23 +45,8 @@ const (
 	tsTable
 	tsFieldList
 	tsField
+	tsRepeat
 )
-
-type statement struct {
-	Assignment *assignmentStatement
-	FuncCall   *funcCallStatement
-	Label      *labelStatement
-	Break      *breakStatement
-	Goto       *gotoStatement
-	Do         *doStatement
-	While      *whileStatement
-	Repeat     *repeatStatement
-	If         *ifStatement
-	For        *forStatement
-	Function   *functionStatement
-	Comment    *commentStatement
-	NewLine    *newlineStatement
-}
 
 // chunk ::= block
 // block ::= {stat} [retstat]
@@ -136,14 +56,14 @@ type statement struct {
 //      label |
 //      break |
 //      goto Name |
-// b     do block end |
-// b     while exp do block end |
-// b     repeat block until exp |
-// b     if exp then block {elseif exp then block} [else block] end |
-// b     for Name ‘=’ exp ‘,’ exp [‘,’ exp] do block end |
-// b     for namelist in explist do block end |
-// b     function funcname funcbody |
-// b     local function Name funcbody |
+//      do block end |
+//      while exp do block end |
+//      repeat block until exp |
+//      if exp then block {elseif exp then block} [else block] end |
+//      for Name ‘=’ exp ‘,’ exp [‘,’ exp] do block end |
+//      for namelist in explist do block end |
+//      function funcname funcbody |
+//      local function Name funcbody |
 //      local namelist [‘=’ explist]
 // retstat ::= return [explist] [‘;’]
 // label ::= ‘::’ Name ‘::’

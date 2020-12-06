@@ -15,7 +15,7 @@
 package formatter
 
 type repeatStatement struct {
-	Body []Block
+	Body statementIntf
 	Exp  *exp
 }
 
@@ -24,7 +24,7 @@ func (repeatStatement) InnerStatement(prev, cur *element) statementIntf {
 }
 
 func (repeatStatement) TypeOf() typeStatement {
-	return tsIf
+	return tsRepeat
 }
 
 func (s *repeatStatement) IsEnd(prev, cur *element) (bool, bool) {
@@ -48,17 +48,21 @@ func (s *repeatStatement) Append(el *element) {}
 func (s *repeatStatement) AppendStatement(st statementIntf) {
 	if v, ok := st.(*exp); ok {
 		s.Exp = v
-
-		return
 	}
-
-	s.Body = append(s.Body, newBlock(st))
 }
 
 func (s *repeatStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
-	return prevSt
+	if s.Body == nil {
+		s.Body = new(body).New()
+	}
+
+	return s.Body
 }
 
 func (s *repeatStatement) GetStatement(prev, cur *element) statementIntf {
+	if prev.Token.Type == nUntil {
+		return &exp{}
+	}
+
 	return nil
 }

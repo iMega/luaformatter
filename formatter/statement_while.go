@@ -15,8 +15,8 @@
 package formatter
 
 type whileStatement struct {
-	Exp *exp
-	Do  *doStatement
+	Exp  *exp
+	Body statementIntf
 }
 
 func (whileStatement) InnerStatement(prev, cur *element) statementIntf {
@@ -24,7 +24,7 @@ func (whileStatement) InnerStatement(prev, cur *element) statementIntf {
 }
 
 func (whileStatement) TypeOf() typeStatement {
-	return tsIf
+	return tsNone
 }
 
 func (s *whileStatement) IsEnd(prev, cur *element) (bool, bool) {
@@ -34,18 +34,27 @@ func (s *whileStatement) IsEnd(prev, cur *element) (bool, bool) {
 func (s *whileStatement) Append(el *element) {}
 
 func (s *whileStatement) AppendStatement(st statementIntf) {
-	switch v := st.(type) {
-	case *exp:
+	if v, ok := st.(*exp); ok {
 		s.Exp = v
-	case *doStatement:
-		s.Do = v
 	}
 }
 
 func (s *whileStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
-	return prevSt
+	if cur.Token.Type != nDo {
+		return prevSt
+	}
+
+	if s.Body == nil {
+		s.Body = new(body).New()
+	}
+
+	return s.Body
 }
 
 func (s *whileStatement) GetStatement(prev, cur *element) statementIntf {
+	if prev.Token.Type == nWhile {
+		return &exp{}
+	}
+
 	return nil
 }

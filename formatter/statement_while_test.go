@@ -19,7 +19,7 @@ func TestParseWhile(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			skip: true,
+			skip: false,
 			name: "while statement",
 			args: args{
 				code: []byte(`
@@ -49,17 +49,26 @@ end
 											},
 										},
 									},
-									Do: &doStatement{
-										Body: &body{
-											Qty: 1,
-											Blocks: map[uint64]block{
-												0: {
-													Statement: statement{
-														Break: &breakStatement{},
+									Body: &body{
+										Blocks: map[uint64]block{
+											0: {
+												Statement: statement{
+													Do: &doStatement{
+														Body: &body{
+															Blocks: map[uint64]block{
+																0: {
+																	Statement: statement{
+																		Break: &breakStatement{},
+																	},
+																},
+															},
+															Qty: 1,
+														},
 													},
 												},
 											},
 										},
+										Qty: 1,
 									},
 								},
 							},
