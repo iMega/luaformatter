@@ -66,6 +66,14 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 		return false, false
 	}
 
+	if cur.Token.Type == nParentheses {
+		return false, false
+	}
+
+	// if isExp(cur) {
+	// 	return false, false
+	// }
+
 	// return false, true
 
 	var syntax = map[tokenID]map[tokenID]bool{
@@ -319,7 +327,7 @@ func (s *exp) GetStatement(prev, cur *element) statementIntf {
 	}
 
 	if cur.Token.Type == nParentheses {
-		return &prefixexpStatement{}
+		return &prefixexpStatement{} //
 	}
 
 	if cur.Token.Type == nSquareBracket {

@@ -159,9 +159,12 @@ a = func:call{}
 a = func.call""
 a = func.call()
 a = func.call{}
-a = func.call""
-a = func.call()
-a = func.call{}
+a = func[0].ca:ll""
+a = func[0].ca:ll()
+a = func[0].ca:ll{}
+a = func[0].call""
+a = func[0].call()
+a = func[0].call{}
 a = funccall""
 a = funccall()
 a = funccall{}
@@ -191,6 +194,7 @@ local a = b.c({
 })
 local a = b("1")
 local a = b("")
+c = -(x^2)
 `),
 			},
 			wantW: `
@@ -330,9 +334,12 @@ a = func:call({})
 a = func.call("")
 a = func.call()
 a = func.call({})
-a = func.call("")
-a = func.call()
-a = func.call({})
+a = func[0].ca:ll("")
+a = func[0].ca:ll()
+a = func[0].ca:ll({})
+a = func[0].call("")
+a = func[0].call()
+a = func[0].call({})
 a = funccall("")
 a = funccall()
 a = funccall({})
@@ -362,6 +369,7 @@ local a = b.c({
 })
 local a = b("1")
 local a = b("")
+c = -(x ^ 2)
 `,
 			wantErr: false,
 		},

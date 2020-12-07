@@ -26,6 +26,8 @@ type prefixexpStatement struct {
 	Prefixexp        *prefixexpStatement
 	OneValue         *exp
 	IsVar            bool
+	Enclosed         bool
+	// prefixexp ::= var | functioncall | ‘(’ exp ‘)’
 }
 
 func (s *prefixexpStatement) InnerStatement(prev, cur *element) statementIntf {
@@ -35,7 +37,12 @@ func (s *prefixexpStatement) InnerStatement(prev, cur *element) statementIntf {
 	}
 
 	if cur.Token.Type == nParentheses {
-		return &funcCallStatement{}
+		if prev != nil && prev.Token.Type == nID {
+			return &funcCallStatement{}
+		}
+
+		s.Enclosed = true
+		return &exp{}
 	}
 
 	if cur.Token.Type == nString {
@@ -177,7 +184,12 @@ func (s *prefixexpStatement) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	if st := s.FieldAccessorExp; st != nil {
-		if _, err := w.Write([]byte("[")); err != nil {
+		def := []byte("[")
+		if s.Enclosed {
+			def = []byte("(")
+		}
+
+		if _, err := w.Write(def); err != nil {
 			return err
 		}
 
@@ -185,7 +197,12 @@ func (s *prefixexpStatement) Format(c *Config, p printer, w io.Writer) error {
 			return err
 		}
 
-		if _, err := w.Write([]byte("]")); err != nil {
+		def = []byte("]")
+		if s.Enclosed {
+			def = []byte(")")
+		}
+
+		if _, err := w.Write(def); err != nil {
 			return err
 		}
 	}
