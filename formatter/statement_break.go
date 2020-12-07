@@ -16,7 +16,7 @@ package formatter
 
 type breakStatement struct{}
 
-func (breakStatement) InnerStatement(prev, cur *element) statementIntf {
+func (breakStatement) InnerStatement(*element, *element) statementIntf {
 	return nil
 }
 
@@ -24,18 +24,18 @@ func (breakStatement) TypeOf() typeStatement {
 	return tsNone
 }
 
-func (s *breakStatement) IsEnd(prev, cur *element) (bool, bool) {
+func (s *breakStatement) IsEnd(*element, *element) (bool, bool) {
 	return false, true
 }
 
-func (s *breakStatement) Append(el *element) {}
+func (s *breakStatement) Append(*element) {}
 
 func (s *breakStatement) AppendStatement(st statementIntf) {}
 
-func (s *breakStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
-	return prevSt
+func (s *breakStatement) GetBody(statementIntf, *element) statementIntf {
+	return nil
 }
 
-func (s *breakStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *breakStatement) GetStatement(*element, *element) statementIntf {
 	return nil
 }

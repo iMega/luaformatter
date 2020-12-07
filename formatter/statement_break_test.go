@@ -58,3 +58,11 @@ break
 		})
 	}
 }
+
+func TestSyntetic(t *testing.T) {
+	b := &breakStatement{}
+
+	b.AppendStatement(nil)
+	b.GetBody(nil, nil)
+	b.GetStatement(nil, nil)
+}

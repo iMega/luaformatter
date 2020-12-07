@@ -24,6 +24,72 @@ func TestFormat(t *testing.T) {
 				c: DefaultConfig(),
 				b: []byte(`
 a = -1
+a = -1 - -1
+a = -1 - -b
+a = -1 .. -1
+a = -1 .. -b
+a = -1 * -1
+a = -1 * -b
+a = -1 / -1
+a = -1 / -b
+a = -1 & -1
+a = -1 & -b
+a = -1 % -1
+a = -1 % -b
+a = -1 ^ -1
+a = -1 ^ -b
+a = -1 + -1
+a = -1 + -b
+a = -1 < -1
+a = -1 < -b
+a = -1 << -1
+a = -1 << -b
+a = -1 <= -1
+a = -1 <= -b
+a = -1 == -1
+a = -1 == -b
+a = -1 > -1
+a = -1 > -b
+a = -1 >= -1
+a = -1 >= -b
+a = -1 >> -1
+a = -1 >> -b
+a = -1 | -1
+a = -1 | -b
+a = -1 ~ -1
+a = -1 ~ -b
+a = -1 ~= -1
+a = -1 ~= -b
+a = -1 and -1
+a = -1 and -b
+a = -1 or -1
+a = -1 or -b
+a = -b
+a = -b - -1
+a = -b .. -1
+a = -b * -1
+a = -b / -1
+a = -b & -1
+a = -b % -1
+a = -b ^ -1
+a = -b + -1
+a = -b < -1
+a = -b << -1
+a = -b <= -1
+a = -b == -1
+a = -b > -1
+a = -b >= -1
+a = -b >> -1
+a = -b | -1
+a = -b ~ -1
+a = -b ~= -1
+a = -b and -1
+a = -b or -1
+a = ...
+a = ... == ...
+a = ... ~= ...
+a = ... and ...
+a = ... or ...
 a = ""
 a = "" .. ""
 a = "" < ""
@@ -38,31 +104,79 @@ a = {}
 a = #b
 a = 0
 a = 1 - 1
+a = 1 - b
 a = 1 .. 1
+a = 1 .. b
 a = 1 * 1
+a = 1 * b
 a = 1 / 1
+a = 1 / b
 a = 1 & 1
+a = 1 & b
 a = 1 % 1
+a = 1 % b
 a = 1 ^ 1
+a = 1 ^ b
 a = 1 + 1
+a = 1 + b
 a = 1 < 1
+a = 1 < b
 a = 1 << 1
+a = 1 << b
 a = 1 <= 1
+a = 1 <= b
 a = 1 == 1
+a = 1 == b
 a = 1 > 1
+a = 1 > b
 a = 1 >= 1
+a = 1 >= b
 a = 1 >> 1
+a = 1 >> b
 a = 1 | 1
+a = 1 | b
 a = 1 ~ 1
+a = 1 ~ b
 a = 1 ~= 1
+a = 1 ~= b
 a = 1 and 1
+a = 1 and b
 a = 1 or 1
+a = 1 or b
 a = b
 a = false
+a = false == nil
+a = false == true
+a = false ~= nil
+a = false ~= true
+a = false and nil
+a = false and true
+a = false or nil
+a = false or true
+a = func:call""
+a = func:call()
+a = func:call{}
+a = func.call""
+a = func.call()
+a = func.call{}
+a = func.call""
+a = func.call()
+a = func.call{}
+a = funccall""
+a = funccall()
+a = funccall{}
+a = nil
+a = nil == true
+a = nil ~= true
+a = nil and true
+a = nil or true
+a = true
+a = true == false
+a = true ~= false
+a = true and false
+a = true or false
 a = function()
 end
-a = nil
-a = true
 local a
 local a, b
 local a = b
@@ -81,6 +195,72 @@ local a = b("")
 			},
 			wantW: `
 a = -1
+a = -1 - -1
+a = -1 - -b
+a = -1 .. -1
+a = -1 .. -b
+a = -1 * -1
+a = -1 * -b
+a = -1 / -1
+a = -1 / -b
+a = -1 & -1
+a = -1 & -b
+a = -1 % -1
+a = -1 % -b
+a = -1 ^ -1
+a = -1 ^ -b
+a = -1 + -1
+a = -1 + -b
+a = -1 < -1
+a = -1 < -b
+a = -1 << -1
+a = -1 << -b
+a = -1 <= -1
+a = -1 <= -b
+a = -1 == -1
+a = -1 == -b
+a = -1 > -1
+a = -1 > -b
+a = -1 >= -1
+a = -1 >= -b
+a = -1 >> -1
+a = -1 >> -b
+a = -1 | -1
+a = -1 | -b
+a = -1 ~ -1
+a = -1 ~ -b
+a = -1 ~= -1
+a = -1 ~= -b
+a = -1 and -1
+a = -1 and -b
+a = -1 or -1
+a = -1 or -b
+a = -b
+a = -b - -1
+a = -b .. -1
+a = -b * -1
+a = -b / -1
+a = -b & -1
+a = -b % -1
+a = -b ^ -1
+a = -b + -1
+a = -b < -1
+a = -b << -1
+a = -b <= -1
+a = -b == -1
+a = -b > -1
+a = -b >= -1
+a = -b >> -1
+a = -b | -1
+a = -b ~ -1
+a = -b ~= -1
+a = -b and -1
+a = -b or -1
+a = ...
+a = ... == ...
+a = ... ~= ...
+a = ... and ...
+a = ... or ...
 a = ""
 a = "" .. ""
 a = "" < ""
@@ -95,31 +275,79 @@ a = {}
 a = #b
 a = 0
 a = 1 - 1
+a = 1 - b
 a = 1 .. 1
+a = 1 .. b
 a = 1 * 1
+a = 1 * b
 a = 1 / 1
+a = 1 / b
 a = 1 & 1
+a = 1 & b
 a = 1 % 1
+a = 1 % b
 a = 1 ^ 1
+a = 1 ^ b
 a = 1 + 1
+a = 1 + b
 a = 1 < 1
+a = 1 < b
 a = 1 << 1
+a = 1 << b
 a = 1 <= 1
+a = 1 <= b
 a = 1 == 1
+a = 1 == b
 a = 1 > 1
+a = 1 > b
 a = 1 >= 1
+a = 1 >= b
 a = 1 >> 1
+a = 1 >> b
 a = 1 | 1
+a = 1 | b
 a = 1 ~ 1
+a = 1 ~ b
 a = 1 ~= 1
+a = 1 ~= b
 a = 1 and 1
+a = 1 and b
 a = 1 or 1
+a = 1 or b
 a = b
 a = false
+a = false == nil
+a = false == true
+a = false ~= nil
+a = false ~= true
+a = false and nil
+a = false and true
+a = false or nil
+a = false or true
+a = func:call("")
+a = func:call()
+a = func:call({})
+a = func.call("")
+a = func.call()
+a = func.call({})
+a = func.call("")
+a = func.call()
+a = func.call({})
+a = funccall("")
+a = funccall()
+a = funccall({})
+a = nil
+a = nil == true
+a = nil ~= true
+a = nil and true
+a = nil or true
+a = true
+a = true == false
+a = true ~= false
+a = true and false
+a = true or false
 a = function()
 end
-a = nil
-a = true
 local a
 local a, b
 local a = b
@@ -240,8 +468,7 @@ a = {
 				return
 			}
 
-			gotW := w.String()
-			if !assert.Equal(t, gotW, tt.wantW) {
+			if !assert.Equal(t, tt.wantW, w.String()) {
 				t.Error("failed to format")
 			}
 		})

@@ -33,7 +33,13 @@ func (exp) InnerStatement(prev, cur *element) statementIntf {
 	case nFunction:
 		return &functionStatement{}
 	case nCurlyBracket:
+		if prev != nil && prev.Token.Type == nID {
+			return &funcCallStatement{}
+		}
 		return &tableStatement{}
+
+		// case nID: // TODO document structure is equal for a=func[0].call{} and func[0].call{}
+		// return &prefixexpStatement{} // not working with a = -b - -1
 	}
 
 	return nil
@@ -53,6 +59,10 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 	}
 
 	if isBinop(prev) && isExp(cur) {
+		return false, false
+	}
+
+	if prev != nil && prev.Token.Type == nSquareBracket && isExp(cur) {
 		return false, false
 	}
 
@@ -274,6 +284,9 @@ func (s *exp) AppendStatement(st statementIntf) {
 		s.Func = v
 	case *exp:
 		s.Exp = v
+	case *funcCallStatement:
+		s.Prefixexp = &prefixexpStatement{FuncCall: v} // a = func[0].call{}
+
 	case *prefixexpStatement:
 		if s.Element != nil {
 			v.Element = s.Element
@@ -293,6 +306,10 @@ func (s *exp) GetStatement(prev, cur *element) statementIntf {
 		switch prev.Token.Type {
 		case nID:
 			if cur.Token.Type == nString {
+				return &prefixexpStatement{}
+			}
+
+			if cur.Token.Type == nCurlyBracket {
 				return &prefixexpStatement{}
 			}
 			// 		if cur.Token.Type == nParentheses {
