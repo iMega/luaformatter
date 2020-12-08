@@ -24,11 +24,6 @@ const (
 	mMagenta     = "\x1b[35m"
 )
 
-type Config struct {
-	IndentSize    uint8 `mapstructure:"indent-size"`
-	MaxLineLength uint8 `mapstructure:"max-line-length"`
-}
-
 func Format(c Config, b []byte, w io.Writer) error {
 	doc, err := parse(b)
 	if err != nil {
@@ -82,6 +77,89 @@ func newLine(w io.Writer) error {
 
 func space(w io.Writer) error {
 	_, err := w.Write([]byte(" "))
+
+	return err
+}
+
+func writeKeyword(c *Config, tokenType int, w io.Writer) error {
+	raw := keywords[tokenType]
+
+	if c.Highlight {
+		raw = append([]byte("\x1b[1m"), raw...)
+		raw = append(raw, "\x1b[0m"...)
+	}
+
+	_, err := w.Write(raw)
+
+	return err
+}
+
+var tokens = map[int][]byte{
+	nColon:     []byte(":"),
+	nSemiColon: []byte(";"),
+	nAssign:    []byte(`=`),
+	nComma:     []byte(`,`),
+	nDot:       []byte(`.`),
+	nVararg:    []byte(`...`),
+
+	// Arithmetic Operators
+	nAddition:       []byte(`+`),
+	nSubtraction:    []byte("-"),
+	nMultiplication: []byte(`*`),
+	nFloatDivision:  []byte("/"),
+	nFloorDivision:  []byte("//"),
+	nModulo:         []byte("%"),
+	nExponentiation: []byte(`^`),
+
+	// Bitwise Operators
+	nBitwiseAND:         []byte("&"),
+	nBitwiseOR:          []byte(`|`),
+	nBitwiseExclusiveOR: []byte("~"),
+	nLeftShift:          []byte("<<"),
+	nRightShift:         []byte(">>"),
+
+	// Length Operator
+	nLength: []byte("#"),
+
+	// Concatenation
+	nConcat: []byte(`..`),
+
+	// Relational Operators
+	nEquality:       []byte("=="),
+	nInequality:     []byte("~="),
+	nLessThan:       []byte("<"),
+	nGreaterThan:    []byte(">"),
+	nLessOrEqual:    []byte("<="),
+	nGreaterOrEqual: []byte(">="),
+
+	nParentheses:          []byte(`(`),
+	nClosingParentheses:   []byte(`)`),
+	nSquareBracket:        []byte(`[`),
+	nClosingSquareBracket: []byte(`]`),
+	nCurlyBracket:         []byte(`{`),
+	nClosingCurlyBracket:  []byte(`}`),
+}
+
+func isRelationalOperator(el *element) bool {
+	ops := []int{
+		nEquality,
+		nInequality,
+		nLessThan,
+		nGreaterThan,
+		nLessOrEqual,
+		nGreaterOrEqual,
+	}
+
+	return binarySearch(ops, el.Token.Type)
+}
+
+func spaceAroundOption(c *Config, tokenType int, w io.Writer) error {
+	raw := tokens[tokenType]
+
+	raw = append([]byte(" "), raw...)
+	raw = append(raw, " "...)
+
+	_, err := w.Write(raw)
 
 	return err
 }

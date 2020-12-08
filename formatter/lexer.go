@@ -16,7 +16,6 @@ package formatter
 
 import (
 	"io"
-	"strings"
 
 	"github.com/timtadh/lexmachine"
 	"github.com/timtadh/lexmachine/machines"
@@ -32,7 +31,7 @@ func newScanner(code []byte) (*scanner, error) {
 	lexer := lexmachine.NewLexer()
 
 	for k, v := range keywords {
-		lexer.Add([]byte(strings.ToLower(v)), token(k))
+		lexer.Add(v, token(k))
 	}
 
 	lexer.Add([]byte(`([a-zA-Z_][a-zA-Z0-9_.:]*)`), token(nID))
@@ -209,33 +208,33 @@ const (
 var (
 	Tokens []string
 
-	keywords = map[int]string{
-		nBreak:    "break",
-		nDo:       "do",
-		nElse:     "else",
-		nElseif:   "elseif",
-		nEnd:      "end",
-		nFalse:    "false",
-		nFor:      "for",
-		nFunction: "function",
-		nGoto:     "goto",
-		nIf:       "if",
-		nIn:       "in",
-		nLocal:    "local",
-		nNil:      "nil",
+	keywords = map[int][]byte{
+		nBreak:    []byte("break"),
+		nDo:       []byte("do"),
+		nElse:     []byte("else"),
+		nElseif:   []byte("elseif"),
+		nEnd:      []byte("end"),
+		nFalse:    []byte("false"),
+		nFor:      []byte("for"),
+		nFunction: []byte("function"),
+		nGoto:     []byte("goto"),
+		nIf:       []byte("if"),
+		nIn:       []byte("in"),
+		nLocal:    []byte("local"),
+		nNil:      []byte("nil"),
+		nRepeat:   []byte("repeat"),
+		nReturn:   []byte("return"),
+		nThen:     []byte("then"),
+		nTrue:     []byte("true"),
+		nUntil:    []byte("until"),
+		nWhile:    []byte("while"),
 
-		nRepeat:    "repeat",
-		nReturn:    "return",
-		nThen:      "then",
-		nTrue:      "true",
-		nUntil:     "until",
-		nWhile:     "while",
-		nColon:     ":",
-		nSemiColon: ";",
-		nAssign:    `=`,
-		nComma:     `,`,
-		nDot:       `\.`,
-		nVararg:    `\.\.\.`,
+		nColon:     []byte(":"),
+		nSemiColon: []byte(";"),
+		nAssign:    []byte(`=`),
+		nComma:     []byte(`,`),
+		nDot:       []byte(`\.`),
+		nVararg:    []byte(`\.\.\.`),
 
 		// binop ::=  ‘+’ | ‘-’ | ‘*’ | ‘/’ | ‘//’ | ‘^’ | ‘%’ |
 		//      ‘&’ | ‘~’ | ‘|’ | ‘>>’ | ‘<<’ | ‘..’ |
@@ -243,50 +242,50 @@ var (
 		//      and | or
 
 		// Logical Operators
-		nAnd: "and",
-		nOr:  "or",
-		nNot: "not",
+		nAnd: []byte("and"),
+		nOr:  []byte("or"),
+		nNot: []byte("not"),
 
 		// Arithmetic Operators
-		nAddition:       `\+`,
-		nSubtraction:    "-",
-		nMultiplication: `\*`,
-		nFloatDivision:  "/",
-		nFloorDivision:  "//",
-		nModulo:         "%",
-		nExponentiation: `\^`,
+		nAddition:       []byte(`\+`),
+		nSubtraction:    []byte("-"),
+		nMultiplication: []byte(`\*`),
+		nFloatDivision:  []byte("/"),
+		nFloorDivision:  []byte("//"),
+		nModulo:         []byte("%"),
+		nExponentiation: []byte(`\^`),
 
 		// Bitwise Operators
-		nBitwiseAND:         "&",
-		nBitwiseOR:          `\|`,
-		nBitwiseExclusiveOR: "~",
-		nLeftShift:          "<<",
-		nRightShift:         ">>",
+		nBitwiseAND:         []byte("&"),
+		nBitwiseOR:          []byte(`\|`),
+		nBitwiseExclusiveOR: []byte("~"),
+		nLeftShift:          []byte("<<"),
+		nRightShift:         []byte(">>"),
 
 		// Length Operator
-		nLength: "#",
+		nLength: []byte("#"),
 
 		// Concatenation
-		nConcat: `\.\.`,
+		nConcat: []byte(`\.\.`),
 
 		// Relational Operators
-		nEquality:       "==",
-		nInequality:     "~=",
-		nLessThan:       "<",
-		nGreaterThan:    ">",
-		nLessOrEqual:    "<=",
-		nGreaterOrEqual: ">=",
+		nEquality:       []byte("=="),
+		nInequality:     []byte("~="),
+		nLessThan:       []byte("<"),
+		nGreaterThan:    []byte(">"),
+		nLessOrEqual:    []byte("<="),
+		nGreaterOrEqual: []byte(">="),
 
-		nParentheses:          `\(`,
-		nClosingParentheses:   `\)`,
-		nSquareBracket:        `\[`,
-		nClosingSquareBracket: `\]`,
-		nCurlyBracket:         `\{`,
-		nClosingCurlyBracket:  `\}`,
+		nParentheses:          []byte(`\(`),
+		nClosingParentheses:   []byte(`\)`),
+		nSquareBracket:        []byte(`\[`),
+		nClosingSquareBracket: []byte(`\]`),
+		nCurlyBracket:         []byte(`\{`),
+		nClosingCurlyBracket:  []byte(`\}`),
 		// nSingleQuote:          `'`,
 		// nDoubleQuote:          `"`,
 
-		nNumber: `\d+(\.\d+)?`,
+		nNumber: []byte(`\d+(\.\d+)?`),
 	}
 
 	TokenIDs = map[int]string{

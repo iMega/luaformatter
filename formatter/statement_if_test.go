@@ -152,8 +152,8 @@ print(c)
 										Binop: &element{
 											Token: &lexmachine.Token{
 												Type:        nEquality,
-												Value:       keywords[nEquality],
-												Lexeme:      []byte(keywords[nEquality]),
+												Value:       string(keywords[nEquality]),
+												Lexeme:      keywords[nEquality],
 												TC:          29,
 												StartLine:   4,
 												StartColumn: 6,
@@ -262,8 +262,8 @@ print(c)
 												Binop: &element{
 													Token: &lexmachine.Token{
 														Type:        nEquality,
-														Value:       keywords[nEquality],
-														Lexeme:      []byte(keywords[nEquality]),
+														Value:       string(keywords[nEquality]),
+														Lexeme:      keywords[nEquality],
 														TC:          92,
 														StartLine:   8,
 														StartColumn: 10,
@@ -372,8 +372,8 @@ print(c)
 												Binop: &element{
 													Token: &lexmachine.Token{
 														Type:        nEquality,
-														Value:       keywords[nEquality],
-														Lexeme:      []byte(keywords[nEquality]),
+														Value:       string(keywords[nEquality]),
+														Lexeme:      keywords[nEquality],
 														TC:          155,
 														StartLine:   12,
 														StartColumn: 10,
@@ -676,8 +676,8 @@ end
 										Binop: &element{
 											Token: &lexmachine.Token{
 												Type:        nInequality,
-												Value:       keywords[nInequality],
-												Lexeme:      []byte(keywords[nInequality]),
+												Value:       string(keywords[nInequality]),
+												Lexeme:      keywords[nInequality],
 												TC:          6,
 												StartLine:   2,
 												StartColumn: 6,
@@ -749,8 +749,8 @@ end
 										Binop: &element{
 											Token: &lexmachine.Token{
 												Type:        nEquality,
-												Value:       keywords[nEquality],
-												Lexeme:      []byte(keywords[nEquality]),
+												Value:       string(keywords[nEquality]),
+												Lexeme:      keywords[nEquality],
 												TC:          47,
 												StartLine:   5,
 												StartColumn: 14,
@@ -898,8 +898,8 @@ end
 										Binop: &element{
 											Token: &lexmachine.Token{
 												Type:        nEquality,
-												Value:       keywords[nEquality],
-												Lexeme:      []byte(keywords[nEquality]),
+												Value:       string(keywords[nEquality]),
+												Lexeme:      keywords[nEquality],
 												TC:          6,
 												StartLine:   2,
 												StartColumn: 6,
@@ -950,8 +950,8 @@ end
 												Binop: &element{
 													Token: &lexmachine.Token{
 														Type:        nEquality,
-														Value:       keywords[nEquality],
-														Lexeme:      []byte(keywords[nEquality]),
+														Value:       string(keywords[nEquality]),
+														Lexeme:      keywords[nEquality],
 														TC:          35,
 														StartLine:   4,
 														StartColumn: 10,
@@ -1032,8 +1032,8 @@ end
 										Binop: &element{
 											Token: &lexmachine.Token{
 												Type:        nEquality,
-												Value:       keywords[nEquality],
-												Lexeme:      []byte(keywords[nEquality]),
+												Value:       string(keywords[nEquality]),
+												Lexeme:      keywords[nEquality],
 												TC:          6,
 												StartLine:   2,
 												StartColumn: 6,
@@ -1084,8 +1084,8 @@ end
 												Binop: &element{
 													Token: &lexmachine.Token{
 														Type:        nEquality,
-														Value:       keywords[nEquality],
-														Lexeme:      []byte(keywords[nEquality]),
+														Value:       string(keywords[nEquality]),
+														Lexeme:      keywords[nEquality],
 														TC:          35,
 														StartLine:   4,
 														StartColumn: 10,

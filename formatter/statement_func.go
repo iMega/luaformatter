@@ -99,9 +99,13 @@ func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
-	if _, err := w.Write([]byte("function")); err != nil {
+	if err := writeKeyword(c, nFunction, w); err != nil {
 		return err
 	}
+
+	// if _, err := w.Write([]byte("function")); err != nil {
+	// 	return err
+	// }
 
 	if s.Name != nil {
 		if err := space(w); err != nil {

@@ -195,6 +195,7 @@ local a = b.c({
 local a = b("1")
 local a = b("")
 c = -(x^2)
+c = -x^2
 `),
 			},
 			wantW: `
@@ -370,6 +371,7 @@ local a = b.c({
 local a = b("1")
 local a = b("")
 c = -(x ^ 2)
+c = -x ^ 2
 `,
 			wantErr: false,
 		},
