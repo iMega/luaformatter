@@ -197,6 +197,13 @@ local a = b("")
 c = -(x^2)
 c = -x^2
 c = (a < y) and (y <= z)
+c = (a+i) < ((b/2)+1)
+c = 5+((x^2)*8)
+c = 5+x^2*8
+c = a < y and y <= z
+c = a+i < b/2+1
+c = x^(y^z)
+c = x^y^z
 `),
 			},
 			wantW: `
@@ -374,6 +381,13 @@ local a = b("")
 c = -(x ^ 2)
 c = -x ^ 2
 c = (a < y) and (y <= z)
+c = (a + i) < ((b / 2) + 1)
+c = 5 + ((x ^ 2) * 8)
+c = 5 + x ^ 2 * 8
+c = a < y and y <= z
+c = a + i < b / 2 + 1
+c = x ^ (y ^ z)
+c = x ^ y ^ z
 `,
 			wantErr: false,
 		},

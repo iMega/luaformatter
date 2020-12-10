@@ -332,6 +332,10 @@ func (s *exp) GetStatement(prev, cur *element) statementIntf {
 			// 		if cur.Token.Type == nParentheses {
 			// 			return &funcCallStatement{}
 			// 		}
+		case nParentheses:
+			if cur.Token.Type == nParentheses {
+				return &prefixexpStatement{} // 1+((1+2)+2)
+			}
 		}
 	}
 
