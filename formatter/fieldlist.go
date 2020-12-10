@@ -24,7 +24,7 @@ func (fieldlist) InnerStatement(prev, cur *element) (bool, statementIntf) {
 	// fieldlist always returns a field. need will add
 	// it will need to be added to the innerStatement.
 	// return &field{}
-	return true, nil
+	return false, nil
 }
 
 func (fieldlist) TypeOf() typeStatement {

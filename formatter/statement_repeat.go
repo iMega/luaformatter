@@ -20,7 +20,7 @@ type repeatStatement struct {
 }
 
 func (repeatStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
-	return true, nil
+	return false, nil
 }
 
 func (repeatStatement) TypeOf() typeStatement {

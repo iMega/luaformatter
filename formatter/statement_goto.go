@@ -19,7 +19,7 @@ type gotoStatement struct {
 }
 
 func (gotoStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
-	return true, nil
+	return false, nil
 }
 
 func (gotoStatement) TypeOf() typeStatement {

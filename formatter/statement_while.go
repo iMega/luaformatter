@@ -20,7 +20,7 @@ type whileStatement struct {
 }
 
 func (whileStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
-	return true, nil
+	return false, nil
 }
 
 func (whileStatement) TypeOf() typeStatement {

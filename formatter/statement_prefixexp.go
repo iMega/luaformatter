@@ -42,7 +42,7 @@ func (s *prefixexpStatement) InnerStatement(prev, cur *element) (bool, statement
 		}
 
 		s.Enclosed = true
-		return false, &exp{} // why?
+		return true, &exp{} // why?
 	}
 
 	if cur.Token.Type == nString {
@@ -53,7 +53,7 @@ func (s *prefixexpStatement) InnerStatement(prev, cur *element) (bool, statement
 		return false, &funcCallStatement{}
 	}
 
-	return true, nil
+	return false, nil
 }
 
 func (prefixexpStatement) TypeOf() typeStatement {

@@ -119,12 +119,16 @@ func parse(code []byte) (*document, error) {
 				chainSt.Append(st)
 			}
 
-			for isBreak, inner := st.InnerStatement(prevElement, curElement); !isBreak; isBreak, inner = st.InnerStatement(nil, curElement) {
+			for isBreak, inner := st.InnerStatement(prevElement, curElement); inner != nil; isBreak, inner = st.InnerStatement(prevElement, curElement) {
 				if st.TypeOf() != inner.TypeOf() {
 					st.AppendStatement(inner)
 					chainSt.Append(inner)
 				}
 				st = inner
+
+				if isBreak {
+					break
+				}
 			}
 
 			if isPrefixexpConvertAssignment {

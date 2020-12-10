@@ -21,7 +21,7 @@ type labelStatement struct {
 }
 
 func (labelStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
-	return true, nil
+	return false, nil
 }
 
 func (labelStatement) TypeOf() typeStatement {

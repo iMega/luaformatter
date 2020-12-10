@@ -34,7 +34,7 @@ func (b *body) GetBody(prevSt statementIntf, cur *element) statementIntf {
 }
 
 func (body) InnerStatement(prev, cur *element) (bool, statementIntf) {
-	return true, nil
+	return false, nil
 }
 
 func (body) TypeOf() typeStatement { return tsBody }

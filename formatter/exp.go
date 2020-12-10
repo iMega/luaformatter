@@ -33,18 +33,23 @@ func (exp) InnerStatement(prev, cur *element) (bool, statementIntf) {
 	case nFunction:
 		return false, &functionStatement{}
 	case nCurlyBracket:
-		if prev != nil && prev.Token.Type == nID {
-			return false, &funcCallStatement{}
-		}
+		// if prev != nil && prev.Token.Type == nID {
+		// 	return false, &funcCallStatement{} // funcCall{}
+		// }
 		return false, &tableStatement{}
 
-		// case nParentheses:
-		// return &prefixexpStatement{Enclosed: true}
+	case nParentheses:
+		if prev != nil {
+			if prev.Token.Type == nID || prev.Token.Type == nClosingSquareBracket {
+				return false, nil // funcCallStatement, asd["adf"]()
+			}
+		}
+		return false, &prefixexpStatement{Enclosed: true}
 		// case nID: // TODO document structure is equal for a=func[0].call{} and func[0].call{}
 		// return &prefixexpStatement{} // not working with a = -b - -1
 	}
 
-	return true, nil
+	return false, nil
 }
 
 func (exp) TypeOf() typeStatement {
@@ -318,7 +323,7 @@ func (s *exp) GetStatement(prev, cur *element) statementIntf {
 			}
 
 			if cur.Token.Type == nParentheses {
-				return &prefixexpStatement{} //funcCallStatement
+				return &prefixexpStatement{} //funcCallStatement 111
 			}
 
 			if cur.Token.Type == nCurlyBracket {

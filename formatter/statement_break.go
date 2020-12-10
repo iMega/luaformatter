@@ -17,7 +17,7 @@ package formatter
 type breakStatement struct{}
 
 func (breakStatement) InnerStatement(*element, *element) (bool, statementIntf) {
-	return true, nil
+	return false, nil
 }
 
 func (breakStatement) TypeOf() typeStatement {

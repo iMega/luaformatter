@@ -24,7 +24,7 @@ type ifStatement struct {
 }
 
 func (ifStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
-	return true, nil
+	return false, nil
 }
 
 func (ifStatement) TypeOf() typeStatement {
@@ -144,7 +144,7 @@ type elseifStatement struct {
 }
 
 func (elseifStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
-	return true, nil
+	return false, nil
 }
 
 func (elseifStatement) TypeOf() typeStatement {
@@ -230,7 +230,7 @@ type elseStatement struct {
 }
 
 func (elseStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
-	return true, nil
+	return false, nil
 }
 
 func (elseStatement) TypeOf() typeStatement {

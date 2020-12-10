@@ -194,7 +194,9 @@ local a = b.c({
 })
 local a = b("1")
 local a = b("")
+c = -(x^2)
 c = -x^2
+-- c = (a < y) and (y <= z)
 `),
 			},
 			wantW: `
@@ -369,7 +371,9 @@ local a = b.c({
 })
 local a = b("1")
 local a = b("")
+c = -(x ^ 2)
 c = -x ^ 2
+-- c = (a < y) and (y <= z)
 `,
 			wantErr: false,
 		},

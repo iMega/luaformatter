@@ -23,7 +23,7 @@ type doStatement struct {
 }
 
 func (doStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
-	return true, nil
+	return false, nil
 }
 
 func (doStatement) TypeOf() typeStatement {

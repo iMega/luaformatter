@@ -21,7 +21,7 @@ import (
 type newlineStatement struct{}
 
 func (newlineStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
-	return true, nil
+	return false, nil
 }
 
 func (newlineStatement) TypeOf() typeStatement {
