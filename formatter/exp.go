@@ -77,9 +77,9 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 		return false, false
 	}
 
-	// if isExp(cur) {
-	// 	return false, false
-	// }
+	if isBinop(cur) {
+		return false, false
+	}
 
 	// return false, true
 
