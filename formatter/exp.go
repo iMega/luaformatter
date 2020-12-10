@@ -81,6 +81,10 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 		return false, false
 	}
 
+	if prev != nil && prev.Token.Type == nParentheses && isExp(cur) {
+		return false, false // ((1+1)+1)+1
+	}
+
 	// return false, true
 
 	var syntax = map[tokenID]map[tokenID]bool{
@@ -256,7 +260,7 @@ func (s *exp) Append(el *element) {
 		return
 	}
 
-	if s.Element == nil {
+	if s.Element == nil && s.Prefixexp == nil {
 		switch el.Token.Type {
 		case nSubtraction:
 			s.Unop = el
