@@ -20,8 +20,8 @@ type returnStatement struct {
 	Explist *explist
 }
 
-func (returnStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (returnStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return true, nil
 }
 
 func (returnStatement) TypeOf() typeStatement {

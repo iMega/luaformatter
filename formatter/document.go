@@ -22,7 +22,7 @@ type document struct {
 type statementIntf interface {
 	Append(*element)
 	AppendStatement(statementIntf)
-	InnerStatement(prev, cur *element) statementIntf
+	InnerStatement(prev, cur *element) (bool, statementIntf)
 	IsEnd(prev, cur *element) (bool, bool)
 	TypeOf() typeStatement
 	GetBody(prevSt statementIntf, cur *element) statementIntf

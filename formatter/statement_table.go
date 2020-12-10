@@ -20,8 +20,8 @@ type tableStatement struct {
 	FieldList *fieldlist
 }
 
-func (tableStatement) InnerStatement(prev, cur *element) statementIntf {
-	return &fieldlist{}
+func (tableStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return false, &fieldlist{}
 }
 
 func (tableStatement) TypeOf() typeStatement {

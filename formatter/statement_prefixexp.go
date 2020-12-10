@@ -30,30 +30,30 @@ type prefixexpStatement struct {
 	// prefixexp ::= var | functioncall | ‘(’ exp ‘)’
 }
 
-func (s *prefixexpStatement) InnerStatement(prev, cur *element) statementIntf {
+func (s *prefixexpStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
 	if cur.Token.Type == nSquareBracket {
 		// s.IsVar = true
-		return &exp{}
+		return false, &exp{}
 	}
 
 	if cur.Token.Type == nParentheses {
 		if prev != nil && prev.Token.Type == nID {
-			return &funcCallStatement{}
+			return false, &funcCallStatement{}
 		}
 
 		s.Enclosed = true
-		return &exp{}
+		return false, &exp{} // why?
 	}
 
 	if cur.Token.Type == nString {
-		return &funcCallStatement{}
+		return false, &funcCallStatement{}
 	}
 
 	if cur.Token.Type == nCurlyBracket {
-		return &funcCallStatement{}
+		return false, &funcCallStatement{}
 	}
 
-	return nil
+	return true, nil
 }
 
 func (prefixexpStatement) TypeOf() typeStatement {
@@ -94,6 +94,10 @@ func (s *prefixexpStatement) IsEnd(prev, cur *element) (bool, bool) {
 	}
 
 	if prev != nil && prev.Token.Type == nID && cur.Token.Type == nAssign {
+		return false, false
+	}
+
+	if prev != nil && prev.Token.Type == nParentheses && isExp(cur) {
 		return false, false
 	}
 

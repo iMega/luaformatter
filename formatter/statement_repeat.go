@@ -19,8 +19,8 @@ type repeatStatement struct {
 	Exp  *exp
 }
 
-func (repeatStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (repeatStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return true, nil
 }
 
 func (repeatStatement) TypeOf() typeStatement {

@@ -26,8 +26,8 @@ type functionStatement struct {
 	IsAnonymous bool
 }
 
-func (functionStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (functionStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return true, nil
 }
 
 func (functionStatement) TypeOf() typeStatement {

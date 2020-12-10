@@ -20,8 +20,8 @@ type explist struct {
 	List []*exp // separator ,
 }
 
-func (explist) InnerStatement(prev, cur *element) statementIntf {
-	return &exp{}
+func (explist) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return false, &exp{}
 }
 
 func (explist) TypeOf() typeStatement {

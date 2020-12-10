@@ -24,8 +24,8 @@ type forStatement struct {
 	Body      statementIntf
 }
 
-func (forStatement) InnerStatement(prev, cur *element) statementIntf {
-	return &fieldlist{}
+func (forStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return false, &fieldlist{}
 }
 
 func (forStatement) TypeOf() typeStatement {

@@ -22,8 +22,8 @@ type field struct {
 	Square bool
 }
 
-func (field) InnerStatement(prev, cur *element) statementIntf {
-	return &exp{}
+func (field) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return false, &exp{}
 }
 
 func (field) TypeOf() typeStatement {

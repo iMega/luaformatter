@@ -20,8 +20,8 @@ import (
 
 type newlineStatement struct{}
 
-func (newlineStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (newlineStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return true, nil
 }
 
 func (newlineStatement) TypeOf() typeStatement {

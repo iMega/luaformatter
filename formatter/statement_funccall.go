@@ -23,8 +23,8 @@ type funcCallStatement struct {
 	Explist   *explist
 }
 
-func (funcCallStatement) InnerStatement(prev, cur *element) statementIntf {
-	return &explist{}
+func (funcCallStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return false, &explist{}
 }
 
 func (funcCallStatement) TypeOf() typeStatement {

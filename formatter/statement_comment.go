@@ -23,8 +23,8 @@ type commentStatement struct {
 	Element *element
 }
 
-func (commentStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (commentStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return true, nil
 }
 
 func (commentStatement) TypeOf() typeStatement {

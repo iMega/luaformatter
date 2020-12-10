@@ -23,8 +23,8 @@ type assignmentStatement struct {
 	Explist   *explist
 }
 
-func (assignmentStatement) InnerStatement(prev, cur *element) statementIntf {
-	return &explist{}
+func (assignmentStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return false, &explist{}
 }
 
 func (assignmentStatement) TypeOf() typeStatement {
@@ -39,6 +39,10 @@ func (s *assignmentStatement) IsEnd(prev, cur *element) (bool, bool) {
 	}
 
 	if cur.Token.Type == nAssign {
+		return false, false
+	}
+
+	if cur.Token.Type == nParentheses {
 		return false, false
 	}
 

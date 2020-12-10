@@ -119,7 +119,7 @@ func parse(code []byte) (*document, error) {
 				chainSt.Append(st)
 			}
 
-			for inner := st.InnerStatement(prevElement, curElement); inner != nil; inner = st.InnerStatement(nil, curElement) {
+			for isBreak, inner := st.InnerStatement(prevElement, curElement); !isBreak; isBreak, inner = st.InnerStatement(nil, curElement) {
 				if st.TypeOf() != inner.TypeOf() {
 					st.AppendStatement(inner)
 					chainSt.Append(inner)

@@ -22,8 +22,8 @@ type doStatement struct {
 	Body statementIntf
 }
 
-func (doStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (doStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return true, nil
 }
 
 func (doStatement) TypeOf() typeStatement {

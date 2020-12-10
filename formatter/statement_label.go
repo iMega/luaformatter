@@ -20,8 +20,8 @@ type labelStatement struct {
 	Element *element
 }
 
-func (labelStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (labelStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return true, nil
 }
 
 func (labelStatement) TypeOf() typeStatement {

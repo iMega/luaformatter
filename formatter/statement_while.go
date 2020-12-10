@@ -19,8 +19,8 @@ type whileStatement struct {
 	Body statementIntf
 }
 
-func (whileStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (whileStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return true, nil
 }
 
 func (whileStatement) TypeOf() typeStatement {

@@ -28,21 +28,23 @@ type exp struct {
 	Prefixexp *prefixexpStatement
 }
 
-func (exp) InnerStatement(prev, cur *element) statementIntf {
+func (exp) InnerStatement(prev, cur *element) (bool, statementIntf) {
 	switch cur.Token.Type {
 	case nFunction:
-		return &functionStatement{}
+		return false, &functionStatement{}
 	case nCurlyBracket:
 		if prev != nil && prev.Token.Type == nID {
-			return &funcCallStatement{}
+			return false, &funcCallStatement{}
 		}
-		return &tableStatement{}
+		return false, &tableStatement{}
 
+		// case nParentheses:
+		// return &prefixexpStatement{Enclosed: true}
 		// case nID: // TODO document structure is equal for a=func[0].call{} and func[0].call{}
 		// return &prefixexpStatement{} // not working with a = -b - -1
 	}
 
-	return nil
+	return true, nil
 }
 
 func (exp) TypeOf() typeStatement {
@@ -183,10 +185,6 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 	return false, res
 }
 
-func (s *exp) HasSyntax(el element) bool {
-	return false
-}
-
 func isBinop(el *element) bool {
 	binop := []int{
 		nAnd,                // 44
@@ -221,6 +219,7 @@ func isExp(el *element) bool {
 		nFunction,     // 13
 		nNil,          // 18
 		nTrue,         // 22
+		nParentheses,  // 27 // c = (1-2)
 		nCurlyBracket, // 31
 		nNumber,       // 38
 		nString,       // 39
@@ -231,6 +230,7 @@ func isExp(el *element) bool {
 		nBitwiseExclusiveOR, // 55
 		nLength,             // 58
 		nNot,                // 65
+
 	} //  exp binop exp
 
 	return binarySearch(exps, el.Token.Type)
@@ -317,6 +317,10 @@ func (s *exp) GetStatement(prev, cur *element) statementIntf {
 				return &prefixexpStatement{}
 			}
 
+			if cur.Token.Type == nParentheses {
+				return &prefixexpStatement{} //funcCallStatement
+			}
+
 			if cur.Token.Type == nCurlyBracket {
 				return &prefixexpStatement{}
 			}
@@ -326,9 +330,10 @@ func (s *exp) GetStatement(prev, cur *element) statementIntf {
 		}
 	}
 
-	if cur.Token.Type == nParentheses {
-		return &prefixexpStatement{} //
-	}
+	// funcCallStatement
+	// if cur.Token.Type == nParentheses {
+	// 	return &prefixexpStatement{} //
+	// }
 
 	if cur.Token.Type == nSquareBracket {
 		return &prefixexpStatement{}

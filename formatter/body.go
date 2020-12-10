@@ -33,8 +33,8 @@ func (b *body) GetBody(prevSt statementIntf, cur *element) statementIntf {
 	return prevSt
 }
 
-func (body) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (body) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return true, nil
 }
 
 func (body) TypeOf() typeStatement { return tsBody }

@@ -23,8 +23,8 @@ type ifStatement struct {
 	ElsePart   *elseStatement
 }
 
-func (ifStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (ifStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return true, nil
 }
 
 func (ifStatement) TypeOf() typeStatement {
@@ -143,8 +143,8 @@ type elseifStatement struct {
 	Body statementIntf
 }
 
-func (elseifStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (elseifStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return true, nil
 }
 
 func (elseifStatement) TypeOf() typeStatement {
@@ -229,8 +229,8 @@ type elseStatement struct {
 	Body statementIntf
 }
 
-func (elseStatement) InnerStatement(prev, cur *element) statementIntf {
-	return nil
+func (elseStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+	return true, nil
 }
 
 func (elseStatement) TypeOf() typeStatement {
