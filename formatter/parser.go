@@ -87,6 +87,13 @@ func parse(code []byte) (*document, error) {
 
 			if st.TypeOf() == tsAssignment && curElement.Token.Type == nAssign { // a = 1
 				assignmentWithOneVar = st
+
+				if s := chainSt.ExctractAssignStatement(); s != nil {
+					currentStatement = s
+					currentStatement.Append(curElement)
+					chainSt.Append(currentStatement)
+					st = &explist{}
+				}
 			}
 
 			if st.TypeOf() == tsField && curElement.Token.Type == nSquareBracket { // ["and"] = 100,

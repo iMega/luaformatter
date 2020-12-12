@@ -85,6 +85,10 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 		return false, false // ((1+1)+1)+1
 	}
 
+	if prev != nil && prev.Token.Type == nAssign && isExp(cur) {
+		return false, false // = exp
+	}
+
 	// return false, true
 
 	var syntax = map[tokenID]map[tokenID]bool{

@@ -62,6 +62,24 @@ func (cs *chainStatments) First() statementIntf {
 	return cs.chain[0]
 }
 
+func (cs *chainStatments) ExctractAssignStatement() statementIntf {
+	item := -1
+	for i := len(cs.chain) - 1; i >= 0; i-- {
+		if _, ok := cs.chain[i].(*assignmentStatement); ok {
+			item = i
+		}
+	}
+
+	if item == -1 {
+		return nil
+	}
+
+	v, _ := cs.chain[item].(*assignmentStatement)
+	cs.chain = cs.chain[:item]
+
+	return v
+}
+
 func (cs *chainStatments) ExctractPrefixexp() statementIntf {
 	item := -1
 	for i := len(cs.chain) - 1; i >= 0; i-- {

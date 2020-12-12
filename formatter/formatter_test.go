@@ -207,6 +207,9 @@ c = x^y^z
 c = ((1 + 1) + 1) + 1
 c = ((1 * 1) * 1) * 1
 c = ((1 - 1) - 1) - 1
+c = ((((((a((1 + 2)) + b()))))))
+c = (a(((1+2)+1)) + b(1-2/2))
+c = (a(((-1 + -2) + -1)) + b(-1 - -2 / -2))
 `),
 			},
 			wantW: `
@@ -373,12 +376,8 @@ local a = b
 local a, b = c, d
 local a = b()
 local a = b({})
-local a = b({
-    c = d,
-})
-local a = b.c({
-    d = e,
-})
+local a = b({c = d})
+local a = b.c({d = e})
 local a = b("1")
 local a = b("")
 c = -(x ^ 2)
@@ -394,6 +393,9 @@ c = x ^ y ^ z
 c = ((1 + 1) + 1) + 1
 c = ((1 * 1) * 1) * 1
 c = ((1 - 1) - 1) - 1
+c = ((((((a((1 + 2)) + b()))))))
+c = (a(((1 + 2) + 1)) + b(1 - 2 / 2))
+c = (a(((-1 + -2) + -1)) + b(-1 - -2 / -2))
 `,
 			wantErr: false,
 		},
@@ -471,21 +473,19 @@ end
 				c: DefaultConfig(),
 				b: []byte(`
 a = {}
-a = {
-    b = c
-}
+a = {b = c}
 a = {
     b = c,
+    d = e,
 }
 `),
 			},
 			wantW: `
 a = {}
+a = {b = c}
 a = {
     b = c,
-}
-a = {
-    b = c,
+    d = e,
 }
 `,
 			wantErr: false,

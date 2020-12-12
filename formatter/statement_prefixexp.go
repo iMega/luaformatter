@@ -81,6 +81,12 @@ func (s *prefixexpStatement) IsEnd(prev, cur *element) (bool, bool) {
 		return false, false
 	}
 
+	if prev != nil && prev.Token.Type == nClosingSquareBracket && cur.Token.Type == nClosingParentheses {
+		// porsche_handler(vehicles["Porsche"])
+		// vehicles["Porsche"] = nil
+		return false, true
+	}
+
 	if cur.Token.Type == nClosingParentheses { // (a-b) and
 		return true, true
 	}
@@ -98,6 +104,10 @@ func (s *prefixexpStatement) IsEnd(prev, cur *element) (bool, bool) {
 	}
 
 	if prev != nil && prev.Token.Type == nID && cur.Token.Type == nAssign {
+		return false, false
+	}
+
+	if prev != nil && prev.Token.Type == nClosingSquareBracket && cur.Token.Type == nAssign {
 		return false, false
 	}
 
