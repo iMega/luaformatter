@@ -56,6 +56,8 @@ func (exp) TypeOf() typeStatement {
 	return tsExp
 }
 
+type tokenID int
+
 func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 	if cur.Token.Type == nEnd {
 		return false, true
@@ -66,6 +68,10 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 	}
 
 	if isBinop(prev) && isExp(cur) {
+		return false, false
+	}
+
+	if isUnop(prev) && isExp(cur) {
 		return false, false
 	}
 
@@ -225,6 +231,17 @@ func isBinop(el *element) bool {
 	return binarySearch(binop, el.Token.Type)
 }
 
+func isUnop(el *element) bool {
+	ops := []int{
+		nSubtraction,        // 47
+		nBitwiseExclusiveOR, // 55
+		nLength,             // 58
+		nNot,                // 66
+	}
+
+	return binarySearch(ops, el.Token.Type)
+}
+
 func isExp(el *element) bool {
 	exps := []int{
 		nID,           // 1
@@ -376,6 +393,12 @@ func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 	if st := s.Unop; st != nil {
 		if err := st.Format(c, p, w); err != nil {
 			return err
+		}
+
+		if st.Token.Type == nNot {
+			if err := space(w); err != nil {
+				return err
+			}
 		}
 	}
 

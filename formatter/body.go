@@ -173,6 +173,12 @@ func (b *block) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
+	if s := b.Statement.Break; s != nil {
+		if err := s.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
 	if st := b.Statement.Do; st != nil {
 		if err := st.Format(c, p, w); err != nil {
 			return err

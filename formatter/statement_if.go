@@ -65,10 +65,6 @@ func (s *ifStatement) GetBody(prevSt statementIntf, cur *element) statementIntf 
 }
 
 func (s *ifStatement) GetStatement(prev, cur *element) statementIntf {
-	if cur.Token.Type == nIf {
-		return &ifStatement{}
-	}
-
 	if cur.Token.Type == nElseif {
 		return &elseifStatement{}
 	}
@@ -77,7 +73,7 @@ func (s *ifStatement) GetStatement(prev, cur *element) statementIntf {
 		return &elseStatement{}
 	}
 
-	if isExp(cur) {
+	if isExp(cur) || isBinop(cur) {
 		return &exp{}
 	}
 

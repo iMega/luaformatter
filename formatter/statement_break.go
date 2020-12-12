@@ -14,6 +14,8 @@
 
 package formatter
 
+import "io"
+
 type breakStatement struct{}
 
 func (breakStatement) InnerStatement(*element, *element) (bool, statementIntf) {
@@ -37,5 +39,13 @@ func (s *breakStatement) GetBody(statementIntf, *element) statementIntf {
 }
 
 func (s *breakStatement) GetStatement(*element, *element) statementIntf {
+	return nil
+}
+
+func (s *breakStatement) Format(c *Config, p printer, w io.Writer) error {
+	if _, err := w.Write([]byte("break")); err != nil {
+		return err
+	}
+
 	return nil
 }
