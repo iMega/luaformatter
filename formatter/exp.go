@@ -252,6 +252,7 @@ func isExp(el *element) bool {
 func (s *exp) Append(el *element) {
 	types := []int{
 		nIn,                   // 16
+		nReturn,               // 20
 		nParentheses,          // 27
 		nClosingParentheses,   // 28
 		nSquareBracket,        // 29

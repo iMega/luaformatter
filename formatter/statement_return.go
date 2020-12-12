@@ -29,22 +29,13 @@ func (returnStatement) TypeOf() typeStatement {
 }
 
 func (s *returnStatement) IsEnd(prev, cur *element) (bool, bool) {
-	if nReturn == cur.Token.Type {
-		return false, false
-	}
-
-	branch := getsyntax(syntax, tokenID(nReturn))
-	_, ok := branch[cur.Token.Type]
-
-	return false, !ok
+	return false, !isExp(cur)
 }
 
 func (s *returnStatement) Append(el *element) {
 	if el == nil || el.Token.Type == nReturn {
 		return
 	}
-
-	//s.Explist.List = append(s.Explist.List, newExp(el))
 }
 
 func (s *returnStatement) AppendStatement(st statementIntf) {
@@ -61,10 +52,6 @@ func (s *returnStatement) GetBody(prevSt statementIntf, cur *element) statementI
 }
 
 func (s *returnStatement) GetStatement(prev, cur *element) statementIntf {
-	if cur.Token.Type == nReturn {
-		return &returnStatement{}
-	}
-
 	if isExp(cur) {
 		return &explist{}
 	}
