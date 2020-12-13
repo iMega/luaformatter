@@ -26,7 +26,7 @@ func TestParseTable(t *testing.T) {
 table = {
     ["1394-E"] = val1,
     ["UTF-8"] = val2,
-    ["and"] = val2,
+    ["and"] = val3,
 }
 `,
 				),
@@ -146,8 +146,8 @@ table = {
 																	Element: &element{
 																		Token: &lexmachine.Token{
 																			Type:        nID,
-																			Value:       "val2",
-																			Lexeme:      []byte("val2"),
+																			Value:       "val3",
+																			Lexeme:      []byte("val3"),
 																			TC:          70,
 																			StartLine:   5,
 																			StartColumn: 15,

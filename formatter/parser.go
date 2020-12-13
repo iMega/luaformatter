@@ -96,10 +96,6 @@ func parse(code []byte) (*document, error) {
 				}
 			}
 
-			if st.TypeOf() == tsField && curElement.Token.Type == nSquareBracket { // ["and"] = 100,
-				st.Append(curElement)
-			}
-
 			if st.TypeOf() == tsFunction { // local function a()
 				if prevElement != nil && prevElement.Token.Type == nLocal {
 					st.Append(prevElement)

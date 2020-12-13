@@ -478,6 +478,7 @@ a = {
     b = c,
     d = e,
 }
+local numbers = {1,2,3}
 `),
 			},
 			wantW: `
@@ -486,6 +487,11 @@ a = {b = c}
 a = {
     b = c,
     d = e,
+}
+local numbers = {
+    1,
+    2,
+    3,
 }
 `,
 			wantErr: false,

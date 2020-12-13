@@ -60,20 +60,11 @@ func (s *fieldlist) GetBody(prevSt statementIntf, cur *element) statementIntf {
 }
 
 func (s *fieldlist) GetStatement(prev, cur *element) statementIntf {
-	if cur.Token.Type == nID {
-		return &field{} // fieldlist always returns a field. need will add
-		// it will need to be added to the innerStatement
+	if cur.Token.Type == nComma {
+		return nil
 	}
 
-	if cur.Token.Type == nSquareBracket {
-		return &field{Square: true}
-	}
-
-	if prev != nil && prev.Token.Type == nComma {
-		return &field{}
-	}
-	// return &field{}
-	return nil
+	return &field{Square: cur.Token.Type == nSquareBracket}
 }
 
 func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
