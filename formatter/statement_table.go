@@ -62,6 +62,7 @@ func (s *tableStatement) Format(c *Config, p printer, w io.Writer) error {
 			if err := newLine(w); err != nil {
 				return err
 			}
+
 			p.ParentStatement = s.TypeOf()
 			p.Pad = p.Pad + c.IndentSize
 		}

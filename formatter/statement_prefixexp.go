@@ -42,6 +42,7 @@ func (s *prefixexpStatement) InnerStatement(prev, cur *element) (bool, statement
 		}
 
 		s.Enclosed = true
+
 		return true, &exp{} // why?
 	}
 
@@ -87,7 +88,7 @@ func (s *prefixexpStatement) IsEnd(prev, cur *element) (bool, bool) {
 		return false, true
 	}
 
-	if cur.Token.Type == nClosingParentheses { // (a-b) and
+	if cur.Token.Type == nClosingParentheses && s.Enclosed { // (a-b) and
 		return true, true
 	}
 
@@ -133,6 +134,7 @@ func (s *prefixexpStatement) Append(el *element) {
 
 	if el.Token.Type == nDot {
 		s.FieldAccessor = el
+
 		return
 	}
 
@@ -142,8 +144,10 @@ func (s *prefixexpStatement) Append(el *element) {
 
 	if s.FieldAccessor != nil && s.FieldAccessor.Token.Type == nDot { // .id
 		s.FieldAccessor = el
+
 		return
 	}
+
 	s.Element = el
 }
 

@@ -35,16 +35,23 @@ end
 							Statement: statement{
 								Function: &functionStatement{
 									IsLocal: true,
-									Name: &element{
-										Token: &lexmachine.Token{
-											Type:        nID,
-											Value:       "a",
-											Lexeme:      []byte("a"),
-											TC:          16,
-											StartLine:   2,
-											StartColumn: 16,
-											EndLine:     2,
-											EndColumn:   16,
+									FuncCall: &funcCallStatement{
+										Prefixexp: &prefixexpStatement{
+											Element: &element{
+												Token: &lexmachine.Token{
+													Type:        nID,
+													Value:       "a",
+													Lexeme:      []byte("a"),
+													TC:          16,
+													StartLine:   2,
+													StartColumn: 16,
+													EndLine:     2,
+													EndColumn:   16,
+												},
+											},
+										},
+										Explist: &explist{
+											List: []*exp{{}},
 										},
 									},
 									Body: &body{
@@ -75,16 +82,23 @@ end
 						0: {
 							Statement: statement{
 								Function: &functionStatement{
-									Name: &element{
-										Token: &lexmachine.Token{
-											Type:        nID,
-											Value:       "a",
-											Lexeme:      []byte("a"),
-											TC:          10,
-											StartLine:   2,
-											StartColumn: 10,
-											EndLine:     2,
-											EndColumn:   10,
+									FuncCall: &funcCallStatement{
+										Prefixexp: &prefixexpStatement{
+											Element: &element{
+												Token: &lexmachine.Token{
+													Type:        nID,
+													Value:       "a",
+													Lexeme:      []byte("a"),
+													TC:          10,
+													StartLine:   2,
+													StartColumn: 10,
+													EndLine:     2,
+													EndColumn:   10,
+												},
+											},
+										},
+										Explist: &explist{
+											List: []*exp{{}},
 										},
 									},
 									Body: &body{
@@ -118,16 +132,23 @@ end
 						0: {
 							Statement: statement{
 								Function: &functionStatement{
-									Name: &element{
-										Token: &lexmachine.Token{
-											Type:        nID,
-											Value:       "a",
-											Lexeme:      []byte("a"),
-											TC:          10,
-											StartLine:   2,
-											StartColumn: 10,
-											EndLine:     2,
-											EndColumn:   10,
+									FuncCall: &funcCallStatement{
+										Prefixexp: &prefixexpStatement{
+											Element: &element{
+												Token: &lexmachine.Token{
+													Type:        nID,
+													Value:       "a",
+													Lexeme:      []byte("a"),
+													TC:          10,
+													StartLine:   2,
+													StartColumn: 10,
+													EndLine:     2,
+													EndColumn:   10,
+												},
+											},
+										},
+										Explist: &explist{
+											List: []*exp{{}},
 										},
 									},
 									Body: &body{
@@ -142,16 +163,23 @@ end
 						2: {
 							Statement: statement{
 								Function: &functionStatement{
-									Name: &element{
-										Token: &lexmachine.Token{
-											Type:        nID,
-											Value:       "b",
-											Lexeme:      []byte("b"),
-											TC:          28,
-											StartLine:   5,
-											StartColumn: 10,
-											EndLine:     5,
-											EndColumn:   10,
+									FuncCall: &funcCallStatement{
+										Prefixexp: &prefixexpStatement{
+											Element: &element{
+												Token: &lexmachine.Token{
+													Type:        nID,
+													Value:       "b",
+													Lexeme:      []byte("b"),
+													TC:          28,
+													StartLine:   5,
+													StartColumn: 10,
+													EndLine:     5,
+													EndColumn:   10,
+												},
+											},
+										},
+										Explist: &explist{
+											List: []*exp{{}},
 										},
 									},
 									Body: &body{
@@ -183,45 +211,49 @@ end
 						0: {
 							Statement: statement{
 								Function: &functionStatement{
-									Name: &element{
-										Token: &lexmachine.Token{
-											Type:        nID,
-											Value:       "sum",
-											Lexeme:      []byte("sum"),
-											TC:          10,
-											StartLine:   2,
-											StartColumn: 10,
-											EndLine:     2,
-											EndColumn:   12,
-										},
-									},
-									Parlist: &explist{
-										List: []*exp{
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "a",
-														Lexeme:      []byte("a"),
-														TC:          14,
-														StartLine:   2,
-														StartColumn: 14,
-														EndLine:     2,
-														EndColumn:   14,
-													},
+									FuncCall: &funcCallStatement{
+										Prefixexp: &prefixexpStatement{
+											Element: &element{
+												Token: &lexmachine.Token{
+													Type:        nID,
+													Value:       "sum",
+													Lexeme:      []byte("sum"),
+													TC:          10,
+													StartLine:   2,
+													StartColumn: 10,
+													EndLine:     2,
+													EndColumn:   12,
 												},
 											},
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "b",
-														Lexeme:      []byte("b"),
-														TC:          17,
-														StartLine:   2,
-														StartColumn: 17,
-														EndLine:     2,
-														EndColumn:   17,
+										},
+										Explist: &explist{
+											List: []*exp{
+												{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "a",
+															Lexeme:      []byte("a"),
+															TC:          14,
+															StartLine:   2,
+															StartColumn: 14,
+															EndLine:     2,
+															EndColumn:   14,
+														},
+													},
+												},
+												{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "b",
+															Lexeme:      []byte("b"),
+															TC:          17,
+															StartLine:   2,
+															StartColumn: 17,
+															EndLine:     2,
+															EndColumn:   17,
+														},
 													},
 												},
 											},

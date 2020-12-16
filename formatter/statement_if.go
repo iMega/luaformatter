@@ -102,6 +102,7 @@ func (s *ifStatement) Format(c *Config, p printer, w io.Writer) error {
 	if st, ok := s.Body.(*body); ok {
 		ip := p
 		ip.Pad = p.Pad + c.IndentSize
+
 		if err := st.Format(c, ip, w); err != nil {
 			return err
 		}
@@ -209,6 +210,7 @@ func (s *elseifStatement) Format(c *Config, p printer, w io.Writer) error {
 	if st, ok := s.Body.(*body); ok {
 		ip := p
 		ip.Pad = p.Pad + c.IndentSize
+
 		if err := st.Format(c, ip, w); err != nil {
 			return err
 		}
@@ -265,6 +267,7 @@ func (s *elseStatement) Format(c *Config, p printer, w io.Writer) error {
 	if st, ok := s.Body.(*body); ok {
 		ip := p
 		ip.Pad = p.Pad + c.IndentSize
+
 		if err := st.Format(c, ip, w); err != nil {
 			return err
 		}

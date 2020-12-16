@@ -72,11 +72,8 @@ func (b *body) AppendStatement(st statementIntf) {
 
 func (b *body) GetStatement(prev, cur *element) statementIntf {
 	if prev != nil && prev.Token.Type == nLocal {
-		switch cur.Token.Type {
-		case nID:
+		if cur.Token.Type == nID {
 			return &assignmentStatement{}
-		case nFunction:
-			return &functionStatement{}
 		}
 	}
 
@@ -165,6 +162,7 @@ func (b *block) Format(c *Config, p printer, w io.Writer) error {
 			}
 		}
 	}
+
 	p.IgnoreFirstPad = false
 
 	if s := b.Statement.Assignment; s != nil {

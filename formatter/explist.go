@@ -62,6 +62,7 @@ func (s *explist) GetStatement(prev, cur *element) statementIntf {
 
 func (s *explist) Format(c *Config, p printer, w io.Writer) error {
 	l := len(s.List)
+
 	for idx, e := range s.List {
 		if err := e.Format(c, p, w); err != nil {
 			return err

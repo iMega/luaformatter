@@ -208,6 +208,11 @@ print(c)
 																{
 																	Func: &functionStatement{
 																		IsAnonymous: true,
+																		FuncCall: &funcCallStatement{
+																			Explist: &explist{
+																				List: []*exp{{}},
+																			},
+																		},
 																		Body: &body{
 																			Qty: 1,
 																			Blocks: map[uint64]block{
@@ -318,6 +323,11 @@ print(c)
 																		{
 																			Func: &functionStatement{
 																				IsAnonymous: true,
+																				FuncCall: &funcCallStatement{
+																					Explist: &explist{
+																						List: []*exp{{}},
+																					},
+																				},
 																				Body: &body{
 																					Qty: 1,
 																					Blocks: map[uint64]block{
@@ -428,6 +438,11 @@ print(c)
 																		{
 																			Func: &functionStatement{
 																				IsAnonymous: true,
+																				FuncCall: &funcCallStatement{
+																					Explist: &explist{
+																						List: []*exp{{}},
+																					},
+																				},
 																				Body: &body{
 																					Qty: 1,
 																					Blocks: map[uint64]block{
@@ -499,6 +514,11 @@ print(c)
 																	{
 																		Func: &functionStatement{
 																			IsAnonymous: true,
+																			FuncCall: &funcCallStatement{
+																				Explist: &explist{
+																					List: []*exp{{}},
+																				},
+																			},
 																			Body: &body{
 																				Qty: 1,
 																				Blocks: map[uint64]block{

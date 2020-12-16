@@ -32,10 +32,8 @@ func (exp) InnerStatement(prev, cur *element) (bool, statementIntf) {
 	switch cur.Token.Type {
 	case nFunction:
 		return false, &functionStatement{}
+
 	case nCurlyBracket:
-		// if prev != nil && prev.Token.Type == nID {
-		// 	return false, &funcCallStatement{} // funcCall{}
-		// }
 		return false, &tableStatement{}
 
 	case nParentheses:
@@ -43,10 +41,13 @@ func (exp) InnerStatement(prev, cur *element) (bool, statementIntf) {
 			if prev.Token.Type == nID || prev.Token.Type == nClosingSquareBracket {
 				return false, nil // funcCallStatement, asd["adf"]()
 			}
+
+			if prev.Token.Type == nFunction {
+				return false, nil
+			}
 		}
+
 		return false, &prefixexpStatement{Enclosed: true}
-		// case nID: // TODO document structure is equal for a=func[0].call{} and func[0].call{}
-		// return &prefixexpStatement{} // not working with a = -b - -1
 	}
 
 	return false, nil
@@ -80,6 +81,10 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 	}
 
 	if cur.Token.Type == nParentheses {
+		return false, false
+	}
+
+	if prev != nil && prev.Token.Type == nDot || cur.Token.Type == nDot {
 		return false, false
 	}
 
@@ -369,6 +374,10 @@ func (s *exp) GetStatement(prev, cur *element) statementIntf {
 	// if cur.Token.Type == nParentheses {
 	// 	return &prefixexpStatement{} //
 	// }
+
+	if cur.Token.Type == nDot {
+		return &prefixexpStatement{}
+	}
 
 	if cur.Token.Type == nSquareBracket {
 		return &prefixexpStatement{}

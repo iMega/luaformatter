@@ -41,11 +41,23 @@ return io.write(string.format(fmt, unpack(arg)))
 														Element: &element{
 															Token: &lexmachine.Token{
 																Type:        nID,
-																Value:       "io.write",
-																Lexeme:      []byte("io.write"),
+																Value:       "io",
+																Lexeme:      []byte("io"),
 																TC:          8,
 																StartLine:   2,
 																StartColumn: 8,
+																EndLine:     2,
+																EndColumn:   9,
+															},
+														},
+														FieldAccessor: &element{
+															Token: &lexmachine.Token{
+																Type:        nID,
+																Value:       "write",
+																Lexeme:      []byte("write"),
+																TC:          11,
+																StartLine:   2,
+																StartColumn: 11,
 																EndLine:     2,
 																EndColumn:   15,
 															},
@@ -60,11 +72,23 @@ return io.write(string.format(fmt, unpack(arg)))
 																			Element: &element{
 																				Token: &lexmachine.Token{
 																					Type:        nID,
-																					Value:       "string.format",
-																					Lexeme:      []byte("string.format"),
+																					Value:       "string",
+																					Lexeme:      []byte("string"),
 																					TC:          17,
 																					StartLine:   2,
 																					StartColumn: 17,
+																					EndLine:     2,
+																					EndColumn:   22,
+																				},
+																			},
+																			FieldAccessor: &element{
+																				Token: &lexmachine.Token{
+																					Type:        nID,
+																					Value:       "format",
+																					Lexeme:      []byte("format"),
+																					TC:          24,
+																					StartLine:   2,
+																					StartColumn: 24,
 																					EndLine:     2,
 																					EndColumn:   29,
 																				},
@@ -264,6 +288,11 @@ return function () end
 										{
 											Func: &functionStatement{
 												IsAnonymous: true,
+												FuncCall: &funcCallStatement{
+													Explist: &explist{
+														List: []*exp{{}},
+													},
+												},
 												Body: &body{
 													Blocks: make(map[uint64]block),
 												},
@@ -298,6 +327,11 @@ return function () end, function () end
 										{
 											Func: &functionStatement{
 												IsAnonymous: true,
+												FuncCall: &funcCallStatement{
+													Explist: &explist{
+														List: []*exp{{}},
+													},
+												},
 												Body: &body{
 													Blocks: make(map[uint64]block),
 												},
@@ -306,6 +340,11 @@ return function () end, function () end
 										{
 											Func: &functionStatement{
 												IsAnonymous: true,
+												FuncCall: &funcCallStatement{
+													Explist: &explist{
+														List: []*exp{{}},
+													},
+												},
 												Body: &body{
 													Blocks: make(map[uint64]block),
 												},

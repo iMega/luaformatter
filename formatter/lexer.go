@@ -34,7 +34,7 @@ func newScanner(code []byte) (*scanner, error) {
 		lexer.Add(v, token(k))
 	}
 
-	lexer.Add([]byte(`([a-zA-Z_][a-zA-Z0-9_.:]*)`), token(nID))
+	lexer.Add([]byte(`([a-zA-Z_][a-zA-Z0-9_:]*)`), token(nID))
 	lexer.Add([]byte(`\s*\n\s*\n\s*`), token(nLF))
 	lexer.Add([]byte("( |\t|\f|\r|\n)+"), skip)
 	lexer.Add([]byte(`--\[\[([^\]\]])*\]\]`), token(nCommentLong))
@@ -114,8 +114,7 @@ func skip(*lexmachine.Scanner, *machines.Match) (interface{}, error) {
 }
 
 const (
-	nEmpty = iota
-	nID
+	nID = iota
 	nLF
 	nSpace
 	nCommentLong
@@ -152,22 +151,16 @@ const (
 	nDot
 	nSingleQuote
 	nDoubleQuote
-	nBranch
 	nNumber
 	nString
 	nVararg
-	nThis
 	nLabel
 
-	//
-	// binop
-	//
-
-	// Logical Operators
+	// Logical Operators.
 	nAnd
 	nOr
 
-	// Arithmetic Operators
+	// Arithmetic Operators.
 	nAddition
 	nSubtraction
 	nMultiplication
@@ -176,20 +169,20 @@ const (
 	nModulo
 	nExponentiation
 
-	// Bitwise Operators
+	// Bitwise Operators.
 	nBitwiseAND
 	nBitwiseOR
 	nBitwiseExclusiveOR
 	nLeftShift
 	nRightShift
 
-	// Length Operator
+	// Length Operator.
 	nLength
 
-	// Concatenation
+	// Concatenation.
 	nConcat
 
-	// Relational Operators
+	// Relational Operators.
 	nEquality
 	nInequality
 	nLessThan
@@ -197,11 +190,7 @@ const (
 	nLessOrEqual
 	nGreaterOrEqual
 
-	//
-	// unop ‘-’ | not | ‘#’ | ‘~’
-	//
-
-	// Logical Operators
+	// Logical Operators.
 	nNot
 )
 

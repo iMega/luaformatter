@@ -196,6 +196,11 @@ myvar = function() end
 											{
 												Func: &functionStatement{
 													IsAnonymous: true,
+													FuncCall: &funcCallStatement{
+														Explist: &explist{
+															List: []*exp{{}},
+														},
+													},
 													Body: &body{
 														Blocks: make(map[uint64]block),
 													},

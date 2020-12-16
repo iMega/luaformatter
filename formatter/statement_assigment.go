@@ -58,22 +58,11 @@ func (s *assignmentStatement) Append(el *element) {
 
 	if el.Token.Type == nAssign {
 		s.HasEqPart = true
-
-		return
 	}
-
-	// switch el.Token.Type {
-	// case nNumber:
-	// 	s.Explist.List = append(s.Explist.List, newExp(el))
-	// }
 }
 
 func (s *assignmentStatement) AppendStatement(st statementIntf) {
-	switch v := st.(type) {
-	// case *functionStatement:
-	// s.Explist.List = append(s.Explist.List, newExp(v))
-
-	case *explist:
+	if v, ok := st.(*explist); ok {
 		if s.HasEqPart {
 			s.Explist = v
 		} else {
@@ -87,11 +76,10 @@ func (s *assignmentStatement) GetBody(prevSt statementIntf, cur *element) statem
 }
 
 func (s *assignmentStatement) GetStatement(prev, cur *element) statementIntf {
-	// if cur.Token.Type == nAssign {
 	if isExp(cur) {
 		return &explist{}
 	}
-	// }
+
 	return nil
 }
 

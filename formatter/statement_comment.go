@@ -41,6 +41,7 @@ func (s *commentStatement) Append(el *element) {
 		el.Token.Lexeme = bytes.TrimSpace(el.Token.Lexeme)
 		el.Token.Value = string(el.Token.Lexeme)
 	}
+
 	s.Element = el
 }
 

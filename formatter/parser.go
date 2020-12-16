@@ -71,6 +71,7 @@ func parse(code []byte) (*document, error) {
 		b := currentStatement.GetBody(chainSt.GetLastBody(), curElement)
 		if b != currentBody {
 			currentBody = b
+
 			if b != chainSt.First() {
 				chainSt.Append(b)
 				currentStatement = b
@@ -79,6 +80,7 @@ func parse(code []byte) (*document, error) {
 
 		if st := currentStatement.GetStatement(prevElement, curElement); st != nil {
 			var assignmentWithOneVar statementIntf
+
 			isPrefixexpConvertAssignment := false
 
 			if st.TypeOf() == tsAssignment && prevElement.Token.Type == nLocal { // local a
@@ -92,6 +94,7 @@ func parse(code []byte) (*document, error) {
 					currentStatement = s
 					currentStatement.Append(curElement)
 					chainSt.Append(currentStatement)
+
 					st = &explist{}
 				}
 			}
@@ -104,19 +107,21 @@ func parse(code []byte) (*document, error) {
 
 			if currentStatement.TypeOf() == tsPrefixexpStatement && st.TypeOf() == tsFuncCallStatement {
 				st.AppendStatement(chainSt.ExctractPrefixexp())
+
 				if chainSt.Len() > 0 {
 					chainSt.Prev().AppendStatement(st)
 				}
-				chainSt.Append(st)
 
+				chainSt.Append(st)
 			} else if st.TypeOf() == tsAssignment {
 				isPrefixexpConvertAssignment = true
 				currentStatement = chainSt.ExctractPrefixexp()
+
 				if chainSt.Len() > 0 {
 					chainSt.Prev().AppendStatement(st)
 				}
-				chainSt.Append(st)
 
+				chainSt.Append(st)
 			} else {
 				currentStatement.AppendStatement(st)
 				chainSt.Append(st)
@@ -127,6 +132,7 @@ func parse(code []byte) (*document, error) {
 					st.AppendStatement(inner)
 					chainSt.Append(inner)
 				}
+
 				st = inner
 
 				if isBreak {

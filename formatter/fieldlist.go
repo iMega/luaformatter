@@ -32,19 +32,13 @@ func (fieldlist) TypeOf() typeStatement {
 }
 
 func (s *fieldlist) IsEnd(prev, cur *element) (bool, bool) {
-	if cur.Token.Type == nIn {
-		return false, true
+	t := []int{
+		nDo,                  // 7
+		nIn,                  // 16
+		nClosingCurlyBracket, // 32
 	}
 
-	if cur.Token.Type == nDo {
-		return false, true
-	}
-
-	if cur.Token.Type == nClosingCurlyBracket {
-		return false, true
-	}
-
-	return false, false
+	return false, binarySearch(t, cur.Token.Type)
 }
 
 func (s *fieldlist) Append(el *element) {}

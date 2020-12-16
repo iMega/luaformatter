@@ -19,10 +19,9 @@ import (
 )
 
 type functionStatement struct {
-	IsLocal     bool
-	Name        *element
-	Parlist     *explist
+	FuncCall    *funcCallStatement
 	Body        statementIntf
+	IsLocal     bool
 	IsAnonymous bool
 }
 
@@ -50,24 +49,18 @@ func (s *functionStatement) Append(el *element) {
 
 		return
 	}
+}
 
-	if el.Token.Type == nID {
-		s.Name = el
+func (s *functionStatement) AppendStatement(st statementIntf) {
+	if v, ok := st.(*funcCallStatement); ok {
+		s.FuncCall = v
 
 		return
 	}
 
-	if s.Name == nil && el.Token.Type == nParentheses {
-		s.IsAnonymous = true
-	}
-}
-
-func (s *functionStatement) AppendStatement(st statementIntf) {
-	if s.Parlist == nil {
-		if v, ok := st.(*explist); ok {
-			s.Parlist = v
-
-			return
+	if v, ok := st.(*prefixexpStatement); ok {
+		s.FuncCall = &funcCallStatement{
+			Prefixexp: v,
 		}
 	}
 }
@@ -89,7 +82,13 @@ func (s *functionStatement) GetStatement(prev, cur *element) statementIntf {
 		return &explist{}
 	}
 
-	return nil
+	if s.FuncCall == nil && cur.Token.Type == nParentheses {
+		s.IsAnonymous = true
+
+		return &funcCallStatement{}
+	}
+
+	return &prefixexpStatement{}
 }
 
 func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
@@ -103,32 +102,16 @@ func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 		return err
 	}
 
-	// if _, err := w.Write([]byte("function")); err != nil {
-	// 	return err
-	// }
-
-	if s.Name != nil {
+	if !s.IsAnonymous {
 		if err := space(w); err != nil {
 			return err
 		}
-
-		if err := s.Name.Format(c, p, w); err != nil {
-			return err
-		}
 	}
 
-	if _, err := w.Write([]byte("(")); err != nil {
-		return err
-	}
-
-	if st := s.Parlist; st != nil {
+	if st := s.FuncCall; st != nil {
 		if err := st.Format(c, p, w); err != nil {
 			return err
 		}
-	}
-
-	if _, err := w.Write([]byte(")")); err != nil {
-		return err
 	}
 
 	if err := newLine(w); err != nil {
@@ -139,6 +122,7 @@ func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 		Pad: p.Pad + c.IndentSize,
 	}
 	st, ok := s.Body.(*body)
+
 	if ok {
 		if err := st.Format(c, inner, w); err != nil {
 			return err

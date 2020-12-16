@@ -62,6 +62,7 @@ func (s *doStatement) Format(c *Config, p printer, w io.Writer) error {
 	if st, ok := s.Body.(*body); ok {
 		ip := p
 		ip.Pad = p.Pad + 4
+
 		if err := st.Format(c, ip, w); err != nil {
 			return err
 		}

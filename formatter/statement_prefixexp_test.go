@@ -80,27 +80,41 @@ r["ff"]["dd"].name.name2["ee"]()
 													FieldAccessor: &element{
 														Token: &lexmachine.Token{
 															Type:        nID,
-															Value:       "name.name2",
-															Lexeme:      []byte("name.name2"),
+															Value:       "name",
+															Lexeme:      []byte("name"),
 															TC:          15,
 															StartLine:   2,
 															StartColumn: 15,
 															EndLine:     2,
-															EndColumn:   24,
+															EndColumn:   18,
 														},
 													},
 													Prefixexp: &prefixexpStatement{
-														FieldAccessorExp: &exp{
-															Element: &element{
-																Token: &lexmachine.Token{
-																	Type:        nString,
-																	Value:       `"ee"`,
-																	Lexeme:      []byte(`"ee"`),
-																	TC:          26,
-																	StartLine:   2,
-																	StartColumn: 26,
-																	EndLine:     2,
-																	EndColumn:   29,
+														FieldAccessor: &element{
+															Token: &lexmachine.Token{
+																Type:        nID,
+																Value:       "name2",
+																Lexeme:      []byte("name2"),
+																TC:          20,
+																StartLine:   2,
+																StartColumn: 20,
+																EndLine:     2,
+																EndColumn:   24,
+															},
+														},
+														Prefixexp: &prefixexpStatement{
+															FieldAccessorExp: &exp{
+																Element: &element{
+																	Token: &lexmachine.Token{
+																		Type:        nString,
+																		Value:       `"ee"`,
+																		Lexeme:      []byte(`"ee"`),
+																		TC:          26,
+																		StartLine:   2,
+																		StartColumn: 26,
+																		EndLine:     2,
+																		EndColumn:   29,
+																	},
 																},
 															},
 														},
@@ -188,27 +202,41 @@ a["bb"]["cc"].dd.ee["ff"], g["hh"] = 1, 2
 																FieldAccessor: &element{
 																	Token: &lexmachine.Token{
 																		Type:        nID,
-																		Value:       "dd.ee",
-																		Lexeme:      []byte("dd.ee"),
+																		Value:       "dd",
+																		Lexeme:      []byte("dd"),
 																		TC:          15,
 																		StartLine:   2,
 																		StartColumn: 15,
 																		EndLine:     2,
-																		EndColumn:   19,
+																		EndColumn:   16,
 																	},
 																},
 																Prefixexp: &prefixexpStatement{
-																	FieldAccessorExp: &exp{
-																		Element: &element{
-																			Token: &lexmachine.Token{
-																				Type:        nString,
-																				Value:       `"ff"`,
-																				Lexeme:      []byte(`"ff"`),
-																				TC:          21,
-																				StartLine:   2,
-																				StartColumn: 21,
-																				EndLine:     2,
-																				EndColumn:   24,
+																	FieldAccessor: &element{
+																		Token: &lexmachine.Token{
+																			Type:        nID,
+																			Value:       "ee",
+																			Lexeme:      []byte("ee"),
+																			TC:          18,
+																			StartLine:   2,
+																			StartColumn: 18,
+																			EndLine:     2,
+																			EndColumn:   19,
+																		},
+																	},
+																	Prefixexp: &prefixexpStatement{
+																		FieldAccessorExp: &exp{
+																			Element: &element{
+																				Token: &lexmachine.Token{
+																					Type:        nString,
+																					Value:       `"ff"`,
+																					Lexeme:      []byte(`"ff"`),
+																					TC:          21,
+																					StartLine:   2,
+																					StartColumn: 21,
+																					EndLine:     2,
+																					EndColumn:   24,
+																				},
 																			},
 																		},
 																	},
