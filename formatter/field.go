@@ -42,11 +42,7 @@ func (s *field) IsEnd(prev, cur *element) (bool, bool) {
 	return false, cur.Token.Type == nComma || cur.Token.Type == nDo
 }
 
-func (s *field) Append(el *element) {
-	if el.Token.Type == nSquareBracket {
-		s.Square = true
-	}
-}
+func (s *field) Append(el *element) {}
 
 func (s *field) AppendStatement(st statement) {
 	v, ok := st.(*exp)

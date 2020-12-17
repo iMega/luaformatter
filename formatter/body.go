@@ -93,12 +93,6 @@ func (b *body) GetStatement(prev, cur *element) statement {
 	case nIf:
 		return &ifStatement{}
 
-	case nElseif:
-		return &elseifStatement{}
-
-	case nElse:
-		return &elseStatement{}
-
 	case nLabel:
 		return &labelStatement{}
 
@@ -122,12 +116,6 @@ func (b *body) GetStatement(prev, cur *element) statement {
 
 	case nLF:
 		return &newlineStatement{}
-
-	case nCurlyBracket:
-		return &tableStatement{}
-
-	case nSquareBracket:
-		return &prefixexpStatement{}
 	}
 
 	return nil
