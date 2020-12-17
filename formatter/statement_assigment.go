@@ -17,13 +17,13 @@ package formatter
 import "io"
 
 type assignmentStatement struct {
-	IsLocal   bool
 	VarList   *explist
-	HasEqPart bool
 	Explist   *explist
+	IsLocal   bool
+	HasEqPart bool
 }
 
-func (assignmentStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (assignmentStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, &explist{}
 }
 
@@ -61,7 +61,7 @@ func (s *assignmentStatement) Append(el *element) {
 	}
 }
 
-func (s *assignmentStatement) AppendStatement(st statementIntf) {
+func (s *assignmentStatement) AppendStatement(st statement) {
 	if v, ok := st.(*explist); ok {
 		if s.HasEqPart {
 			s.Explist = v
@@ -71,11 +71,11 @@ func (s *assignmentStatement) AppendStatement(st statementIntf) {
 	}
 }
 
-func (s *assignmentStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *assignmentStatement) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (s *assignmentStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *assignmentStatement) GetStatement(prev, cur *element) statement {
 	if isExp(cur) {
 		return &explist{}
 	}

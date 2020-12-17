@@ -18,7 +18,7 @@ import "io"
 
 type breakStatement struct{}
 
-func (breakStatement) InnerStatement(*element, *element) (bool, statementIntf) {
+func (breakStatement) InnerStatement(*element, *element) (bool, statement) {
 	return false, nil
 }
 
@@ -32,13 +32,13 @@ func (s *breakStatement) IsEnd(*element, *element) (bool, bool) {
 
 func (s *breakStatement) Append(*element) {}
 
-func (s *breakStatement) AppendStatement(st statementIntf) {}
+func (s *breakStatement) AppendStatement(st statement) {}
 
-func (s *breakStatement) GetBody(statementIntf, *element) statementIntf {
+func (s *breakStatement) GetBody(statement, *element) statement {
 	return nil
 }
 
-func (s *breakStatement) GetStatement(*element, *element) statementIntf {
+func (s *breakStatement) GetStatement(*element, *element) statement {
 	return nil
 }
 

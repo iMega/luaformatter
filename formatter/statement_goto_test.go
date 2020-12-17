@@ -29,22 +29,18 @@ goto label
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Goto: &gotoStatement{
-									Element: &element{
-										Token: &lexmachine.Token{
-											Type:        nID,
-											Value:       "label",
-											Lexeme:      []byte("label"),
-											TC:          6,
-											StartLine:   2,
-											StartColumn: 6,
-											EndLine:     2,
-											EndColumn:   10,
-										},
-									},
+					Blocks: map[uint64]statement{
+						0: &gotoStatement{
+							Element: &element{
+								Token: &lexmachine.Token{
+									Type:        nID,
+									Value:       "label",
+									Lexeme:      []byte("label"),
+									TC:          6,
+									StartLine:   2,
+									StartColumn: 6,
+									EndLine:     2,
+									EndColumn:   10,
 								},
 							},
 						},

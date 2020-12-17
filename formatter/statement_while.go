@@ -14,12 +14,14 @@
 
 package formatter
 
+import "io"
+
 type whileStatement struct {
 	Exp  *exp
-	Body statementIntf
+	Body statement
 }
 
-func (whileStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (whileStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
@@ -33,13 +35,13 @@ func (s *whileStatement) IsEnd(prev, cur *element) (bool, bool) {
 
 func (s *whileStatement) Append(el *element) {}
 
-func (s *whileStatement) AppendStatement(st statementIntf) {
+func (s *whileStatement) AppendStatement(st statement) {
 	if v, ok := st.(*exp); ok {
 		s.Exp = v
 	}
 }
 
-func (s *whileStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *whileStatement) GetBody(prevSt statement, cur *element) statement {
 	if cur.Token.Type != nDo {
 		return prevSt
 	}
@@ -51,10 +53,14 @@ func (s *whileStatement) GetBody(prevSt statementIntf, cur *element) statementIn
 	return s.Body
 }
 
-func (s *whileStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *whileStatement) GetStatement(prev, cur *element) statement {
 	if prev.Token.Type == nWhile {
 		return &exp{}
 	}
 
+	return nil
+}
+
+func (s *whileStatement) Format(c *Config, p printer, w io.Writer) error {
 	return nil
 }

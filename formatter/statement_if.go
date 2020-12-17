@@ -18,12 +18,12 @@ import "io"
 
 type ifStatement struct {
 	Exp        *exp
-	Body       statementIntf
+	Body       statement
 	ElseIfPart []*elseifStatement
 	ElsePart   *elseStatement
 }
 
-func (ifStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (ifStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
@@ -41,7 +41,7 @@ func (s *ifStatement) IsEnd(prev, cur *element) (bool, bool) {
 
 func (s *ifStatement) Append(el *element) {}
 
-func (s *ifStatement) AppendStatement(st statementIntf) {
+func (s *ifStatement) AppendStatement(st statement) {
 	switch v := st.(type) {
 	case *exp:
 		s.Exp = v
@@ -52,7 +52,7 @@ func (s *ifStatement) AppendStatement(st statementIntf) {
 	}
 }
 
-func (s *ifStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *ifStatement) GetBody(prevSt statement, cur *element) statement {
 	if cur.Token.Type != nThen {
 		return prevSt
 	}
@@ -64,7 +64,7 @@ func (s *ifStatement) GetBody(prevSt statementIntf, cur *element) statementIntf 
 	return s.Body
 }
 
-func (s *ifStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *ifStatement) GetStatement(prev, cur *element) statement {
 	if cur.Token.Type == nElseif {
 		return &elseifStatement{}
 	}
@@ -137,10 +137,10 @@ func (s *ifStatement) Format(c *Config, p printer, w io.Writer) error {
 
 type elseifStatement struct {
 	Exp  *exp
-	Body statementIntf
+	Body statement
 }
 
-func (elseifStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (elseifStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
@@ -158,13 +158,13 @@ func (s *elseifStatement) IsEnd(prev, cur *element) (bool, bool) {
 
 func (s *elseifStatement) Append(el *element) {}
 
-func (s *elseifStatement) AppendStatement(st statementIntf) {
+func (s *elseifStatement) AppendStatement(st statement) {
 	if v, ok := st.(*exp); ok {
 		s.Exp = v
 	}
 }
 
-func (s *elseifStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *elseifStatement) GetBody(prevSt statement, cur *element) statement {
 	if cur.Token.Type != nThen {
 		return prevSt
 	}
@@ -176,7 +176,7 @@ func (s *elseifStatement) GetBody(prevSt statementIntf, cur *element) statementI
 	return s.Body
 }
 
-func (s *elseifStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *elseifStatement) GetStatement(prev, cur *element) statement {
 	if cur.Token.Type == nElseif {
 		return &elseifStatement{}
 	}
@@ -224,10 +224,10 @@ func (s *elseifStatement) Format(c *Config, p printer, w io.Writer) error {
 }
 
 type elseStatement struct {
-	Body statementIntf
+	Body statement
 }
 
-func (elseStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (elseStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
@@ -241,9 +241,9 @@ func (s *elseStatement) IsEnd(prev, cur *element) (bool, bool) {
 
 func (s *elseStatement) Append(el *element) {}
 
-func (s *elseStatement) AppendStatement(st statementIntf) {}
+func (s *elseStatement) AppendStatement(st statement) {}
 
-func (s *elseStatement) GetBody(statementIntf, *element) statementIntf {
+func (s *elseStatement) GetBody(statement, *element) statement {
 	if s.Body == nil {
 		s.Body = new(body).New()
 	}
@@ -251,7 +251,7 @@ func (s *elseStatement) GetBody(statementIntf, *element) statementIntf {
 	return s.Body
 }
 
-func (s *elseStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *elseStatement) GetStatement(prev, cur *element) statement {
 	return nil
 }
 

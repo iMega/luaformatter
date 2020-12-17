@@ -21,10 +21,10 @@ import (
 type forStatement struct {
 	FieldList *fieldlist
 	Explist   *explist
-	Body      statementIntf
+	Body      statement
 }
 
-func (forStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (forStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, &fieldlist{}
 }
 
@@ -38,7 +38,7 @@ func (s *forStatement) IsEnd(prev, cur *element) (bool, bool) {
 
 func (s *forStatement) Append(el *element) {}
 
-func (s *forStatement) AppendStatement(st statementIntf) {
+func (s *forStatement) AppendStatement(st statement) {
 	switch v := st.(type) {
 	case *fieldlist:
 		s.FieldList = v
@@ -47,7 +47,7 @@ func (s *forStatement) AppendStatement(st statementIntf) {
 	}
 }
 
-func (s *forStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *forStatement) GetBody(prevSt statement, cur *element) statement {
 	if cur.Token.Type != nDo {
 		return prevSt
 	}
@@ -59,7 +59,7 @@ func (s *forStatement) GetBody(prevSt statementIntf, cur *element) statementIntf
 	return s.Body
 }
 
-func (s *forStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *forStatement) GetStatement(prev, cur *element) statement {
 	if cur.Token.Type == nFor {
 		return &forStatement{}
 	}

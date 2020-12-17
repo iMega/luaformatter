@@ -20,7 +20,7 @@ type explist struct {
 	List []*exp // separator ,
 }
 
-func (explist) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (explist) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, &exp{}
 }
 
@@ -42,17 +42,17 @@ func (s *explist) IsEnd(prev, cur *element) (bool, bool) {
 
 func (s *explist) Append(el *element) {}
 
-func (s *explist) AppendStatement(st statementIntf) {
+func (s *explist) AppendStatement(st statement) {
 	if v, ok := st.(*exp); ok {
 		s.List = append(s.List, v)
 	}
 }
 
-func (s *explist) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *explist) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (s *explist) GetStatement(prev, cur *element) statementIntf {
+func (s *explist) GetStatement(prev, cur *element) statement {
 	if prev != nil && prev.Token.Type == nComma && isExp(cur) {
 		return &exp{}
 	}

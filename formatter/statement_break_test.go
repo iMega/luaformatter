@@ -28,12 +28,8 @@ break
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Break: &breakStatement{},
-							},
-						},
+					Blocks: map[uint64]statement{
+						0: &breakStatement{},
 					},
 					Qty: 1,
 				},

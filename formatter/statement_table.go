@@ -20,7 +20,7 @@ type tableStatement struct {
 	FieldList *fieldlist
 }
 
-func (tableStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (tableStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, &fieldlist{}
 }
 
@@ -38,17 +38,17 @@ func (s *tableStatement) IsEnd(prev, cur *element) (bool, bool) {
 
 func (s *tableStatement) Append(el *element) {}
 
-func (s *tableStatement) AppendStatement(st statementIntf) {
+func (s *tableStatement) AppendStatement(st statement) {
 	if v, ok := st.(*fieldlist); ok {
 		s.FieldList = v
 	}
 }
 
-func (s *tableStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *tableStatement) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (s *tableStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *tableStatement) GetStatement(prev, cur *element) statement {
 	return nil
 }
 

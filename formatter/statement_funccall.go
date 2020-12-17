@@ -23,7 +23,7 @@ type funcCallStatement struct {
 	Explist   *explist
 }
 
-func (funcCallStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (funcCallStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, &explist{}
 }
 
@@ -42,7 +42,7 @@ func (s *funcCallStatement) IsEnd(prev, cur *element) (bool, bool) {
 func (s *funcCallStatement) Append(el *element) {
 }
 
-func (s *funcCallStatement) AppendStatement(st statementIntf) {
+func (s *funcCallStatement) AppendStatement(st statement) {
 	switch v := st.(type) {
 	case *prefixexpStatement:
 		s.Prefixexp = v
@@ -51,11 +51,11 @@ func (s *funcCallStatement) AppendStatement(st statementIntf) {
 	}
 }
 
-func (s *funcCallStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *funcCallStatement) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (s *funcCallStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *funcCallStatement) GetStatement(prev, cur *element) statement {
 	return nil
 }
 

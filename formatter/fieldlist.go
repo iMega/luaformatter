@@ -20,7 +20,7 @@ type fieldlist struct {
 	List []*field
 }
 
-func (fieldlist) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (fieldlist) InnerStatement(prev, cur *element) (bool, statement) {
 	// fieldlist always returns a field. need will add
 	// it will need to be added to the innerStatement.
 	// return &field{}
@@ -43,17 +43,17 @@ func (s *fieldlist) IsEnd(prev, cur *element) (bool, bool) {
 
 func (s *fieldlist) Append(el *element) {}
 
-func (s *fieldlist) AppendStatement(st statementIntf) {
+func (s *fieldlist) AppendStatement(st statement) {
 	if v, ok := st.(*field); ok {
 		s.List = append(s.List, v)
 	}
 }
 
-func (s *fieldlist) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *fieldlist) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (s *fieldlist) GetStatement(prev, cur *element) statementIntf {
+func (s *fieldlist) GetStatement(prev, cur *element) statement {
 	if cur.Token.Type == nComma {
 		return nil
 	}

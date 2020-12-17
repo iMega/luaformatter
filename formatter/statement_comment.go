@@ -23,7 +23,7 @@ type commentStatement struct {
 	Element *element
 }
 
-func (commentStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (commentStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
@@ -45,13 +45,13 @@ func (s *commentStatement) Append(el *element) {
 	s.Element = el
 }
 
-func (s *commentStatement) AppendStatement(st statementIntf) {}
+func (s *commentStatement) AppendStatement(st statement) {}
 
-func (s *commentStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *commentStatement) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (s *commentStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *commentStatement) GetStatement(prev, cur *element) statement {
 	return nil
 }
 

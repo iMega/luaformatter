@@ -57,8 +57,8 @@ func DefaultConfig() Config {
 }
 
 type printer struct {
-	Pad             uint8
 	ParentStatement typeStatement
+	Pad             uint8
 	IgnoreFirstPad  bool
 }
 

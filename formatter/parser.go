@@ -19,8 +19,8 @@ func parse(code []byte) (*document, error) {
 	var (
 		prevElement      *element
 		curElement       *element
-		currentStatement statementIntf
-		currentBody      statementIntf
+		currentStatement statement
+		currentBody      statement
 
 		chainSt = &chainStatments{}
 	)
@@ -79,7 +79,7 @@ func parse(code []byte) (*document, error) {
 		}
 
 		if st := currentStatement.GetStatement(prevElement, curElement); st != nil {
-			var assignmentWithOneVar statementIntf
+			var assignmentWithOneVar statement
 
 			isPrefixexpConvertAssignment := false
 

@@ -14,11 +14,13 @@
 
 package formatter
 
+import "io"
+
 type gotoStatement struct {
 	Element *element
 }
 
-func (gotoStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (gotoStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
@@ -38,12 +40,16 @@ func (s *gotoStatement) Append(el *element) {
 	s.Element = el
 }
 
-func (s *gotoStatement) AppendStatement(st statementIntf) {}
+func (s *gotoStatement) AppendStatement(st statement) {}
 
-func (s *gotoStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *gotoStatement) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (s *gotoStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *gotoStatement) GetStatement(prev, cur *element) statement {
+	return nil
+}
+
+func (s *gotoStatement) Format(c *Config, p printer, w io.Writer) error {
 	return nil
 }

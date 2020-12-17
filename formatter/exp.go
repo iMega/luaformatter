@@ -28,7 +28,7 @@ type exp struct {
 	Prefixexp *prefixexpStatement
 }
 
-func (exp) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (exp) InnerStatement(prev, cur *element) (bool, statement) {
 	switch cur.Token.Type {
 	case nFunction:
 		return false, &functionStatement{}
@@ -320,7 +320,7 @@ func (s *exp) Append(el *element) {
 	s.Element = el
 }
 
-func (s *exp) AppendStatement(st statementIntf) {
+func (s *exp) AppendStatement(st statement) {
 	switch v := st.(type) {
 	case *tableStatement:
 		s.Table = v
@@ -341,11 +341,11 @@ func (s *exp) AppendStatement(st statementIntf) {
 	}
 }
 
-func (s *exp) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *exp) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (s *exp) GetStatement(prev, cur *element) statementIntf {
+func (s *exp) GetStatement(prev, cur *element) statement {
 	if prev != nil {
 		switch prev.Token.Type {
 		case nID:

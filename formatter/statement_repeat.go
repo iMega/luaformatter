@@ -14,12 +14,14 @@
 
 package formatter
 
+import "io"
+
 type repeatStatement struct {
-	Body statementIntf
+	Body statement
 	Exp  *exp
 }
 
-func (repeatStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (repeatStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
@@ -45,13 +47,13 @@ func (s *repeatStatement) IsEnd(prev, cur *element) (bool, bool) {
 
 func (s *repeatStatement) Append(el *element) {}
 
-func (s *repeatStatement) AppendStatement(st statementIntf) {
+func (s *repeatStatement) AppendStatement(st statement) {
 	if v, ok := st.(*exp); ok {
 		s.Exp = v
 	}
 }
 
-func (s *repeatStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *repeatStatement) GetBody(prevSt statement, cur *element) statement {
 	if s.Body == nil {
 		s.Body = new(body).New()
 	}
@@ -59,10 +61,14 @@ func (s *repeatStatement) GetBody(prevSt statementIntf, cur *element) statementI
 	return s.Body
 }
 
-func (s *repeatStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *repeatStatement) GetStatement(prev, cur *element) statement {
 	if prev.Token.Type == nUntil {
 		return &exp{}
 	}
 
+	return nil
+}
+
+func (s *repeatStatement) Format(c *Config, p printer, w io.Writer) error {
 	return nil
 }

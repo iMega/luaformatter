@@ -19,21 +19,21 @@ import (
 )
 
 type body struct {
-	Blocks map[uint64]block
+	Blocks map[uint64]statement
 	Qty    uint64
 }
 
-func (body) New() statementIntf {
+func (body) New() statement {
 	return &body{
-		Blocks: make(map[uint64]block),
+		Blocks: make(map[uint64]statement),
 	}
 }
 
-func (b *body) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (b *body) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (body) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (body) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
@@ -61,16 +61,16 @@ func (b *body) IsEnd(prev, cur *element) (bool, bool) {
 
 func (b *body) Append(el *element) {}
 
-func (b *body) AppendStatement(st statementIntf) {
+func (b *body) AppendStatement(st statement) {
 	if _, ok := st.(*prefixexpStatement); ok {
 		return
 	}
 
-	b.Blocks[b.Qty] = newBlock(st)
+	b.Blocks[b.Qty] = st
 	b.Qty++
 }
 
-func (b *body) GetStatement(prev, cur *element) statementIntf {
+func (b *body) GetStatement(prev, cur *element) statement {
 	if prev != nil && prev.Token.Type == nLocal {
 		if cur.Token.Type == nID {
 			return &assignmentStatement{}
@@ -136,6 +136,17 @@ func (b *body) GetStatement(prev, cur *element) statementIntf {
 func (b *body) Format(c *Config, p printer, w io.Writer) error {
 	for i := 0; i < int(b.Qty); i++ {
 		st := b.Blocks[uint64(i)]
+
+		if !p.IgnoreFirstPad {
+			if _, ok := st.(*newlineStatement); !ok {
+				if err := p.WritePad(w); err != nil {
+					return err
+				}
+			}
+		}
+
+		p.IgnoreFirstPad = false
+
 		if err := st.Format(c, p, w); err != nil {
 			return err
 		}
@@ -144,7 +155,7 @@ func (b *body) Format(c *Config, p printer, w io.Writer) error {
 			continue
 		}
 
-		if s := st.Statement.NewLine; s == nil {
+		if _, ok := st.(*newlineStatement); !ok {
 			if err := newLine(w); err != nil {
 				return err
 			}
@@ -152,156 +163,4 @@ func (b *body) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	return nil
-}
-
-func (b *block) Format(c *Config, p printer, w io.Writer) error {
-	if !p.IgnoreFirstPad {
-		if b.Statement.NewLine == nil {
-			if err := p.WritePad(w); err != nil {
-				return err
-			}
-		}
-	}
-
-	p.IgnoreFirstPad = false
-
-	if s := b.Statement.Assignment; s != nil {
-		if err := s.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if s := b.Statement.Break; s != nil {
-		if err := s.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if st := b.Statement.Do; st != nil {
-		if err := st.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if st := b.Statement.If; st != nil {
-		if err := st.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if st := b.Statement.For; st != nil {
-		if err := st.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if s := b.Statement.FuncCall; s != nil {
-		if err := s.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if s := b.Statement.Function; s != nil {
-		if err := s.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if s := b.Return; s != nil {
-		if err := s.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if s := b.Statement.Comment; s != nil {
-		if err := s.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if s := b.Statement.NewLine; s != nil {
-		if err := s.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func newBlock(st statementIntf) block {
-	bl := block{}
-
-	switch v := st.(type) {
-	case *assignmentStatement:
-		bl.Statement = statement{Assignment: v}
-
-	case *labelStatement:
-		bl.Statement = statement{Label: v}
-
-	case *gotoStatement:
-		bl.Statement = statement{Goto: v}
-
-	case *breakStatement:
-		bl.Statement = statement{Break: v}
-
-	case *doStatement:
-		bl.Statement = statement{Do: v}
-
-	case *whileStatement:
-		bl.Statement = statement{While: v}
-
-	case *repeatStatement:
-		bl.Statement = statement{Repeat: v}
-
-	case *functionStatement:
-		bl.Statement = statement{Function: v}
-
-	case *funcCallStatement:
-		bl.Statement = statement{FuncCall: v}
-
-	case *prefixexpStatement:
-		bl.Statement = statement{
-			FuncCall: &funcCallStatement{
-				Prefixexp: v,
-			},
-		}
-
-	case *ifStatement:
-		bl.Statement = statement{If: v}
-
-	case *forStatement:
-		bl.Statement = statement{For: v}
-
-	case *returnStatement:
-		bl.Return = v
-
-	case *commentStatement:
-		bl.Statement = statement{Comment: v}
-
-	case *newlineStatement:
-		bl.Statement = statement{NewLine: v}
-	}
-
-	return bl
-}
-
-type block struct {
-	Statement statement
-	Return    *returnStatement
-}
-
-type statement struct {
-	Assignment *assignmentStatement
-	FuncCall   *funcCallStatement
-	Label      *labelStatement
-	Break      *breakStatement
-	Goto       *gotoStatement
-	Do         *doStatement
-	While      *whileStatement
-	Repeat     *repeatStatement
-	If         *ifStatement
-	For        *forStatement
-	Function   *functionStatement
-	Comment    *commentStatement
-	NewLine    *newlineStatement
 }

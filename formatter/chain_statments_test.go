@@ -1,6 +1,7 @@
 package formatter
 
 import (
+	"io"
 	"reflect"
 	"testing"
 )
@@ -9,27 +10,29 @@ type fakeStatements struct {
 	ID int
 }
 
-func (fakeStatements) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (fakeStatements) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
 func (fakeStatements) Append(*element) {}
 
-func (fakeStatements) AppendStatement(statementIntf) {}
+func (fakeStatements) AppendStatement(statement) {}
 
 func (fakeStatements) IsEnd(prev, cur *element) (bool, bool) { return false, false }
 
 func (fakeStatements) TypeOf() typeStatement { return 0 }
 
-func (fakeStatements) GetBody(prevSt statementIntf, cur *element) statementIntf { return nil }
+func (fakeStatements) GetBody(prevSt statement, cur *element) statement { return nil }
 
-func (fakeStatements) GetStatement(prev, cur *element) statementIntf { return nil }
+func (fakeStatements) GetStatement(prev, cur *element) statement { return nil }
+
+func (fakeStatements) Format(*Config, printer, io.Writer) error { return nil }
 
 func Test_chainStatments_Prev(t *testing.T) {
 	tests := []struct {
 		name   string
 		csFunc func() *chainStatments
-		want   statementIntf
+		want   statement
 	}{
 		{
 			name: "chain is empty returns nil",

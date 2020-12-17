@@ -14,13 +14,16 @@
 
 package formatter
 
-import "bytes"
+import (
+	"bytes"
+	"io"
+)
 
 type labelStatement struct {
 	Element *element
 }
 
-func (labelStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (labelStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
@@ -40,12 +43,16 @@ func (s *labelStatement) Append(el *element) {
 	s.Element = el
 }
 
-func (s *labelStatement) AppendStatement(st statementIntf) {}
+func (s *labelStatement) AppendStatement(st statement) {}
 
-func (s *labelStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *labelStatement) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (s *labelStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *labelStatement) GetStatement(prev, cur *element) statement {
+	return nil
+}
+
+func (s *labelStatement) Format(c *Config, p printer, w io.Writer) error {
 	return nil
 }

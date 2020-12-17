@@ -22,7 +22,7 @@ type field struct {
 	Square bool
 }
 
-func (field) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (field) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, &exp{}
 }
 
@@ -48,7 +48,7 @@ func (s *field) Append(el *element) {
 	}
 }
 
-func (s *field) AppendStatement(st statementIntf) {
+func (s *field) AppendStatement(st statement) {
 	v, ok := st.(*exp)
 	if !ok {
 		return
@@ -63,11 +63,11 @@ func (s *field) AppendStatement(st statementIntf) {
 	s.Val = v
 }
 
-func (s *field) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *field) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (s *field) GetStatement(prev, cur *element) statementIntf {
+func (s *field) GetStatement(prev, cur *element) statement {
 	if isExp(cur) {
 		return &exp{}
 	}

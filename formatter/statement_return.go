@@ -20,7 +20,7 @@ type returnStatement struct {
 	Explist *explist
 }
 
-func (returnStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (returnStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
@@ -38,7 +38,7 @@ func (s *returnStatement) Append(el *element) {
 	}
 }
 
-func (s *returnStatement) AppendStatement(st statementIntf) {
+func (s *returnStatement) AppendStatement(st statement) {
 	el, ok := st.(*explist)
 	if !ok {
 		return
@@ -47,11 +47,11 @@ func (s *returnStatement) AppendStatement(st statementIntf) {
 	s.Explist = el
 }
 
-func (s *returnStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *returnStatement) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (s *returnStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *returnStatement) GetStatement(prev, cur *element) statement {
 	if isExp(cur) {
 		return &explist{}
 	}

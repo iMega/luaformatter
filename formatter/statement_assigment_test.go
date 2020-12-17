@@ -30,113 +30,109 @@ local data = get_data("KRP") .. tostring(area_number)
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Assignment: &assignmentStatement{
-									IsLocal: true,
-									VarList: &explist{
-										List: []*exp{
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "data",
-														Lexeme:      []byte("data"),
-														TC:          7,
-														StartLine:   2,
-														StartColumn: 7,
-														EndLine:     2,
-														EndColumn:   10,
+					Blocks: map[uint64]statement{
+						0: &assignmentStatement{
+							IsLocal: true,
+							VarList: &explist{
+								List: []*exp{
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "data",
+												Lexeme:      []byte("data"),
+												TC:          7,
+												StartLine:   2,
+												StartColumn: 7,
+												EndLine:     2,
+												EndColumn:   10,
+											},
+										},
+									},
+								},
+							},
+							HasEqPart: true,
+							Explist: &explist{
+								List: []*exp{
+									{
+										Prefixexp: &prefixexpStatement{
+											FuncCall: &funcCallStatement{
+												Prefixexp: &prefixexpStatement{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "get_data",
+															Lexeme:      []byte("get_data"),
+															TC:          14,
+															StartLine:   2,
+															StartColumn: 14,
+															EndLine:     2,
+															EndColumn:   21,
+														},
+													},
+												},
+												Explist: &explist{
+													List: []*exp{
+														{
+															Element: &element{
+																Token: &lexmachine.Token{
+																	Type:        nString,
+																	Value:       `"KRP"`,
+																	Lexeme:      []byte(`"KRP"`),
+																	TC:          23,
+																	StartLine:   2,
+																	StartColumn: 23,
+																	EndLine:     2,
+																	EndColumn:   27,
+																},
+															},
+														},
 													},
 												},
 											},
 										},
-									},
-									HasEqPart: true,
-									Explist: &explist{
-										List: []*exp{
-											{
-												Prefixexp: &prefixexpStatement{
-													FuncCall: &funcCallStatement{
-														Prefixexp: &prefixexpStatement{
-															Element: &element{
-																Token: &lexmachine.Token{
-																	Type:        nID,
-																	Value:       "get_data",
-																	Lexeme:      []byte("get_data"),
-																	TC:          14,
-																	StartLine:   2,
-																	StartColumn: 14,
-																	EndLine:     2,
-																	EndColumn:   21,
-																},
-															},
-														},
-														Explist: &explist{
-															List: []*exp{
-																{
-																	Element: &element{
-																		Token: &lexmachine.Token{
-																			Type:        nString,
-																			Value:       `"KRP"`,
-																			Lexeme:      []byte(`"KRP"`),
-																			TC:          23,
-																			StartLine:   2,
-																			StartColumn: 23,
-																			EndLine:     2,
-																			EndColumn:   27,
-																		},
-																	},
-																},
-															},
-														},
-													},
-												},
-												Binop: &element{
-													Token: &lexmachine.Token{
-														Type:        nConcat,
-														Value:       "..",
-														Lexeme:      []byte(".."),
-														TC:          30,
-														StartLine:   2,
-														StartColumn: 30,
-														EndLine:     2,
-														EndColumn:   31,
-													},
-												},
-												Exp: &exp{
+										Binop: &element{
+											Token: &lexmachine.Token{
+												Type:        nConcat,
+												Value:       "..",
+												Lexeme:      []byte(".."),
+												TC:          30,
+												StartLine:   2,
+												StartColumn: 30,
+												EndLine:     2,
+												EndColumn:   31,
+											},
+										},
+										Exp: &exp{
+											Prefixexp: &prefixexpStatement{
+												FuncCall: &funcCallStatement{
 													Prefixexp: &prefixexpStatement{
-														FuncCall: &funcCallStatement{
-															Prefixexp: &prefixexpStatement{
+														Element: &element{
+															Token: &lexmachine.Token{
+																Type:        nID,
+																Value:       "tostring",
+																Lexeme:      []byte("tostring"),
+																TC:          33,
+																StartLine:   2,
+																StartColumn: 33,
+																EndLine:     2,
+																EndColumn:   40,
+															},
+														},
+													},
+													Explist: &explist{
+														List: []*exp{
+															{
 																Element: &element{
 																	Token: &lexmachine.Token{
 																		Type:        nID,
-																		Value:       "tostring",
-																		Lexeme:      []byte("tostring"),
-																		TC:          33,
+																		Value:       "area_number",
+																		Lexeme:      []byte("area_number"),
+																		TC:          42,
 																		StartLine:   2,
-																		StartColumn: 33,
+																		StartColumn: 42,
 																		EndLine:     2,
-																		EndColumn:   40,
-																	},
-																},
-															},
-															Explist: &explist{
-																List: []*exp{
-																	{
-																		Element: &element{
-																			Token: &lexmachine.Token{
-																				Type:        nID,
-																				Value:       "area_number",
-																				Lexeme:      []byte("area_number"),
-																				TC:          42,
-																				StartLine:   2,
-																				StartColumn: 42,
-																				EndLine:     2,
-																				EndColumn:   52,
-																			},
-																		},
+																		EndColumn:   52,
 																	},
 																},
 															},
@@ -166,45 +162,41 @@ myvar = function() end
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Assignment: &assignmentStatement{
-									VarList: &explist{
-										List: []*exp{
-											{
-												Prefixexp: &prefixexpStatement{
-													Element: &element{
-														Token: &lexmachine.Token{
-															Type:        nID,
-															Value:       "myvar",
-															Lexeme:      []byte("myvar"),
-															TC:          1,
-															StartLine:   2,
-															StartColumn: 1,
-															EndLine:     2,
-															EndColumn:   5,
-														},
-													},
+					Blocks: map[uint64]statement{
+						0: &assignmentStatement{
+							VarList: &explist{
+								List: []*exp{
+									{
+										Prefixexp: &prefixexpStatement{
+											Element: &element{
+												Token: &lexmachine.Token{
+													Type:        nID,
+													Value:       "myvar",
+													Lexeme:      []byte("myvar"),
+													TC:          1,
+													StartLine:   2,
+													StartColumn: 1,
+													EndLine:     2,
+													EndColumn:   5,
 												},
 											},
 										},
 									},
-									HasEqPart: true,
-									Explist: &explist{
-										List: []*exp{
-											{
-												Func: &functionStatement{
-													IsAnonymous: true,
-													FuncCall: &funcCallStatement{
-														Explist: &explist{
-															List: []*exp{{}},
-														},
-													},
-													Body: &body{
-														Blocks: make(map[uint64]block),
-													},
+								},
+							},
+							HasEqPart: true,
+							Explist: &explist{
+								List: []*exp{
+									{
+										Func: &functionStatement{
+											IsAnonymous: true,
+											FuncCall: &funcCallStatement{
+												Explist: &explist{
+													List: []*exp{{}},
 												},
+											},
+											Body: &body{
+												Blocks: make(map[uint64]statement),
 											},
 										},
 									},
@@ -228,46 +220,42 @@ myvar = 1
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Assignment: &assignmentStatement{
-									VarList: &explist{
-										List: []*exp{
-											{
-												Prefixexp: &prefixexpStatement{
-													Element: &element{
-														Token: &lexmachine.Token{
-															Type:        nID,
-															Value:       "myvar",
-															Lexeme:      []byte("myvar"),
-															TC:          1,
-															StartLine:   2,
-															StartColumn: 1,
-															EndLine:     2,
-															EndColumn:   5,
-														},
-													},
+					Blocks: map[uint64]statement{
+						0: &assignmentStatement{
+							VarList: &explist{
+								List: []*exp{
+									{
+										Prefixexp: &prefixexpStatement{
+											Element: &element{
+												Token: &lexmachine.Token{
+													Type:        nID,
+													Value:       "myvar",
+													Lexeme:      []byte("myvar"),
+													TC:          1,
+													StartLine:   2,
+													StartColumn: 1,
+													EndLine:     2,
+													EndColumn:   5,
 												},
 											},
 										},
 									},
-									HasEqPart: true,
-									Explist: &explist{
-										List: []*exp{
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nNumber,
-														Value:       "1",
-														Lexeme:      []byte("1"),
-														TC:          9,
-														StartLine:   2,
-														StartColumn: 9,
-														EndLine:     2,
-														EndColumn:   9,
-													},
-												},
+								},
+							},
+							HasEqPart: true,
+							Explist: &explist{
+								List: []*exp{
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nNumber,
+												Value:       "1",
+												Lexeme:      []byte("1"),
+												TC:          9,
+												StartLine:   2,
+												StartColumn: 9,
+												EndLine:     2,
+												EndColumn:   9,
 											},
 										},
 									},
@@ -291,75 +279,71 @@ a, b = 1, 2
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Assignment: &assignmentStatement{
-									IsLocal: false,
-									VarList: &explist{
-										List: []*exp{
-											{
-												Prefixexp: &prefixexpStatement{
-													Element: &element{
-														Token: &lexmachine.Token{
-															Type:        nID,
-															Value:       "a",
-															Lexeme:      []byte("a"),
-															TC:          1,
-															StartLine:   2,
-															StartColumn: 1,
-															EndLine:     2,
-															EndColumn:   1,
-														},
-													},
-												},
-											},
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "b",
-														Lexeme:      []byte("b"),
-														TC:          4,
-														StartLine:   2,
-														StartColumn: 4,
-														EndLine:     2,
-														EndColumn:   4,
-													},
+					Blocks: map[uint64]statement{
+						0: &assignmentStatement{
+							IsLocal: false,
+							VarList: &explist{
+								List: []*exp{
+									{
+										Prefixexp: &prefixexpStatement{
+											Element: &element{
+												Token: &lexmachine.Token{
+													Type:        nID,
+													Value:       "a",
+													Lexeme:      []byte("a"),
+													TC:          1,
+													StartLine:   2,
+													StartColumn: 1,
+													EndLine:     2,
+													EndColumn:   1,
 												},
 											},
 										},
 									},
-									HasEqPart: true,
-									Explist: &explist{
-										List: []*exp{
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nNumber,
-														Value:       "1",
-														Lexeme:      []byte("1"),
-														TC:          8,
-														StartLine:   2,
-														StartColumn: 8,
-														EndLine:     2,
-														EndColumn:   8,
-													},
-												},
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "b",
+												Lexeme:      []byte("b"),
+												TC:          4,
+												StartLine:   2,
+												StartColumn: 4,
+												EndLine:     2,
+												EndColumn:   4,
 											},
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nNumber,
-														Value:       "2",
-														Lexeme:      []byte("2"),
-														TC:          11,
-														StartLine:   2,
-														StartColumn: 11,
-														EndLine:     2,
-														EndColumn:   11,
-													},
-												},
+										},
+									},
+								},
+							},
+							HasEqPart: true,
+							Explist: &explist{
+								List: []*exp{
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nNumber,
+												Value:       "1",
+												Lexeme:      []byte("1"),
+												TC:          8,
+												StartLine:   2,
+												StartColumn: 8,
+												EndLine:     2,
+												EndColumn:   8,
+											},
+										},
+									},
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nNumber,
+												Value:       "2",
+												Lexeme:      []byte("2"),
+												TC:          11,
+												StartLine:   2,
+												StartColumn: 11,
+												EndLine:     2,
+												EndColumn:   11,
 											},
 										},
 									},
@@ -383,26 +367,22 @@ local a
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Assignment: &assignmentStatement{
-									IsLocal: true,
-									VarList: &explist{
-										List: []*exp{
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "a",
-														Lexeme:      []byte("a"),
-														TC:          7,
-														StartLine:   2,
-														StartColumn: 7,
-														EndLine:     2,
-														EndColumn:   7,
-													},
-												},
+					Blocks: map[uint64]statement{
+						0: &assignmentStatement{
+							IsLocal: true,
+							VarList: &explist{
+								List: []*exp{
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "a",
+												Lexeme:      []byte("a"),
+												TC:          7,
+												StartLine:   2,
+												StartColumn: 7,
+												EndLine:     2,
+												EndColumn:   7,
 											},
 										},
 									},
@@ -426,45 +406,41 @@ local a = b
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Assignment: &assignmentStatement{
-									IsLocal: true,
-									VarList: &explist{
-										List: []*exp{
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "a",
-														Lexeme:      []byte("a"),
-														TC:          7,
-														StartLine:   2,
-														StartColumn: 7,
-														EndLine:     2,
-														EndColumn:   7,
-													},
-												},
+					Blocks: map[uint64]statement{
+						0: &assignmentStatement{
+							IsLocal: true,
+							VarList: &explist{
+								List: []*exp{
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "a",
+												Lexeme:      []byte("a"),
+												TC:          7,
+												StartLine:   2,
+												StartColumn: 7,
+												EndLine:     2,
+												EndColumn:   7,
 											},
 										},
 									},
-									HasEqPart: true,
-									Explist: &explist{
-										List: []*exp{
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "b",
-														Lexeme:      []byte("b"),
-														TC:          11,
-														StartLine:   2,
-														StartColumn: 11,
-														EndLine:     2,
-														EndColumn:   11,
-													},
-												},
+								},
+							},
+							HasEqPart: true,
+							Explist: &explist{
+								List: []*exp{
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "b",
+												Lexeme:      []byte("b"),
+												TC:          11,
+												StartLine:   2,
+												StartColumn: 11,
+												EndLine:     2,
+												EndColumn:   11,
 											},
 										},
 									},
@@ -488,40 +464,36 @@ local a, b
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Assignment: &assignmentStatement{
-									IsLocal: true,
-									VarList: &explist{
-										List: []*exp{
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "a",
-														Lexeme:      []byte("a"),
-														TC:          7,
-														StartLine:   2,
-														StartColumn: 7,
-														EndLine:     2,
-														EndColumn:   7,
-													},
-												},
+					Blocks: map[uint64]statement{
+						0: &assignmentStatement{
+							IsLocal: true,
+							VarList: &explist{
+								List: []*exp{
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "a",
+												Lexeme:      []byte("a"),
+												TC:          7,
+												StartLine:   2,
+												StartColumn: 7,
+												EndLine:     2,
+												EndColumn:   7,
 											},
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "b",
-														Lexeme:      []byte("b"),
-														TC:          10,
-														StartLine:   2,
-														StartColumn: 10,
-														EndLine:     2,
-														EndColumn:   10,
-													},
-												},
+										},
+									},
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "b",
+												Lexeme:      []byte("b"),
+												TC:          10,
+												StartLine:   2,
+												StartColumn: 10,
+												EndLine:     2,
+												EndColumn:   10,
 											},
 										},
 									},
@@ -545,73 +517,69 @@ local a, b = c, d
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Assignment: &assignmentStatement{
-									IsLocal: true,
-									VarList: &explist{
-										List: []*exp{
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "a",
-														Lexeme:      []byte("a"),
-														TC:          7,
-														StartLine:   2,
-														StartColumn: 7,
-														EndLine:     2,
-														EndColumn:   7,
-													},
-												},
-											},
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "b",
-														Lexeme:      []byte("b"),
-														TC:          10,
-														StartLine:   2,
-														StartColumn: 10,
-														EndLine:     2,
-														EndColumn:   10,
-													},
-												},
+					Blocks: map[uint64]statement{
+						0: &assignmentStatement{
+							IsLocal: true,
+							VarList: &explist{
+								List: []*exp{
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "a",
+												Lexeme:      []byte("a"),
+												TC:          7,
+												StartLine:   2,
+												StartColumn: 7,
+												EndLine:     2,
+												EndColumn:   7,
 											},
 										},
 									},
-									HasEqPart: true,
-									Explist: &explist{
-										List: []*exp{
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "c",
-														Lexeme:      []byte("c"),
-														TC:          14,
-														StartLine:   2,
-														StartColumn: 14,
-														EndLine:     2,
-														EndColumn:   14,
-													},
-												},
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "b",
+												Lexeme:      []byte("b"),
+												TC:          10,
+												StartLine:   2,
+												StartColumn: 10,
+												EndLine:     2,
+												EndColumn:   10,
 											},
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "d",
-														Lexeme:      []byte("d"),
-														TC:          17,
-														StartLine:   2,
-														StartColumn: 17,
-														EndLine:     2,
-														EndColumn:   17,
-													},
-												},
+										},
+									},
+								},
+							},
+							HasEqPart: true,
+							Explist: &explist{
+								List: []*exp{
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "c",
+												Lexeme:      []byte("c"),
+												TC:          14,
+												StartLine:   2,
+												StartColumn: 14,
+												EndLine:     2,
+												EndColumn:   14,
+											},
+										},
+									},
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "d",
+												Lexeme:      []byte("d"),
+												TC:          17,
+												StartLine:   2,
+												StartColumn: 17,
+												EndLine:     2,
+												EndColumn:   17,
 											},
 										},
 									},
@@ -635,64 +603,60 @@ local base = require "resty.core.base"
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Assignment: &assignmentStatement{
-									IsLocal: true,
-									VarList: &explist{
-										List: []*exp{
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nID,
-														Value:       "base",
-														Lexeme:      []byte("base"),
-														TC:          7,
-														StartLine:   2,
-														StartColumn: 7,
-														EndLine:     2,
-														EndColumn:   10,
-													},
-												},
+					Blocks: map[uint64]statement{
+						0: &assignmentStatement{
+							IsLocal: true,
+							VarList: &explist{
+								List: []*exp{
+									{
+										Element: &element{
+											Token: &lexmachine.Token{
+												Type:        nID,
+												Value:       "base",
+												Lexeme:      []byte("base"),
+												TC:          7,
+												StartLine:   2,
+												StartColumn: 7,
+												EndLine:     2,
+												EndColumn:   10,
 											},
 										},
 									},
-									HasEqPart: true,
-									Explist: &explist{
-										List: []*exp{
-											{
+								},
+							},
+							HasEqPart: true,
+							Explist: &explist{
+								List: []*exp{
+									{
+										Prefixexp: &prefixexpStatement{
+											FuncCall: &funcCallStatement{
 												Prefixexp: &prefixexpStatement{
-													FuncCall: &funcCallStatement{
-														Prefixexp: &prefixexpStatement{
+													Element: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "require",
+															Lexeme:      []byte("require"),
+															TC:          14,
+															StartLine:   2,
+															StartColumn: 14,
+															EndLine:     2,
+															EndColumn:   20,
+														},
+													},
+												},
+												Explist: &explist{
+													List: []*exp{
+														{
 															Element: &element{
 																Token: &lexmachine.Token{
-																	Type:        nID,
-																	Value:       "require",
-																	Lexeme:      []byte("require"),
-																	TC:          14,
+																	Type:        nString,
+																	Value:       `"resty.core.base"`,
+																	Lexeme:      []byte(`"resty.core.base"`),
+																	TC:          22,
 																	StartLine:   2,
-																	StartColumn: 14,
+																	StartColumn: 22,
 																	EndLine:     2,
-																	EndColumn:   20,
-																},
-															},
-														},
-														Explist: &explist{
-															List: []*exp{
-																{
-																	Element: &element{
-																		Token: &lexmachine.Token{
-																			Type:        nString,
-																			Value:       `"resty.core.base"`,
-																			Lexeme:      []byte(`"resty.core.base"`),
-																			TC:          22,
-																			StartLine:   2,
-																			StartColumn: 22,
-																			EndLine:     2,
-																			EndColumn:   38,
-																		},
-																	},
+																	EndColumn:   38,
 																},
 															},
 														},

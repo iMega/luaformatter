@@ -29,29 +29,25 @@ funccall()
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								FuncCall: &funcCallStatement{
-									Prefixexp: &prefixexpStatement{
-										Element: &element{
-											Token: &lexmachine.Token{
-												Type:        nID,
-												Value:       "funccall",
-												Lexeme:      []byte("funccall"),
-												TC:          1,
-												StartLine:   2,
-												StartColumn: 1,
-												EndLine:     2,
-												EndColumn:   8,
-											},
-										},
+					Blocks: map[uint64]statement{
+						0: &funcCallStatement{
+							Prefixexp: &prefixexpStatement{
+								Element: &element{
+									Token: &lexmachine.Token{
+										Type:        nID,
+										Value:       "funccall",
+										Lexeme:      []byte("funccall"),
+										TC:          1,
+										StartLine:   2,
+										StartColumn: 1,
+										EndLine:     2,
+										EndColumn:   8,
 									},
-									Explist: &explist{
-										List: []*exp{
-											{},
-										},
-									},
+								},
+							},
+							Explist: &explist{
+								List: []*exp{
+									{},
 								},
 							},
 						},
@@ -72,39 +68,35 @@ funccall "literal"
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								FuncCall: &funcCallStatement{
-									Prefixexp: &prefixexpStatement{
+					Blocks: map[uint64]statement{
+						0: &funcCallStatement{
+							Prefixexp: &prefixexpStatement{
+								Element: &element{
+									Token: &lexmachine.Token{
+										Type:        nID,
+										Value:       "funccall",
+										Lexeme:      []byte("funccall"),
+										TC:          1,
+										StartLine:   2,
+										StartColumn: 1,
+										EndLine:     2,
+										EndColumn:   8,
+									},
+								},
+							},
+							Explist: &explist{
+								List: []*exp{
+									{
 										Element: &element{
 											Token: &lexmachine.Token{
-												Type:        nID,
-												Value:       "funccall",
-												Lexeme:      []byte("funccall"),
-												TC:          1,
+												Type:        nString,
+												Value:       `"literal"`,
+												Lexeme:      []byte(`"literal"`),
+												TC:          10,
 												StartLine:   2,
-												StartColumn: 1,
+												StartColumn: 10,
 												EndLine:     2,
-												EndColumn:   8,
-											},
-										},
-									},
-									Explist: &explist{
-										List: []*exp{
-											{
-												Element: &element{
-													Token: &lexmachine.Token{
-														Type:        nString,
-														Value:       `"literal"`,
-														Lexeme:      []byte(`"literal"`),
-														TC:          10,
-														StartLine:   2,
-														StartColumn: 10,
-														EndLine:     2,
-														EndColumn:   18,
-													},
-												},
+												EndColumn:   18,
 											},
 										},
 									},

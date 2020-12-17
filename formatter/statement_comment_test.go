@@ -29,22 +29,18 @@ func TestParseComment(t *testing.T) {
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Comment: &commentStatement{
-									Element: &element{
-										Token: &lexmachine.Token{
-											Type:        nComment,
-											Value:       "comment",
-											Lexeme:      []byte("comment"),
-											TC:          1,
-											StartLine:   2,
-											StartColumn: 1,
-											EndLine:     2,
-											EndColumn:   10,
-										},
-									},
+					Blocks: map[uint64]statement{
+						0: &commentStatement{
+							Element: &element{
+								Token: &lexmachine.Token{
+									Type:        nComment,
+									Value:       "comment",
+									Lexeme:      []byte("comment"),
+									TC:          1,
+									StartLine:   2,
+									StartColumn: 1,
+									EndLine:     2,
+									EndColumn:   10,
 								},
 							},
 						},
@@ -66,40 +62,32 @@ func TestParseComment(t *testing.T) {
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Comment: &commentStatement{
-									Element: &element{
-										Token: &lexmachine.Token{
-											Type:        nComment,
-											Value:       "comment",
-											Lexeme:      []byte("comment"),
-											TC:          1,
-											StartLine:   2,
-											StartColumn: 1,
-											EndLine:     2,
-											EndColumn:   10,
-										},
-									},
+					Blocks: map[uint64]statement{
+						0: &commentStatement{
+							Element: &element{
+								Token: &lexmachine.Token{
+									Type:        nComment,
+									Value:       "comment",
+									Lexeme:      []byte("comment"),
+									TC:          1,
+									StartLine:   2,
+									StartColumn: 1,
+									EndLine:     2,
+									EndColumn:   10,
 								},
 							},
 						},
-						1: {
-							Statement: statement{
-								Comment: &commentStatement{
-									Element: &element{
-										Token: &lexmachine.Token{
-											Type:        nComment,
-											Value:       "comment2",
-											Lexeme:      []byte("comment2"),
-											TC:          12,
-											StartLine:   3,
-											StartColumn: 1,
-											EndLine:     3,
-											EndColumn:   15,
-										},
-									},
+						1: &commentStatement{
+							Element: &element{
+								Token: &lexmachine.Token{
+									Type:        nComment,
+									Value:       "comment2",
+									Lexeme:      []byte("comment2"),
+									TC:          12,
+									StartLine:   3,
+									StartColumn: 1,
+									EndLine:     3,
+									EndColumn:   15,
 								},
 							},
 						},

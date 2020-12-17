@@ -30,20 +30,12 @@ end
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Do: &doStatement{
-									Body: &body{
-										Qty: 1,
-										Blocks: map[uint64]block{
-											0: {
-												Statement: statement{
-													Break: &breakStatement{},
-												},
-											},
-										},
-									},
+					Blocks: map[uint64]statement{
+						0: &doStatement{
+							Body: &body{
+								Qty: 1,
+								Blocks: map[uint64]statement{
+									0: &breakStatement{},
 								},
 							},
 						},

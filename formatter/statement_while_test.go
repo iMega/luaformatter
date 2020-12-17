@@ -31,46 +31,34 @@ end
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								While: &whileStatement{
-									Exp: &exp{
-										Element: &element{
-											Token: &lexmachine.Token{
-												Type:        nID,
-												Value:       "a",
-												Lexeme:      []byte("a"),
-												TC:          7,
-												StartLine:   2,
-												StartColumn: 7,
-												EndLine:     2,
-												EndColumn:   7,
-											},
-										},
-									},
-									Body: &body{
-										Blocks: map[uint64]block{
-											0: {
-												Statement: statement{
-													Do: &doStatement{
-														Body: &body{
-															Blocks: map[uint64]block{
-																0: {
-																	Statement: statement{
-																		Break: &breakStatement{},
-																	},
-																},
-															},
-															Qty: 1,
-														},
-													},
-												},
-											},
-										},
-										Qty: 1,
+					Blocks: map[uint64]statement{
+						0: &whileStatement{
+							Exp: &exp{
+								Element: &element{
+									Token: &lexmachine.Token{
+										Type:        nID,
+										Value:       "a",
+										Lexeme:      []byte("a"),
+										TC:          7,
+										StartLine:   2,
+										StartColumn: 7,
+										EndLine:     2,
+										EndColumn:   7,
 									},
 								},
+							},
+							Body: &body{
+								Blocks: map[uint64]statement{
+									0: &doStatement{
+										Body: &body{
+											Blocks: map[uint64]statement{
+												0: &breakStatement{},
+											},
+											Qty: 1,
+										},
+									},
+								},
+								Qty: 1,
 							},
 						},
 					},

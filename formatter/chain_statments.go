@@ -15,10 +15,10 @@
 package formatter
 
 type chainStatments struct {
-	chain []statementIntf
+	chain []statement
 }
 
-func (cs *chainStatments) Append(st statementIntf) {
+func (cs *chainStatments) Append(st statement) {
 	for i := len(cs.chain) - 1; i >= 0; i-- {
 		if cs.chain[i] == st {
 			return
@@ -32,7 +32,7 @@ func (cs *chainStatments) Reset() {
 	cs.chain = nil
 }
 
-func (cs *chainStatments) ExtractPrev() statementIntf {
+func (cs *chainStatments) ExtractPrev() statement {
 	if len(cs.chain) == 0 {
 		return nil
 	}
@@ -46,7 +46,7 @@ func (cs *chainStatments) ExtractPrev() statementIntf {
 	return cs.chain[len(cs.chain)-1]
 }
 
-func (cs *chainStatments) Prev() statementIntf {
+func (cs *chainStatments) Prev() statement {
 	if len(cs.chain) == 0 {
 		return nil
 	}
@@ -58,11 +58,11 @@ func (cs *chainStatments) Len() int {
 	return len(cs.chain)
 }
 
-func (cs *chainStatments) First() statementIntf {
+func (cs *chainStatments) First() statement {
 	return cs.chain[0]
 }
 
-func (cs *chainStatments) ExctractAssignStatement() statementIntf {
+func (cs *chainStatments) ExctractAssignStatement() statement {
 	item := -1
 
 	for i := len(cs.chain) - 1; i >= 0; i-- {
@@ -81,7 +81,7 @@ func (cs *chainStatments) ExctractAssignStatement() statementIntf {
 	return v
 }
 
-func (cs *chainStatments) ExctractPrefixexp() statementIntf {
+func (cs *chainStatments) ExctractPrefixexp() statement {
 	item := -1
 
 	for i := len(cs.chain) - 1; i >= 0; i-- {
@@ -100,7 +100,7 @@ func (cs *chainStatments) ExctractPrefixexp() statementIntf {
 	return v
 }
 
-func (cs *chainStatments) GetLastBody() statementIntf {
+func (cs *chainStatments) GetLastBody() statement {
 	for i := len(cs.chain) - 1; i >= 0; i-- {
 		if v, ok := cs.chain[i].(*body); ok {
 			return v

@@ -88,8 +88,8 @@ func (s *scanner) Next() bool {
 
 type element struct {
 	Token    *lexmachine.Token
-	Resolved bool
 	NL       int
+	Resolved bool
 	AddSpace bool
 }
 

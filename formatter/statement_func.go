@@ -20,12 +20,12 @@ import (
 
 type functionStatement struct {
 	FuncCall    *funcCallStatement
-	Body        statementIntf
+	Body        statement
 	IsLocal     bool
 	IsAnonymous bool
 }
 
-func (functionStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (functionStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
@@ -51,7 +51,7 @@ func (s *functionStatement) Append(el *element) {
 	}
 }
 
-func (s *functionStatement) AppendStatement(st statementIntf) {
+func (s *functionStatement) AppendStatement(st statement) {
 	if v, ok := st.(*funcCallStatement); ok {
 		s.FuncCall = v
 
@@ -65,7 +65,7 @@ func (s *functionStatement) AppendStatement(st statementIntf) {
 	}
 }
 
-func (s *functionStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *functionStatement) GetBody(prevSt statement, cur *element) statement {
 	if cur.Token.Type != nClosingParentheses {
 		return prevSt
 	}
@@ -77,7 +77,7 @@ func (s *functionStatement) GetBody(prevSt statementIntf, cur *element) statemen
 	return s.Body
 }
 
-func (s *functionStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *functionStatement) GetStatement(prev, cur *element) statement {
 	if prev != nil && prev.Token.Type == nParentheses {
 		return &explist{}
 	}

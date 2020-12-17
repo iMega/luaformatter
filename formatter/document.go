@@ -14,19 +14,22 @@
 
 package formatter
 
+import "io"
+
 type document struct {
 	MaxWidth int
-	Body     statementIntf
+	Body     statement
 }
 
-type statementIntf interface {
+type statement interface {
 	Append(*element)
-	AppendStatement(statementIntf)
-	InnerStatement(prev, cur *element) (bool, statementIntf)
+	AppendStatement(statement)
+	InnerStatement(prev, cur *element) (bool, statement)
 	IsEnd(prev, cur *element) (bool, bool)
 	TypeOf() typeStatement
-	GetBody(prevSt statementIntf, cur *element) statementIntf
-	GetStatement(prev, cur *element) statementIntf
+	GetBody(prevSt statement, cur *element) statement
+	GetStatement(prev, cur *element) statement
+	Format(*Config, printer, io.Writer) error
 }
 
 type typeStatement int

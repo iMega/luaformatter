@@ -19,10 +19,10 @@ import (
 )
 
 type doStatement struct {
-	Body statementIntf
+	Body statement
 }
 
-func (doStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (doStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
@@ -36,9 +36,9 @@ func (s *doStatement) IsEnd(prev, cur *element) (bool, bool) {
 
 func (s *doStatement) Append(el *element) {}
 
-func (s *doStatement) AppendStatement(st statementIntf) {}
+func (s *doStatement) AppendStatement(st statement) {}
 
-func (s *doStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *doStatement) GetBody(prevSt statement, cur *element) statement {
 	if s.Body == nil {
 		s.Body = new(body).New()
 	}
@@ -46,7 +46,7 @@ func (s *doStatement) GetBody(prevSt statementIntf, cur *element) statementIntf 
 	return s.Body
 }
 
-func (s *doStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *doStatement) GetStatement(prev, cur *element) statement {
 	return nil
 }
 

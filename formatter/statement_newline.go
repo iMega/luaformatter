@@ -20,7 +20,7 @@ import (
 
 type newlineStatement struct{}
 
-func (newlineStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (newlineStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
@@ -34,13 +34,13 @@ func (s *newlineStatement) IsEnd(prev, cur *element) (bool, bool) {
 
 func (s *newlineStatement) Append(el *element) {}
 
-func (s *newlineStatement) AppendStatement(st statementIntf) {}
+func (s *newlineStatement) AppendStatement(st statement) {}
 
-func (s *newlineStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *newlineStatement) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (s *newlineStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *newlineStatement) GetStatement(prev, cur *element) statement {
 	return nil
 }
 

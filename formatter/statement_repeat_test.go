@@ -31,33 +31,25 @@ until a
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Repeat: &repeatStatement{
-									Body: &body{
-										Blocks: map[uint64]block{
-											0: {
-												Statement: statement{
-													Break: &breakStatement{},
-												},
-											},
-										},
-										Qty: 1,
-									},
-									Exp: &exp{
-										Element: &element{
-											Token: &lexmachine.Token{
-												Type:        nID,
-												Value:       "a",
-												Lexeme:      []byte("a"),
-												TC:          24,
-												StartLine:   4,
-												StartColumn: 7,
-												EndLine:     4,
-												EndColumn:   7,
-											},
-										},
+					Blocks: map[uint64]statement{
+						0: &repeatStatement{
+							Body: &body{
+								Blocks: map[uint64]statement{
+									0: &breakStatement{},
+								},
+								Qty: 1,
+							},
+							Exp: &exp{
+								Element: &element{
+									Token: &lexmachine.Token{
+										Type:        nID,
+										Value:       "a",
+										Lexeme:      []byte("a"),
+										TC:          24,
+										StartLine:   4,
+										StartColumn: 7,
+										EndLine:     4,
+										EndColumn:   7,
 									},
 								},
 							},

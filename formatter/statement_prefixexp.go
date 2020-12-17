@@ -30,7 +30,7 @@ type prefixexpStatement struct {
 	// prefixexp ::= var | functioncall | ‘(’ exp ‘)’
 }
 
-func (s *prefixexpStatement) InnerStatement(prev, cur *element) (bool, statementIntf) {
+func (s *prefixexpStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	if cur.Token.Type == nSquareBracket {
 		// s.IsVar = true
 		return false, &exp{}
@@ -151,7 +151,7 @@ func (s *prefixexpStatement) Append(el *element) {
 	s.Element = el
 }
 
-func (s *prefixexpStatement) AppendStatement(st statementIntf) {
+func (s *prefixexpStatement) AppendStatement(st statement) {
 	switch v := st.(type) {
 	case *prefixexpStatement:
 		s.Prefixexp = v
@@ -166,11 +166,11 @@ func (s *prefixexpStatement) AppendStatement(st statementIntf) {
 	}
 }
 
-func (s *prefixexpStatement) GetBody(prevSt statementIntf, cur *element) statementIntf {
+func (s *prefixexpStatement) GetBody(prevSt statement, cur *element) statement {
 	return prevSt
 }
 
-func (s *prefixexpStatement) GetStatement(prev, cur *element) statementIntf {
+func (s *prefixexpStatement) GetStatement(prev, cur *element) statement {
 	if cur.Token.Type == nAssign {
 		return &assignmentStatement{}
 	}

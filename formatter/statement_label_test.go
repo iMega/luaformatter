@@ -29,22 +29,18 @@ func TestParseLabel(t *testing.T) {
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Label: &labelStatement{
-									Element: &element{
-										Token: &lexmachine.Token{
-											Type:        nLabel,
-											Value:       "label",
-											Lexeme:      []byte("label"),
-											TC:          1,
-											StartLine:   2,
-											StartColumn: 1,
-											EndLine:     2,
-											EndColumn:   11,
-										},
-									},
+					Blocks: map[uint64]statement{
+						0: &labelStatement{
+							Element: &element{
+								Token: &lexmachine.Token{
+									Type:        nLabel,
+									Value:       "label",
+									Lexeme:      []byte("label"),
+									TC:          1,
+									StartLine:   2,
+									StartColumn: 1,
+									EndLine:     2,
+									EndColumn:   11,
 								},
 							},
 						},
@@ -67,22 +63,18 @@ func TestParseLabel(t *testing.T) {
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Label: &labelStatement{
-									Element: &element{
-										Token: &lexmachine.Token{
-											Type:        nLabel,
-											Value:       "label",
-											Lexeme:      []byte("label"),
-											TC:          1,
-											StartLine:   2,
-											StartColumn: 1,
-											EndLine:     4,
-											EndColumn:   2,
-										},
-									},
+					Blocks: map[uint64]statement{
+						0: &labelStatement{
+							Element: &element{
+								Token: &lexmachine.Token{
+									Type:        nLabel,
+									Value:       "label",
+									Lexeme:      []byte("label"),
+									TC:          1,
+									StartLine:   2,
+									StartColumn: 1,
+									EndLine:     4,
+									EndColumn:   2,
 								},
 							},
 						},
@@ -109,45 +101,33 @@ func TestParseLabel(t *testing.T) {
 			},
 			want: &document{
 				Body: &body{
-					Blocks: map[uint64]block{
-						0: {
-							Statement: statement{
-								Label: &labelStatement{
-									Element: &element{
-										Token: &lexmachine.Token{
-											Type:        nLabel,
-											Value:       "label",
-											Lexeme:      []byte("label"),
-											TC:          1,
-											StartLine:   2,
-											StartColumn: 1,
-											EndLine:     4,
-											EndColumn:   2,
-										},
-									},
+					Blocks: map[uint64]statement{
+						0: &labelStatement{
+							Element: &element{
+								Token: &lexmachine.Token{
+									Type:        nLabel,
+									Value:       "label",
+									Lexeme:      []byte("label"),
+									TC:          1,
+									StartLine:   2,
+									StartColumn: 1,
+									EndLine:     4,
+									EndColumn:   2,
 								},
 							},
 						},
-						1: {
-							Statement: statement{
-								NewLine: &newlineStatement{},
-							},
-						},
-						2: {
-							Statement: statement{
-								Label: &labelStatement{
-									Element: &element{
-										Token: &lexmachine.Token{
-											Type:        nLabel,
-											Value:       "label2",
-											Lexeme:      []byte("label2"),
-											TC:          20,
-											StartLine:   6,
-											StartColumn: 1,
-											EndLine:     8,
-											EndColumn:   2,
-										},
-									},
+						1: &newlineStatement{},
+						2: &labelStatement{
+							Element: &element{
+								Token: &lexmachine.Token{
+									Type:        nLabel,
+									Value:       "label2",
+									Lexeme:      []byte("label2"),
+									TC:          20,
+									StartLine:   6,
+									StartColumn: 1,
+									EndLine:     8,
+									EndColumn:   2,
 								},
 							},
 						},
