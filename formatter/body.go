@@ -15,6 +15,7 @@
 package formatter
 
 import (
+	"fmt"
 	"io"
 )
 
@@ -122,6 +123,8 @@ func (b *body) GetStatement(prev, cur *element) statement {
 }
 
 func (b *body) Format(c *Config, p printer, w io.Writer) error {
+	c.line = 1
+
 	for i := 0; i < int(b.Qty); i++ {
 		st := b.Blocks[uint64(i)]
 
@@ -144,10 +147,34 @@ func (b *body) Format(c *Config, p printer, w io.Writer) error {
 		}
 
 		if _, ok := st.(*newlineStatement); !ok {
-			if err := newLine(w); err != nil {
-				return err
+			skip := false
+
+			if int(b.Qty)-1 > i {
+				next := b.Blocks[uint64(i)+1]
+				if v, ok := next.(*commentStatement); ok {
+					fmt.Printf("===== %d = %d", v.Element.Token.StartLine, c.line)
+					if v.Element.Token.StartLine == c.line {
+						skip = true
+					}
+				}
+			}
+
+			if skip {
+				if err := space(w); err != nil {
+					return err
+				}
+				c.line--
+			}
+
+			if !skip {
+				if err := newLine(w); err != nil {
+					return err
+				}
+
 			}
 		}
+
+		c.line++
 	}
 
 	return nil

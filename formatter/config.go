@@ -6,6 +6,8 @@ type Config struct {
 
 	Highlight bool
 	Spaces    Spaces
+
+	line int
 }
 
 type Spaces struct {
