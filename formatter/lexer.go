@@ -37,8 +37,8 @@ func newScanner(code []byte) (*scanner, error) {
 	lexer.Add([]byte(`([a-zA-Z_][a-zA-Z0-9_:]*)`), token(nID))
 	lexer.Add([]byte(`\s*\n\s*\n\s*`), token(nLF))
 	lexer.Add([]byte("( |\t|\f|\r|\n)+"), skip)
+	lexer.Add([]byte(`--[^\[\[]( |\S)*`), token(nComment))
 	lexer.Add([]byte(`--\[\[([^\]\]])*\]\]`), token(nCommentLong))
-	lexer.Add([]byte(`--( |\S)*`), token(nComment))
 	lexer.Add([]byte(`::([^::])*::`), token(nLabel))
 
 	lexer.Add([]byte(`(")[^(")]*(")`), token(nString))
@@ -281,7 +281,7 @@ var (
 		nID:          "ID",
 		nLF:          "LF",
 		nSpace:       "Space",
-		nCommentLong: "nComment",
+		nCommentLong: "nCommentLong",
 		nComment:     "nComment",
 		nAnd:         "nAnd",
 		nBreak:       "nBreak",

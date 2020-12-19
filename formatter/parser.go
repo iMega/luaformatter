@@ -83,14 +83,16 @@ func parse(code []byte) (*document, error) {
 
 			isPrefixexpConvertAssignment := false
 
-			if st.TypeOf() == tsAssignment && prevElement.Token.Type == nLocal { // local a
-				st.Append(prevElement)
+			if st.TypeOf() == tsAssignment || st.TypeOf() == tsFunction {
+				if prevElement != nil && prevElement.Token.Type == nLocal {
+					st.Append(prevElement)
+				}
 			}
 
 			if st.TypeOf() == tsAssignment && curElement.Token.Type == nAssign { // a = 1
 				assignmentWithOneVar = st
 
-				if s := chainSt.ExctractAssignStatement(); s != nil {
+				if s := chainSt.ExctractStatement(tsAssignment); s != nil {
 					currentStatement = s
 					currentStatement.Append(curElement)
 					chainSt.Append(currentStatement)
@@ -99,39 +101,24 @@ func parse(code []byte) (*document, error) {
 				}
 			}
 
-			if st.TypeOf() == tsFunction { // local function a()
-				if prevElement != nil && prevElement.Token.Type == nLocal {
-					st.Append(prevElement)
-				}
-			}
-
 			if currentStatement.TypeOf() == tsPrefixexpStatement && st.TypeOf() == tsFuncCallStatement {
-				st.AppendStatement(chainSt.ExctractPrefixexp())
-
-				if chainSt.Len() > 0 {
-					chainSt.Prev().AppendStatement(st)
-				}
-
-				chainSt.Append(st)
+				st.AppendStatement(chainSt.ExctractStatement(tsPrefixexpStatement))
+				chainSt.Prev().AppendStatement(st)
 			} else if st.TypeOf() == tsAssignment {
 				isPrefixexpConvertAssignment = true
-				currentStatement = chainSt.ExctractPrefixexp()
-
-				if chainSt.Len() > 0 {
-					chainSt.Prev().AppendStatement(st)
-				}
-
-				chainSt.Append(st)
+				currentStatement = chainSt.ExctractStatement(tsPrefixexpStatement)
+				chainSt.Prev().AppendStatement(st)
 			} else {
 				currentStatement.AppendStatement(st)
-				chainSt.Append(st)
 			}
 
+			chainSt.Append(st)
+
 			for isBreak, inner := st.InnerStatement(prevElement, curElement); inner != nil; isBreak, inner = st.InnerStatement(prevElement, curElement) {
-				if st.TypeOf() != inner.TypeOf() {
-					st.AppendStatement(inner)
-					chainSt.Append(inner)
-				}
+				// if st.TypeOf() != inner.TypeOf() {
+				st.AppendStatement(inner)
+				chainSt.Append(inner)
+				// }
 
 				st = inner
 

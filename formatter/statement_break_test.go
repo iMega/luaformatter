@@ -55,7 +55,7 @@ break
 	}
 }
 
-func TestSyntetic(t *testing.T) {
+func TestSynteticBreak(t *testing.T) {
 	b := &breakStatement{}
 
 	b.AppendStatement(nil)
