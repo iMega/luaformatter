@@ -144,7 +144,10 @@ func parse(code []byte) (*document, error) {
 
 		currentStatement.Append(curElement)
 
-		prevElement = curElement
+		if curElement.Token.Type != nCommentLong {
+			prevElement = curElement
+		}
+
 		curElement = nil
 	}
 

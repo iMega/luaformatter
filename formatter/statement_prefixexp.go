@@ -24,15 +24,12 @@ type prefixexpStatement struct {
 	FieldAccessorExp *exp
 	FieldAccessor    *element
 	Prefixexp        *prefixexpStatement
-	OneValue         *exp
-	IsVar            bool
+	Comments         map[uint64]*element
 	Enclosed         bool
-	// prefixexp ::= var | functioncall | ‘(’ exp ‘)’
 }
 
 func (s *prefixexpStatement) InnerStatement(prev, cur *element) (bool, statement) {
 	if cur.Token.Type == nSquareBracket {
-		// s.IsVar = true
 		return false, &exp{}
 	}
 
@@ -116,6 +113,10 @@ func (s *prefixexpStatement) IsEnd(prev, cur *element) (bool, bool) {
 		return false, false
 	}
 
+	if cur.Token.Type == nCommentLong {
+		return false, false
+	}
+
 	return false, true //cur.Token.Type == nAssign
 }
 
@@ -129,6 +130,17 @@ func (s *prefixexpStatement) Append(el *element) {
 	}
 
 	if el.Token.Type == nClosingParentheses {
+		return
+	}
+
+	// note: before nDot
+	if el.Token.Type == nCommentLong {
+		if s.Comments == nil {
+			s.Comments = make(map[uint64]*element)
+		}
+
+		s.Comments[uint64(len(s.Comments))] = el
+
 		return
 	}
 
@@ -199,6 +211,22 @@ func (s *prefixexpStatement) GetStatement(prev, cur *element) statement {
 }
 
 func (s *prefixexpStatement) Format(c *Config, p printer, w io.Writer) error {
+	if s.Comments != nil {
+		for i := 0; i < len(s.Comments); i++ {
+			if _, err := w.Write([]byte("--[[ ")); err != nil {
+				return err
+			}
+
+			if err := s.Comments[uint64(i)].Format(c, p, w); err != nil {
+				return err
+			}
+
+			if _, err := w.Write([]byte(" ]]")); err != nil {
+				return err
+			}
+		}
+	}
+
 	if st := s.Element; st != nil {
 		if err := st.Format(c, p, w); err != nil {
 			return err

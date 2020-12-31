@@ -15,7 +15,6 @@
 package formatter
 
 import (
-	"bytes"
 	"io"
 )
 
@@ -36,12 +35,6 @@ func (s *commentStatement) IsEnd(prev, cur *element) (bool, bool) {
 }
 
 func (s *commentStatement) Append(el *element) {
-	if el.Token.Type == nComment {
-		el.Token.Lexeme = bytes.TrimLeft(el.Token.Lexeme, "--")
-		el.Token.Lexeme = bytes.TrimSpace(el.Token.Lexeme)
-		el.Token.Value = string(el.Token.Lexeme)
-	}
-
 	s.Element = el
 }
 

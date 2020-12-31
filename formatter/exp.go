@@ -19,13 +19,14 @@ import (
 )
 
 type exp struct {
-	Element   *element           // nil | false | true | Numeral | LiteralString | ‘...’
-	Table     *tableStatement    // {
-	Func      *functionStatement // function
+	Element   *element
+	Table     *tableStatement
+	Func      *functionStatement
 	Binop     *element
 	Unop      *element
 	Exp       *exp
 	Prefixexp *prefixexpStatement
+	Comments  map[uint64]*element
 }
 
 func (exp) InnerStatement(prev, cur *element) (bool, statement) {
@@ -98,6 +99,10 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 
 	if prev != nil && prev.Token.Type == nAssign && isExp(cur) {
 		return false, false // = exp
+	}
+
+	if cur.Token.Type == nCommentLong {
+		return false, false
 	}
 
 	// return false, true
@@ -317,6 +322,16 @@ func (s *exp) Append(el *element) {
 		return
 	}
 
+	if el.Token.Type == nCommentLong {
+		if s.Comments == nil {
+			s.Comments = make(map[uint64]*element)
+		}
+
+		s.Comments[uint64(len(s.Comments))] = el
+
+		return
+	}
+
 	s.Element = el
 }
 
@@ -399,6 +414,22 @@ func (s *exp) GetStatement(prev, cur *element) statement {
 }
 
 func (s *exp) Format(c *Config, p printer, w io.Writer) error {
+	if s.Comments != nil {
+		for i := 0; i < len(s.Comments); i++ {
+			if _, err := w.Write([]byte("--[[ ")); err != nil {
+				return err
+			}
+
+			if err := s.Comments[uint64(i)].Format(c, p, w); err != nil {
+				return err
+			}
+
+			if _, err := w.Write([]byte(" ]]")); err != nil {
+				return err
+			}
+		}
+	}
+
 	if st := s.Unop; st != nil {
 		if err := st.Format(c, p, w); err != nil {
 			return err

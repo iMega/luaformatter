@@ -114,6 +114,9 @@ func (b *body) GetStatement(prev, cur *element) statement {
 	case nComment:
 		return &commentStatement{}
 
+	case nCommentLong:
+		return &commentStatement{}
+
 	case nLF:
 		return &newlineStatement{}
 	}

@@ -15,6 +15,7 @@
 package formatter
 
 import (
+	"bytes"
 	"io"
 
 	"github.com/timtadh/lexmachine"
@@ -37,8 +38,8 @@ func newScanner(code []byte) (*scanner, error) {
 	lexer.Add([]byte(`([a-zA-Z_][a-zA-Z0-9_:]*)`), token(nID))
 	lexer.Add([]byte(`\s*\n\s*\n\s*`), token(nLF))
 	lexer.Add([]byte("( |\t|\f|\r|\n)+"), skip)
-	lexer.Add([]byte(`--[^\[\[]( |\S)*`), token(nComment))
-	lexer.Add([]byte(`--\[\[([^\]\]])*\]\]`), token(nCommentLong))
+	lexer.Add([]byte(`--[^\[\[]( |\S)*`), comment(nComment))
+	lexer.Add([]byte(`--\[\[([^\]\]])*\]\]`), commentLong(nCommentLong))
 	lexer.Add([]byte(`::([^::])*::`), token(nLabel))
 
 	lexer.Add([]byte(`(")[^(")]*(")`), token(nString))
@@ -106,6 +107,27 @@ func (s *scanner) Scan() (element, error) {
 func token(nodeID int) lexmachine.Action {
 	return func(s *lexmachine.Scanner, m *machines.Match) (interface{}, error) {
 		return s.Token(nodeID, string(m.Bytes), m), nil
+	}
+}
+
+func comment(nodeID int) lexmachine.Action {
+	return func(s *lexmachine.Scanner, m *machines.Match) (interface{}, error) {
+		b := bytes.TrimLeft(m.Bytes, "--")
+		b = bytes.TrimSpace(b)
+		m.Bytes = b
+
+		return s.Token(nodeID, string(b), m), nil
+	}
+}
+
+func commentLong(nodeID int) lexmachine.Action {
+	return func(s *lexmachine.Scanner, m *machines.Match) (interface{}, error) {
+		b := bytes.TrimLeft(m.Bytes, "--[[")
+		b = bytes.TrimRight(b, "]]")
+		b = bytes.TrimSpace(b)
+		m.Bytes = b
+
+		return s.Token(nodeID, string(b), m), nil
 	}
 }
 
