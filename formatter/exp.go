@@ -105,6 +105,18 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 		return false, false
 	}
 
+	if prev != nil && prev.Token.Type == nCurlyBracket && isExp(cur) {
+		return false, false // { 1
+	}
+
+	if prev != nil && prev.Token.Type == nCurlyBracket && cur.Token.Type == nSquareBracket {
+		return false, false // { [
+	}
+
+	if prev != nil && prev.Token.Type == nFor && isExp(cur) {
+		return false, false // for 1
+	}
+
 	// return false, true
 
 	var syntax = map[tokenID]map[tokenID]bool{
@@ -254,7 +266,8 @@ func isUnop(el *element) bool {
 
 func isExp(el *element) bool {
 	exps := []int{
-		nID,           // 1
+		nID, // 1
+		// nCommentLong,  //3
 		nFalse,        // 11
 		nFunction,     // 13
 		nNil,          // 18
@@ -278,15 +291,17 @@ func isExp(el *element) bool {
 
 func (s *exp) Append(el *element) {
 	types := []int{
-		nIn,                   // 16
-		nReturn,               // 20
-		nParentheses,          // 27
-		nClosingParentheses,   // 28
-		nSquareBracket,        // 29
-		nClosingSquareBracket, // 30
-		nClosingCurlyBracket,  // 32
-		nAssign,               // 33
-		nComma,                // 34
+		nFor,                  // 11
+		nIn,                   // 15
+		nReturn,               // 19
+		nParentheses,          // 26
+		nClosingParentheses,   // 27
+		nSquareBracket,        // 28
+		nClosingSquareBracket, // 29
+		nCurlyBracket,         // 30
+		nClosingCurlyBracket,  // 31
+		nAssign,               // 32
+		nComma,                // 33
 	}
 	if binarySearch(types, el.Token.Type) {
 		return
@@ -322,7 +337,7 @@ func (s *exp) Append(el *element) {
 		return
 	}
 
-	if el.Token.Type == nCommentLong {
+	if el.Token.Type == nCommentLong || el.Token.Type == nComment {
 		if s.Comments == nil {
 			s.Comments = make(map[uint64]*element)
 		}
@@ -381,6 +396,11 @@ func (s *exp) GetStatement(prev, cur *element) statement {
 		case nParentheses:
 			if cur.Token.Type == nParentheses {
 				return &prefixexpStatement{} // 1+((1+2)+2)
+			}
+
+		case nCurlyBracket:
+			if cur.Token.Type == nSquareBracket {
+				return nil
 			}
 		}
 	}

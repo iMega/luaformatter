@@ -14,6 +14,8 @@
 
 package formatter
 
+import "fmt"
+
 // Parse code.
 func parse(code []byte) (*document, error) {
 	var (
@@ -45,11 +47,11 @@ func parse(code []byte) (*document, error) {
 
 		curElement = &el
 
-		// if prevElement != nil {
-		// 	fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
-		// }
+		if prevElement != nil {
+			fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
+		}
 
-		// fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
+		fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
 
 		for isBlockEnd, ok := currentStatement.IsEnd(prevElement, curElement); ok; isBlockEnd, ok = currentStatement.IsEnd(prevElement, curElement) {
 			cs := chainSt.ExtractPrev()
@@ -144,7 +146,7 @@ func parse(code []byte) (*document, error) {
 
 		currentStatement.Append(curElement)
 
-		if curElement.Token.Type != nCommentLong {
+		if curElement.Token.Type != nCommentLong && curElement.Token.Type != nComment {
 			prevElement = curElement
 		}
 

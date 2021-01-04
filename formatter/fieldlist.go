@@ -23,8 +23,8 @@ type fieldlist struct {
 func (fieldlist) InnerStatement(prev, cur *element) (bool, statement) {
 	// fieldlist always returns a field. need will add
 	// it will need to be added to the innerStatement.
-	// return &field{}
-	return false, nil
+	return false, &field{}
+	// return false, nil
 }
 
 func (fieldlist) TypeOf() typeStatement {

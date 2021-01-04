@@ -23,7 +23,7 @@ type field struct {
 }
 
 func (field) InnerStatement(prev, cur *element) (bool, statement) {
-	return false, &exp{}
+	return true, &exp{}
 }
 
 func (field) TypeOf() typeStatement {
