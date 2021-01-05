@@ -105,6 +105,22 @@ func (s *exp) IsEnd(prev, cur *element) (bool, bool) {
 		return false, false
 	}
 
+	if prev != nil && prev.Token.Type == nCurlyBracket && isExp(cur) {
+		return false, false // { 1
+	}
+
+	if prev != nil && prev.Token.Type == nCurlyBracket && cur.Token.Type == nSquareBracket {
+		return false, false // { [
+	}
+
+	if prev != nil && prev.Token.Type == nCurlyBracket && cur.Token.Type == nComment {
+		return false, false // { --
+	}
+
+	if prev != nil && prev.Token.Type == nCurlyBracket && cur.Token.Type == nCommentLong {
+		return false, false // { --[[
+	}
+
 	// return false, true
 
 	var syntax = map[tokenID]map[tokenID]bool{
@@ -322,7 +338,7 @@ func (s *exp) Append(el *element) {
 		return
 	}
 
-	if el.Token.Type == nCommentLong {
+	if el.Token.Type == nCommentLong || el.Token.Type == nComment {
 		if s.Comments == nil {
 			s.Comments = make(map[uint64]*element)
 		}
@@ -381,6 +397,11 @@ func (s *exp) GetStatement(prev, cur *element) statement {
 		case nParentheses:
 			if cur.Token.Type == nParentheses {
 				return &prefixexpStatement{} // 1+((1+2)+2)
+			}
+
+		case nCurlyBracket:
+			if cur.Token.Type == nSquareBracket {
+				return nil
 			}
 		}
 	}

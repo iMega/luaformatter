@@ -39,10 +39,24 @@ func (s *field) IsEnd(prev, cur *element) (bool, bool) {
 		return false, true
 	}
 
+	if cur.Token.Type == nClosingSquareBracket {
+		s.Square = true // exeption
+	}
+
 	return false, cur.Token.Type == nComma || cur.Token.Type == nDo
 }
 
-func (s *field) Append(el *element) {}
+func (s *field) Append(el *element) {
+	if el.Token.Type == nComment || el.Token.Type == nCommentLong {
+		if s.Val == nil {
+			s.Key.Append(el)
+
+			return
+		}
+
+		s.Val.Append(el)
+	}
+}
 
 func (s *field) AppendStatement(st statement) {
 	v, ok := st.(*exp)
@@ -56,7 +70,31 @@ func (s *field) AppendStatement(st statement) {
 		return
 	}
 
+	if s.Key.Element == nil &&
+		s.Key.Table == nil &&
+		s.Key.Func == nil &&
+		s.Key.Binop == nil &&
+		s.Key.Unop == nil &&
+		s.Key.Exp == nil &&
+		s.Key.Prefixexp == nil {
+
+		v.Comments = s.Key.Comments
+		s.Key = v
+
+		return
+	}
+
 	s.Val = v
+}
+
+func allFieldsStructAreNil(in ...interface{}) bool {
+	for _, v := range in {
+		if v != nil {
+			return false
+		}
+	}
+
+	return true
 }
 
 func (s *field) GetBody(prevSt statement, cur *element) statement {

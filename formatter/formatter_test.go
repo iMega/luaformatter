@@ -496,6 +496,21 @@ local numbers = {
 `,
 			wantErr: false,
 		},
+		{
+			name: "break statement",
+			args: args{
+				c: DefaultConfig(),
+				b: []byte(`
+if true then break end
+`),
+			},
+			wantW: `
+if true then
+    break
+end
+`,
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
