@@ -21,6 +21,8 @@ type document struct {
 	Body     statement
 }
 
+type isBreak bool
+
 type statement interface {
 	Append(*element)
 	AppendStatement(statement)

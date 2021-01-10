@@ -42,9 +42,9 @@ func newScanner(code []byte) (*scanner, error) {
 	lexer.Add([]byte(`--\[\[([^\]\]])*\]\]`), commentLong(nCommentLong))
 	lexer.Add([]byte(`::([^::])*::`), token(nLabel))
 
-	lexer.Add([]byte(`(")[^(")]*(")`), token(nString))
-	lexer.Add([]byte(`(')[^(')]*(')`), token(nString))
-	lexer.Add([]byte(`(\[\[)[^(\]\])]*(\]\])`), token(nString))
+	lexer.Add([]byte(`"[^"]*"`), token(nString))
+	lexer.Add([]byte(`'[^']*'`), token(nString))
+	lexer.Add([]byte(`\[\[[^\]\]]*\]\]`), token(nString))
 
 	if err := lexer.Compile(); err != nil {
 		return nil, err

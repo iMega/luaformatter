@@ -437,6 +437,10 @@ func (s *exp) GetStatement(prev, cur *element) statement {
 func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 	if s.Comments != nil {
 		for i := 0; i < len(s.Comments); i++ {
+			if s.Comments[uint64(i)].Token.Type == nComment {
+				continue
+			}
+
 			if _, err := w.Write([]byte("--[[ ")); err != nil {
 				return err
 			}

@@ -527,3 +527,73 @@ end
 		})
 	}
 }
+
+func TestFormat_withConfigTable(t *testing.T) {
+	type args struct {
+		c Config
+		b []byte
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantW   string
+		wantErr bool
+	}{
+		{
+			name: "assignment statement",
+			args: args{
+				c: Config{
+					IndentSize:    4,
+					MaxLineLength: 80,
+					Alignment: Alignment{
+						Table: AlignmentTable{
+							KeyValuePairs: true,
+							Comments:      true,
+						},
+					},
+				},
+				b: []byte(`
+table = {
+    ["a()"] = false, -- comm 1
+    [1+1] = true, -- comm 2
+    bb = function () return 1 end, -- comm 3
+    ["1394-E"] = val1, -- comm 4
+    ["UTF-8"] = val2, -- comm 5
+    ["and"] = val3, -- comm 6
+    [true] = 1, -- comm 7
+    aa = nil, -- comm 8
+}
+`),
+			},
+			wantW: `
+table = {
+    ["a()"] = false, -- comm 1
+    [1 + 1] = true,  -- comm 2
+    bb = function()
+        return 1
+    end, -- comm 3
+    ["1394-E"] = val1, -- comm 4
+    ["UTF-8"]  = val2, -- comm 5
+    ["and"]    = val3, -- comm 6
+    [true]     = 1,    -- comm 7
+    aa         = nil,  -- comm 8
+}
+`,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := &bytes.Buffer{}
+			w.Write([]byte("\n"))
+			if err := Format(tt.args.c, tt.args.b, w); (err != nil) != tt.wantErr {
+				t.Errorf("Format() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if !assert.Equal(t, tt.wantW, w.String()) {
+				t.Error("failed to format")
+			}
+		})
+	}
+}

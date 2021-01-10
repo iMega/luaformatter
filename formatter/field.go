@@ -14,7 +14,9 @@
 
 package formatter
 
-import "io"
+import (
+	"io"
+)
 
 type field struct {
 	Key    *exp
@@ -128,6 +130,12 @@ func (s *field) Format(c *Config, p printer, w io.Writer) error {
 
 	if s.Val == nil {
 		return nil
+	}
+
+	if p.SpacesBeforeAssign > 0 {
+		if err := p.WriteSpaces(w, int(p.SpacesBeforeAssign)); err != nil {
+			return err
+		}
 	}
 
 	if _, err := w.Write([]byte(" = ")); err != nil {

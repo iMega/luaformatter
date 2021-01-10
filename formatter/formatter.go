@@ -49,21 +49,22 @@ func Format(c Config, b []byte, w io.Writer) error {
 	return nil
 }
 
-func DefaultConfig() Config {
-	return Config{
-		IndentSize:    4,
-		MaxLineLength: 80,
-	}
-}
-
 type printer struct {
 	ParentStatement typeStatement
 	Pad             uint8
-	IgnoreFirstPad  bool
+
+	SpacesBeforeAssign  uint8
+	SpacesBeforeComment uint8
+
+	IgnoreFirstPad bool
 }
 
 func (p printer) WritePad(w io.Writer) error {
-	b := bytes.Repeat([]byte(" "), int(p.Pad))
+	return p.WriteSpaces(w, int(p.Pad))
+}
+
+func (p printer) WriteSpaces(w io.Writer, count int) error {
+	b := bytes.Repeat([]byte(" "), count)
 	_, err := w.Write(b)
 
 	return err
