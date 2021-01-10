@@ -75,6 +75,37 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	for i, v := range s.List {
+		if v.Key.Comments != nil {
+			for _, com := range v.Key.Comments {
+				if com.Token.Type != nComment {
+					break
+				}
+
+				if i == 0 {
+					if err := newLine(w); err != nil {
+						return err
+					}
+					if err := p.WritePad(w); err != nil {
+						return err
+					}
+				}
+
+				if i > 0 {
+					if err := p.WriteSpaces(w, int(fl[uint64(i-1)].Val+1)); err != nil {
+						return err
+					}
+				}
+
+				if _, err := w.Write([]byte("-- ")); err != nil {
+					return err
+				}
+
+				if err := com.Format(c, p, w); err != nil {
+					return err
+				}
+			}
+		}
+
 		if v.Key.Element == nil &&
 			v.Key.Table == nil &&
 			v.Key.Func == nil &&
@@ -86,26 +117,12 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 		}
 
 		if p.ParentStatement == tsTable {
-			if err := p.WritePad(w); err != nil {
-				return err
-			}
-		}
-
-		if i == 0 && v.Key.Comments != nil {
-			for _, com := range v.Key.Comments {
-				if com.Token.Type != nComment {
-					break
-				}
-
-				if _, err := w.Write([]byte("-- ")); err != nil {
-					return err
-				}
-
-				if err := com.Format(c, p, w); err != nil {
-					return err
-				}
-
+			if i < len(s.List) {
 				if err := newLine(w); err != nil {
+					return err
+				}
+
+				if err := p.WritePad(w); err != nil {
 					return err
 				}
 			}
@@ -129,27 +146,12 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 			if _, err := w.Write([]byte(",")); err != nil {
 				return err
 			}
+		}
+	}
 
-			if i+1 < len(s.List) {
-				com := s.List[i+1].Key.Comments
-				if com != nil && len(com) > 0 && com[0].Token.Type == nComment {
-					if err := p.WriteSpaces(w, int(fl[uint64(i)].Val)); err != nil {
-						return err
-					}
-
-					if _, err := w.Write([]byte(" -- ")); err != nil {
-						return err
-					}
-
-					if _, err := w.Write(com[0].Token.Lexeme); err != nil {
-						return err
-					}
-				}
-			}
-
-			if err := newLine(w); err != nil {
-				return err
-			}
+	if p.ParentStatement == tsTable {
+		if err := newLine(w); err != nil {
+			return err
 		}
 	}
 
@@ -175,7 +177,7 @@ func (s *fieldlist) Align(c *Config, p printer) map[uint64]fieldLength {
 	for i := 0; i < len(s.List); i++ {
 		item := s.List[i]
 
-		if item.Val != nil && item.Val.Func != nil {
+		if isEndedAlignedBlock(item) {
 			for b, v := range alignBlock {
 				res[b] = fieldLength{
 					Key: MaxKeyLength - v.Key,
@@ -229,4 +231,16 @@ func (s *fieldlist) Align(c *Config, p printer) map[uint64]fieldLength {
 	}
 
 	return res
+}
+
+func isEndedAlignedBlock(f *field) bool {
+	if f.Key.Comments != nil && len(f.Key.Comments) > 1 {
+		for i := 0; i < len(f.Key.Comments); i++ {
+			if i > 0 && f.Key.Comments[uint64(i)].Token.Type == nComment {
+				return true
+			}
+		}
+	}
+
+	return f.Val != nil && f.Val.Func != nil
 }
