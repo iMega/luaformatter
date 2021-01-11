@@ -626,7 +626,8 @@ table = {
 			},
 			wantW: `
 table = {
-    ["a()"] = false, -- comm 1 -- comm 0
+    ["a()"] = false, -- comm 1
+    -- comm 0
     [1 + 1] = true, -- comm 2
     bb = function()
         return 1
@@ -636,6 +637,68 @@ table = {
     ["and"]    = val3, -- comm 6
     [true]     = 1,    -- comm 7
     aa         = nil,  -- comm 8
+}
+`,
+			wantErr: false,
+		},
+		{
+			name: "config for table alignment",
+			args: args{
+				c: Config{
+					IndentSize:    4,
+					MaxLineLength: 80,
+					Alignment: Alignment{
+						Table: AlignmentTable{
+							KeyValuePairs: true,
+							Comments:      true,
+						},
+					},
+				},
+				b: []byte(`
+table = {
+    -- comm a
+    -- comm b
+    ["a()"] = false, -- comm 1
+    -- comm c
+    -- comm d
+    [1+1] = true, -- comm 2
+    -- comm e
+    -- comm f
+    bb = function () return 1 end, -- comm 3
+    -- comm g
+    -- comm h
+    ["1394-E"] = val1, -- comm 4
+    ["UTF-8"] = val2, -- comm 5
+    ["and"] = val3, -- comm 6
+    [true] = 1, -- comm 7
+    aa = nil, -- comm 8
+    -- comm i
+    -- comm j
+}
+`),
+			},
+			wantW: `
+table = {
+    -- comm a
+    -- comm b
+    ["a()"] = false, -- comm 1
+    -- comm c
+    -- comm d
+    [1 + 1] = true, -- comm 2
+    -- comm e
+    -- comm f
+    bb = function()
+        return 1
+    end, -- comm 3
+    -- comm g
+    -- comm h
+    ["1394-E"] = val1, -- comm 4
+    ["UTF-8"]  = val2, -- comm 5
+    ["and"]    = val3, -- comm 6
+    [true]     = 1,    -- comm 7
+    aa         = nil,  -- comm 8
+    -- comm i
+    -- comm j
 }
 `,
 			wantErr: false,

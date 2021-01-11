@@ -74,25 +74,44 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
-	for i, v := range s.List {
+	for i := 0; i < len(s.List); i++ {
+		v := s.List[i]
+
 		if v.Key.Comments != nil {
-			for _, com := range v.Key.Comments {
+			for n := 0; n < len(v.Key.Comments); n++ {
+				com := v.Key.Comments[uint64(n)]
 				if com.Token.Type != nComment {
 					break
 				}
 
-				if i == 0 {
+				if i == 0 && n == 0 {
 					if err := newLine(w); err != nil {
 						return err
 					}
+
+					if err := p.WritePad(w); err != nil {
+						return err
+					}
+				}
+
+				pad := 1
+				if n > 0 {
+					pad = 0
+
+					if err := newLine(w); err != nil {
+						return err
+					}
+
 					if err := p.WritePad(w); err != nil {
 						return err
 					}
 				}
 
 				if i > 0 {
-					if err := p.WriteSpaces(w, int(fl[uint64(i-1)].Val+1)); err != nil {
-						return err
+					if n == 0 {
+						if err := p.WriteSpaces(w, int(fl[uint64(i-1)].Val)+pad); err != nil {
+							return err
+						}
 					}
 				}
 
@@ -177,7 +196,8 @@ func (s *fieldlist) Align(c *Config, p printer) map[uint64]fieldLength {
 	for i := 0; i < len(s.List); i++ {
 		item := s.List[i]
 
-		if isEndedAlignedBlock(item) {
+		isEnded := isEndedAlignedBlock(item)
+		if isEnded || isStartAlignedBlock(item) {
 			for b, v := range alignBlock {
 				res[b] = fieldLength{
 					Key: MaxKeyLength - v.Key,
@@ -188,7 +208,9 @@ func (s *fieldlist) Align(c *Config, p printer) map[uint64]fieldLength {
 			alignBlock = make(map[uint64]fieldLength)
 			MaxKeyLength = 0
 			MaxValueLength = 0
+		}
 
+		if isEnded {
 			continue
 		}
 
@@ -233,7 +255,7 @@ func (s *fieldlist) Align(c *Config, p printer) map[uint64]fieldLength {
 	return res
 }
 
-func isEndedAlignedBlock(f *field) bool {
+func isStartAlignedBlock(f *field) bool {
 	if f.Key.Comments != nil && len(f.Key.Comments) > 1 {
 		for i := 0; i < len(f.Key.Comments); i++ {
 			if i > 0 && f.Key.Comments[uint64(i)].Token.Type == nComment {
@@ -242,5 +264,9 @@ func isEndedAlignedBlock(f *field) bool {
 		}
 	}
 
+	return false
+}
+
+func isEndedAlignedBlock(f *field) bool {
 	return f.Val != nil && f.Val.Func != nil
 }
