@@ -470,7 +470,16 @@ end
 		{
 			name: "table statement",
 			args: args{
-				c: DefaultConfig(),
+				c: Config{
+					IndentSize:    4,
+					MaxLineLength: 80,
+					Alignment: Alignment{
+						Table: AlignmentTable{
+							KeyValuePairs: true,
+							Comments:      true,
+						},
+					},
+				},
 				b: []byte(`
 a = {}
 a = {b = c}
@@ -479,19 +488,51 @@ a = {
     d = e,
 }
 local numbers = {1,2,3}
+a = {
+    b = 1,
+    c = 2,
+    d = 3,
+}
+a = {
+    b = 1,
+    c = 2,
+    d = 3,
+    e = 4,
+}
+local strings = {"012345", "012345", "012345", "012345", "012345"}
+local strings = {"012345", "012345", "012345", "012345", "01234555555555555555"}
+local strings = {"012345", "012345", "012345", "012345", "012345555555555555550"}
+local strings = {"012345", "012345", "012345", "012345", "012345", "012345"}
 `),
 			},
 			wantW: `
 a = {}
 a = {b = c}
+a = {b = c, d = e}
+local numbers = {1, 2, 3}
+a = {b = 1, c = 2, d = 3}
 a = {
-    b = c,
-    d = e,
+    b = 1,
+    c = 2,
+    d = 3,
+    e = 4,
 }
-local numbers = {
-    1,
-    2,
-    3,
+local strings = {"012345", "012345", "012345", "012345", "012345"}
+local strings = {"012345", "012345", "012345", "012345", "01234555555555555555"}
+local strings = {
+    "012345",
+    "012345",
+    "012345",
+    "012345",
+    "012345555555555555550",
+}
+local strings = {
+    "012345",
+    "012345",
+    "012345",
+    "012345",
+    "012345",
+    "012345",
 }
 `,
 			wantErr: false,

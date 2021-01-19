@@ -67,6 +67,7 @@ func (s *fieldlist) GetStatement(prev, cur *element) statement {
 func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 	var fl map[uint64]fieldLength
 
+	isInLine := s.isInline(c, p, w)
 	t := c.Alignment.Table
 	if t.KeyValuePairs || t.Comments {
 		if p.ParentStatement == tsTable {
@@ -136,7 +137,7 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 		}
 
 		if p.ParentStatement == tsTable {
-			if i < len(s.List) {
+			if i < len(s.List) && !isInLine {
 				if err := newLine(w); err != nil {
 					return err
 				}
@@ -153,7 +154,7 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 			return err
 		}
 
-		if p.ParentStatement != tsTable {
+		if p.ParentStatement != tsTable || isInLine {
 			if i < len(s.List)-1 {
 				if _, err := w.Write([]byte(", ")); err != nil {
 					return err
@@ -161,14 +162,14 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 			}
 		}
 
-		if p.ParentStatement == tsTable {
+		if p.ParentStatement == tsTable && !isInLine {
 			if _, err := w.Write([]byte(",")); err != nil {
 				return err
 			}
 		}
 	}
 
-	if p.ParentStatement == tsTable {
+	if p.ParentStatement == tsTable && !isInLine {
 		if err := newLine(w); err != nil {
 			return err
 		}
@@ -180,6 +181,78 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 type fieldLength struct {
 	Key uint8
 	Val uint8
+}
+
+func (s *fieldlist) isInline(c *Config, p printer, w io.Writer) bool {
+	var curpos cursorPosition
+
+	if v, ok := w.(cursorPositioner); ok {
+		curpos = v.Cursor()
+	}
+
+	buf := bytes.NewBuffer([]byte("{}"))
+
+	values := 0
+	keyType := -1
+	isVector := false
+
+	for i := 0; i < len(s.List); i++ {
+		item := s.List[i]
+
+		isEnded := isEndedAlignedBlock(item)
+		if isEnded || isStartAlignedBlock(item) {
+			return false
+		}
+
+		if err := item.Key.Format(c, p, buf); err != nil {
+			return false
+		}
+
+		if item.Key.Element != nil {
+			if keyType == -1 {
+				keyType = item.Key.Element.Token.Type
+			}
+
+			if keyType == item.Key.Element.Token.Type {
+				isVector = true
+			}
+		}
+
+		if s.List[i].Val != nil {
+			values++
+			buf.WriteString(" = ")
+			if err := s.List[i].Val.Format(c, p, buf); err != nil {
+				return false
+			}
+		}
+
+		if i < len(s.List)-1 {
+			buf.WriteString(", ")
+		}
+
+		a := buf.String()
+		_ = a
+
+		curpos.Col += uint64(buf.Len())
+		buf.Reset()
+		if curpos.Col > uint64(c.MaxLineLength+1) {
+			return false
+		}
+
+		if i > 2 && values > 0 {
+			return false
+		}
+	}
+
+	if !isVector {
+		return false
+	}
+
+	if isVector && len(s.List) > 5 {
+		return false
+	}
+
+	return true
 }
 
 func (s *fieldlist) Align(c *Config, p printer) map[uint64]fieldLength {
@@ -256,6 +329,10 @@ func (s *fieldlist) Align(c *Config, p printer) map[uint64]fieldLength {
 }
 
 func isStartAlignedBlock(f *field) bool {
+	if f.Key.Table != nil {
+		return true
+	}
+
 	if f.Key.Comments != nil && len(f.Key.Comments) > 1 {
 		for i := 0; i < len(f.Key.Comments); i++ {
 			if i > 0 && f.Key.Comments[uint64(i)].Token.Type == nComment {

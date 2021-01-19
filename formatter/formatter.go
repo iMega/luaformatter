@@ -25,6 +25,8 @@ const (
 )
 
 func Format(c Config, b []byte, w io.Writer) error {
+	ww := &writer{Writer: w}
+
 	doc, err := parse(b)
 	if err != nil {
 		return err
@@ -37,12 +39,12 @@ func Format(c Config, b []byte, w io.Writer) error {
 	p := printer{}
 
 	if st, ok := doc.Body.(*body); ok {
-		if err := st.Format(&c, p, w); err != nil {
+		if err := st.Format(&c, p, ww); err != nil {
 			return err
 		}
 	}
 
-	if err := newLine(w); err != nil {
+	if err := newLine(ww); err != nil {
 		return err
 	}
 
@@ -71,9 +73,11 @@ func (p printer) WriteSpaces(w io.Writer, count int) error {
 }
 
 func newLine(w io.Writer) error {
-	_, err := w.Write([]byte(newLineSymbol))
+	if v, ok := w.(newLineWriter); ok {
+		return v.NewLine()
+	}
 
-	return err
+	return nil
 }
 
 func space(w io.Writer) error {

@@ -39,16 +39,9 @@ local function is_evil(alignment)
     return alignment < 100
 end
 
-local player = {
-    name = "Jack",
-    class = "Rogue",
-}
+local player = {name = "Jack", class = "Rogue"}
 
-table = {
-    ["1394-E"] = val1,
-    ["UTF-8"] = val2,
-    ["and"] = val3,
-}
+table = {["1394-E"] = val1, ["UTF-8"] = val2, ["and"] = val3}
 
 local name = "LuaRocks"
 local sentence = 'The name of the program is "LuaRocks"'
@@ -90,15 +83,9 @@ local data = get_data("KRP" .. tostring(area_number))
 local data = get_data("KRP" .. tostring(area_number))
 local data = get_data("KRP") .. tostring(area_number)
 
-local an_instance = a_module.new({
-    a_parameter = 42,
-    another_parameter = "yay",
-})
+local an_instance = a_module.new({a_parameter = 42, another_parameter = "yay"})
 
-local luke = {
-    jedi = true,
-    age = 28,
-}
+local luke = {jedi = true, age = 28}
 
 -- bad
 local is_jedi = luke["jedi"]
