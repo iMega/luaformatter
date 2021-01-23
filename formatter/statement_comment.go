@@ -19,7 +19,8 @@ import (
 )
 
 type commentStatement struct {
-	Element *element
+	Element   *element
+	IsNewline bool
 }
 
 func (commentStatement) InnerStatement(prev, cur *element) (bool, statement) {

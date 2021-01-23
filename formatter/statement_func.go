@@ -114,15 +114,11 @@ func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
-	if err := newLine(w); err != nil {
-		return err
-	}
-
 	inner := printer{
 		Pad: p.Pad + c.IndentSize,
 	}
-	st, ok := s.Body.(*body)
 
+	st, ok := s.Body.(*body)
 	if ok {
 		if err := st.Format(c, inner, w); err != nil {
 			return err
@@ -132,6 +128,12 @@ func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 	if st.Qty > 0 {
 		// a = function()
 		// end
+		if err := newLine(w); err != nil {
+			return err
+		}
+	}
+
+	if st == nil || len(st.Blocks) == 0 {
 		if err := newLine(w); err != nil {
 			return err
 		}

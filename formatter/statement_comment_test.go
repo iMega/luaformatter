@@ -90,6 +90,7 @@ func TestParseComment(t *testing.T) {
 									EndColumn:   15,
 								},
 							},
+							IsNewline: true,
 						},
 					},
 					Qty: 2,

@@ -10,10 +10,15 @@ type Config struct {
 	Alignment Alignment `mapstructure:"alignment"`
 }
 
+const (
+	defaultIndentSize    = 4
+	defaultMaxLineLength = 80
+)
+
 func DefaultConfig() Config {
 	return Config{
-		IndentSize:    4,
-		MaxLineLength: 80,
+		IndentSize:    defaultIndentSize,
+		MaxLineLength: defaultMaxLineLength,
 	}
 }
 

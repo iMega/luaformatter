@@ -36,7 +36,9 @@ func Format(c Config, b []byte, w io.Writer) error {
 		return nil
 	}
 
-	p := printer{}
+	p := printer{
+		IgnoreFirstPad: true,
+	}
 
 	if st, ok := doc.Body.(*body); ok {
 		if err := st.Format(&c, p, ww); err != nil {

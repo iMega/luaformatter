@@ -95,10 +95,6 @@ func (s *ifStatement) Format(c *Config, p printer, w io.Writer) error {
 		return err
 	}
 
-	if err := newLine(w); err != nil {
-		return err
-	}
-
 	if st, ok := s.Body.(*body); ok {
 		ip := p
 		ip.Pad = p.Pad + c.IndentSize
@@ -203,10 +199,6 @@ func (s *elseifStatement) Format(c *Config, p printer, w io.Writer) error {
 		return err
 	}
 
-	if err := newLine(w); err != nil {
-		return err
-	}
-
 	if st, ok := s.Body.(*body); ok {
 		ip := p
 		ip.Pad = p.Pad + c.IndentSize
@@ -257,10 +249,6 @@ func (s *elseStatement) GetStatement(prev, cur *element) statement {
 
 func (s *elseStatement) Format(c *Config, p printer, w io.Writer) error {
 	if _, err := w.Write([]byte("else")); err != nil {
-		return err
-	}
-
-	if err := newLine(w); err != nil {
 		return err
 	}
 

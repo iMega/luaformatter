@@ -112,7 +112,9 @@ func (b *body) GetStatement(prev, cur *element) statement {
 		return &repeatStatement{}
 
 	case nComment:
-		return &commentStatement{}
+		return &commentStatement{
+			IsNewline: prev != nil && prev.Token.StartLine != cur.Token.StartLine || cur.Token.TC > 1,
+		}
 
 	case nCommentLong:
 		return &commentStatement{}
@@ -129,8 +131,20 @@ func (b *body) Format(c *Config, p printer, w io.Writer) error {
 		st := b.Blocks[uint64(i)]
 
 		if !p.IgnoreFirstPad {
-			if _, ok := st.(*newlineStatement); !ok {
+			_, newlineOk := st.(*newlineStatement)
+			commentSt, commentOk := st.(*commentStatement)
+			if !newlineOk && !commentOk || commentSt != nil && commentSt.IsNewline {
+				if err := newLine(w); err != nil {
+					return err
+				}
+
 				if err := p.WritePad(w); err != nil {
+					return err
+				}
+			}
+
+			if commentSt != nil && !commentSt.IsNewline {
+				if err := space(w); err != nil {
 					return err
 				}
 			}
@@ -140,16 +154,6 @@ func (b *body) Format(c *Config, p printer, w io.Writer) error {
 
 		if err := st.Format(c, p, w); err != nil {
 			return err
-		}
-
-		if int(b.Qty)-1 == i {
-			continue
-		}
-
-		if _, ok := st.(*newlineStatement); !ok {
-			if err := newLine(w); err != nil {
-				return err
-			}
 		}
 	}
 

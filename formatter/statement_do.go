@@ -55,13 +55,10 @@ func (s *doStatement) Format(c *Config, p printer, w io.Writer) error {
 		return err
 	}
 
-	if err := newLine(w); err != nil {
-		return err
-	}
-
-	if st, ok := s.Body.(*body); ok {
+	st, ok := s.Body.(*body)
+	if ok {
 		ip := p
-		ip.Pad = p.Pad + 4
+		ip.Pad = p.Pad + c.IndentSize
 
 		if err := st.Format(c, ip, w); err != nil {
 			return err
@@ -70,6 +67,20 @@ func (s *doStatement) Format(c *Config, p printer, w io.Writer) error {
 		if err := newLine(w); err != nil {
 			return err
 		}
+	}
+
+	if st == nil || len(st.Blocks) == 0 {
+		if err := newLine(w); err != nil {
+			return err
+		}
+	}
+
+	if err := p.WritePad(w); err != nil {
+		return err
+	}
+
+	if _, err := w.Write([]byte("end")); err != nil {
+		return err
 	}
 
 	return nil
