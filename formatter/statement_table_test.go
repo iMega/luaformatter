@@ -39,6 +39,7 @@ table = {
 								List: []*exp{
 									{
 										Prefixexp: &prefixexpStatement{
+											IsUnknow: true,
 											Element: &element{
 												Token: &lexmachine.Token{
 													Type:        nID,
@@ -190,6 +191,7 @@ table = {
 								List: []*exp{
 									{
 										Prefixexp: &prefixexpStatement{
+											IsUnknow: true,
 											Element: &element{
 												Token: &lexmachine.Token{
 													Type:        nID,
@@ -371,6 +373,7 @@ table = { -- 1
 								List: []*exp{
 									{
 										Prefixexp: &prefixexpStatement{
+											IsUnknow: true,
 											Element: &element{
 												Token: &lexmachine.Token{
 													Type:        nID,
@@ -570,6 +573,7 @@ table = { -- 0.1
 								List: []*exp{
 									{
 										Prefixexp: &prefixexpStatement{
+											IsUnknow: true,
 											Element: &element{
 												Token: &lexmachine.Token{
 													Type:        nID,

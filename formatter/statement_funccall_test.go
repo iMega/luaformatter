@@ -44,6 +44,7 @@ funccall()
 										EndColumn:   8,
 									},
 								},
+								IsUnknow: true,
 							},
 							Explist: &explist{
 								List: []*exp{
@@ -83,6 +84,7 @@ funccall "literal"
 										EndColumn:   8,
 									},
 								},
+								IsUnknow: true,
 							},
 							Explist: &explist{
 								List: []*exp{

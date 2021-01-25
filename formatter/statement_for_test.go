@@ -208,6 +208,7 @@ end
 																	Blocks: map[uint64]statement{
 																		0: &funcCallStatement{
 																			Prefixexp: &prefixexpStatement{
+																				IsUnknow: true,
 																				Element: &element{
 																					Token: &lexmachine.Token{
 																						Type:        nID,
@@ -360,6 +361,7 @@ for i=10,1,-1 do print(i) end
 											Blocks: map[uint64]statement{
 												0: &funcCallStatement{
 													Prefixexp: &prefixexpStatement{
+														IsUnknow: true,
 														Element: &element{
 															Token: &lexmachine.Token{
 																Type:        nID,
@@ -504,6 +506,7 @@ for i, pkg in ipairs(packages) do print(i) end
 											Blocks: map[uint64]statement{
 												0: &funcCallStatement{
 													Prefixexp: &prefixexpStatement{
+														IsUnknow: true,
 														Element: &element{
 															Token: &lexmachine.Token{
 																Type:        nID,

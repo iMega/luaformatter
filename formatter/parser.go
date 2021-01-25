@@ -52,6 +52,10 @@ func parse(code []byte) (*document, error) {
 		// fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
 
 		for isBlockEnd, ok := currentStatement.IsEnd(prevElement, curElement); ok; isBlockEnd, ok = currentStatement.IsEnd(prevElement, curElement) {
+			if currentStatement.TypeOf() == tsUnknow && curElement.Token.Type == nComma {
+				break
+			}
+
 			cs := chainSt.ExtractPrev()
 			if cs == nil {
 				currentBody = doc.Body
@@ -102,11 +106,22 @@ func parse(code []byte) (*document, error) {
 			}
 
 			if currentStatement.TypeOf() == tsPrefixexpStatement && st.TypeOf() == tsFuncCallStatement {
-				st.AppendStatement(chainSt.ExctractStatement(tsPrefixexpStatement))
+				extracted := chainSt.ExctractStatement(tsUnknow)
+				if extracted == nil {
+					extracted = chainSt.ExctractStatement(tsPrefixexpStatement)
+				}
+
+				st.AppendStatement(extracted)
+				chainSt.Prev().AppendStatement(st)
+			} else if currentStatement.TypeOf() == tsUnknow && st.TypeOf() == tsFuncCallStatement {
+				st.AppendStatement(chainSt.ExctractStatement(tsUnknow))
 				chainSt.Prev().AppendStatement(st)
 			} else if st.TypeOf() == tsAssignment {
 				isPrefixexpConvertAssignment = true
-				currentStatement = chainSt.ExctractStatement(tsPrefixexpStatement)
+				currentStatement = chainSt.ExctractStatement(tsUnknow)
+				if currentStatement == nil {
+					currentStatement = chainSt.ExctractStatement(tsPrefixexpStatement)
+				}
 				chainSt.Prev().AppendStatement(st)
 			} else {
 				currentStatement.AppendStatement(st)

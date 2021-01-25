@@ -46,6 +46,7 @@ func TestParsePrefixexp(t *testing.T) {
 						},
 						1: &funcCallStatement{
 							Prefixexp: &prefixexpStatement{
+								IsUnknow: true,
 								Element: &element{
 									Token: &lexmachine.Token{
 										Type:        nID,
@@ -376,6 +377,7 @@ r["ff"]["dd"].name.name2["ee"]()
 					Blocks: map[uint64]statement{
 						0: &funcCallStatement{
 							Prefixexp: &prefixexpStatement{
+								IsUnknow: true,
 								Element: &element{
 									Token: &lexmachine.Token{
 										Type:        nID,
@@ -494,6 +496,7 @@ a["bb"]["cc"].dd.ee["ff"], g["hh"] = 1, 2
 								List: []*exp{
 									{
 										Prefixexp: &prefixexpStatement{
+											IsUnknow: true,
 											Element: &element{
 												Token: &lexmachine.Token{
 													Type:        nID,

@@ -79,7 +79,7 @@ func (b *body) GetStatement(prev, cur *element) statement {
 
 	switch cur.Token.Type {
 	case nID:
-		return &prefixexpStatement{IsUnknow: false}
+		return &prefixexpStatement{IsUnknow: true}
 
 	case nFor:
 		return &forStatement{}

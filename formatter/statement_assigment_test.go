@@ -168,6 +168,7 @@ myvar = function() end
 								List: []*exp{
 									{
 										Prefixexp: &prefixexpStatement{
+											IsUnknow: true,
 											Element: &element{
 												Token: &lexmachine.Token{
 													Type:        nID,
@@ -226,6 +227,7 @@ myvar = 1
 								List: []*exp{
 									{
 										Prefixexp: &prefixexpStatement{
+											IsUnknow: true,
 											Element: &element{
 												Token: &lexmachine.Token{
 													Type:        nID,
@@ -286,6 +288,7 @@ a, b = 1, 2
 								List: []*exp{
 									{
 										Prefixexp: &prefixexpStatement{
+											IsUnknow: true,
 											Element: &element{
 												Token: &lexmachine.Token{
 													Type:        nID,

@@ -174,6 +174,7 @@ print(c)
 											List: []*exp{
 												{
 													Prefixexp: &prefixexpStatement{
+														IsUnknow: true,
 														Element: &element{
 															Token: &lexmachine.Token{
 																Type:        nID,
@@ -283,6 +284,7 @@ print(c)
 													List: []*exp{
 														{
 															Prefixexp: &prefixexpStatement{
+																IsUnknow: true,
 																Element: &element{
 																	Token: &lexmachine.Token{
 																		Type:        nID,
@@ -392,6 +394,7 @@ print(c)
 													List: []*exp{
 														{
 															Prefixexp: &prefixexpStatement{
+																IsUnknow: true,
 																Element: &element{
 																	Token: &lexmachine.Token{
 																		Type:        nID,
@@ -462,6 +465,7 @@ print(c)
 												List: []*exp{
 													{
 														Prefixexp: &prefixexpStatement{
+															IsUnknow: true,
 															Element: &element{
 																Token: &lexmachine.Token{
 																	Type:        nID,
@@ -528,6 +532,7 @@ print(c)
 								List: []*exp{
 									{
 										Prefixexp: &prefixexpStatement{
+											IsUnknow: true,
 											Element: &element{
 												Token: &lexmachine.Token{
 													Type:        nID,
@@ -577,6 +582,7 @@ print(c)
 						},
 						4: &funcCallStatement{
 							Prefixexp: &prefixexpStatement{
+								IsUnknow: true,
 								Element: &element{
 									Token: &lexmachine.Token{
 										Type:        nID,
@@ -746,6 +752,7 @@ end
 								Blocks: map[uint64]statement{
 									0: &funcCallStatement{
 										Prefixexp: &prefixexpStatement{
+											IsUnknow: true,
 											Element: &element{
 												Token: &lexmachine.Token{
 													Type:        nID,
@@ -780,6 +787,7 @@ end
 									},
 									1: &funcCallStatement{
 										Prefixexp: &prefixexpStatement{
+											IsUnknow: true,
 											Element: &element{
 												Token: &lexmachine.Token{
 													Type:        nID,

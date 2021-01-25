@@ -56,9 +56,9 @@ func (s *prefixexpStatement) InnerStatement(prev, cur *element) (bool, statement
 }
 
 func (s *prefixexpStatement) TypeOf() typeStatement {
-	// if s.IsUnknow {
-	// 	return tsUnknow
-	// }
+	if s.IsUnknow {
+		return tsUnknow
+	}
 
 	return tsPrefixexpStatement
 }
@@ -99,8 +99,7 @@ func (s *prefixexpStatement) IsEnd(prev, cur *element) (bool, bool) {
 	}
 
 	if cur.Token.Type == nComma { // assignment statement
-		// return false, true ///////////
-		return false, false
+		return false, true
 	}
 
 	if cur.Token.Type == nDot { // prefixexpStatement
