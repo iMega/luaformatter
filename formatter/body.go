@@ -37,7 +37,7 @@ func (body) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
-func (body) TypeOf() typeStatement { return tsBody }
+func (body) TypeOf() typeStatement { return tsNone }
 
 func (b *body) IsEnd(prev, cur *element) (bool, bool) {
 	if cur.Token.Type == nEnd {
@@ -79,7 +79,7 @@ func (b *body) GetStatement(prev, cur *element) statement {
 
 	switch cur.Token.Type {
 	case nID:
-		return &prefixexpStatement{}
+		return &prefixexpStatement{IsUnknow: false}
 
 	case nFor:
 		return &forStatement{}
@@ -113,7 +113,8 @@ func (b *body) GetStatement(prev, cur *element) statement {
 
 	case nComment:
 		return &commentStatement{
-			IsNewline: prev != nil && prev.Token.StartLine != cur.Token.StartLine || cur.Token.TC > 1,
+			IsNewline: prev != nil && prev.Token.StartLine != cur.Token.StartLine ||
+				prev == nil && cur.Token.TC > 1,
 		}
 
 	case nCommentLong:

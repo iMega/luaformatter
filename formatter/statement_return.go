@@ -25,7 +25,7 @@ func (returnStatement) InnerStatement(prev, cur *element) (bool, statement) {
 }
 
 func (returnStatement) TypeOf() typeStatement {
-	return tsReturn
+	return tsNone
 }
 
 func (s *returnStatement) IsEnd(prev, cur *element) (bool, bool) {

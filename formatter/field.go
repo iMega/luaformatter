@@ -29,7 +29,7 @@ func (field) InnerStatement(prev, cur *element) (bool, statement) {
 }
 
 func (field) TypeOf() typeStatement {
-	return tsField
+	return tsNone
 }
 
 func (s *field) IsEnd(prev, cur *element) (bool, bool) {

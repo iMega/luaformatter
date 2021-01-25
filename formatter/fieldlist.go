@@ -31,7 +31,7 @@ func (fieldlist) InnerStatement(prev, cur *element) (bool, statement) {
 }
 
 func (fieldlist) TypeOf() typeStatement {
-	return tsFieldList
+	return tsNone
 }
 
 func (s *fieldlist) IsEnd(prev, cur *element) (bool, bool) {

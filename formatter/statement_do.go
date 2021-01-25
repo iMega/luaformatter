@@ -27,7 +27,7 @@ func (doStatement) InnerStatement(prev, cur *element) (bool, statement) {
 }
 
 func (doStatement) TypeOf() typeStatement {
-	return tsIf
+	return tsNone
 }
 
 func (s *doStatement) IsEnd(prev, cur *element) (bool, bool) {

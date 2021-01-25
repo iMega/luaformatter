@@ -25,7 +25,7 @@ func (explist) InnerStatement(prev, cur *element) (bool, statement) {
 }
 
 func (explist) TypeOf() typeStatement {
-	return tsExpList
+	return tsNone
 }
 
 func (s *explist) IsEnd(prev, cur *element) (bool, bool) {

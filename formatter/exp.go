@@ -55,7 +55,7 @@ func (exp) InnerStatement(prev, cur *element) (bool, statement) {
 }
 
 func (exp) TypeOf() typeStatement {
-	return tsExp
+	return tsNone
 }
 
 type tokenID int

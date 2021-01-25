@@ -26,6 +26,7 @@ type prefixexpStatement struct {
 	Prefixexp        *prefixexpStatement
 	Comments         map[uint64]*element
 	Enclosed         bool
+	IsUnknow         bool
 }
 
 func (s *prefixexpStatement) InnerStatement(prev, cur *element) (bool, statement) {
@@ -54,7 +55,11 @@ func (s *prefixexpStatement) InnerStatement(prev, cur *element) (bool, statement
 	return false, nil
 }
 
-func (prefixexpStatement) TypeOf() typeStatement {
+func (s *prefixexpStatement) TypeOf() typeStatement {
+	// if s.IsUnknow {
+	// 	return tsUnknow
+	// }
+
 	return tsPrefixexpStatement
 }
 
@@ -94,6 +99,7 @@ func (s *prefixexpStatement) IsEnd(prev, cur *element) (bool, bool) {
 	}
 
 	if cur.Token.Type == nComma { // assignment statement
+		// return false, true ///////////
 		return false, false
 	}
 

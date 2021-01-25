@@ -40,17 +40,10 @@ const (
 	tsNone = iota
 	tsAssignment
 	tsFunction
-	tsIf
-	tsBody
-	tsReturn
-	tsExp
-	tsExpList
 	tsPrefixexpStatement
 	tsFuncCallStatement
 	tsTable
-	tsFieldList
-	tsField
-	tsRepeat
+	tsUnknow
 )
 
 // chunk ::= block
