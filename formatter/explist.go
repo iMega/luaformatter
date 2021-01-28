@@ -61,19 +61,59 @@ func (s *explist) GetStatement(prev, cur *element) statement {
 }
 
 func (s *explist) Format(c *Config, p printer, w io.Writer) error {
-	l := len(s.List)
+	isInLine := s.isInline(c, p, w)
+	sep := []byte(", ")
+	if !isInLine {
+		sep = []byte(",")
+		p.Pad += c.IndentSize
+	}
 
-	for idx, e := range s.List {
-		if err := e.Format(c, p, w); err != nil {
+	for i := 0; i < len(s.List); i++ {
+		if !isInLine {
+			if err := newLine(w); err != nil {
+				return err
+			}
+
+			if err := p.WritePad(w); err != nil {
+				return err
+			}
+		}
+
+		if err := s.List[i].Format(c, p, w); err != nil {
 			return err
 		}
 
-		if idx < l-1 {
-			if _, err := w.Write([]byte(", ")); err != nil {
+		if i < len(s.List)-1 {
+			if _, err := w.Write(sep); err != nil {
 				return err
 			}
 		}
 	}
 
+	if !isInLine {
+		if err := newLine(w); err != nil {
+			return err
+		}
+
+		p.Pad -= c.IndentSize
+		if err := p.WritePad(w); err != nil {
+			return err
+		}
+	}
+
 	return nil
+}
+
+func (s *explist) isInline(c *Config, p printer, w io.Writer) bool {
+	if len(s.List) == 1 {
+		return true
+	}
+
+	for _, item := range s.List {
+		if item.Table != nil || item.Func != nil {
+			return false
+		}
+	}
+
+	return true
 }

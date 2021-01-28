@@ -1,0 +1,211 @@
+-- bad
+local my_table = {"hello", "world"}
+using_a_callback(
+    x,
+    function(...)
+        print("hello")
+    end
+)
+
+-- good
+local my_table = {"hello", "world"}
+using_a_callback(
+    x,
+    function(...)
+        print("hello")
+    end
+)
+
+-- okay
+local message = "Hello, " .. user .. "! This is your day # " .. day .. " in our platform!"
+
+-- bad
+local function hello(name, language)
+    -- code
+end
+
+-- good
+local function hello(name, language)
+    -- code
+end
+
+-- bad
+local function foo()
+    -- code
+end
+local function bar()
+    -- code
+end
+
+-- good
+local function foo()
+    -- code
+end
+
+local function bar()
+    -- code
+end
+
+-- bad
+local a = 1
+local long_identifier = 2
+
+-- good
+local a = 1
+local long_identifier = 2
+
+-- okay
+sys_command(form, UI_FORM_UPDATE_NODE, "a", FORM_NODE_HIDDEN, false)
+sys_command(form, UI_FORM_UPDATE_NODE, "sample", FORM_NODE_VISIBLE, false)
+
+function manif.load_manifest(repo_url, lua_version)
+    assert(type(repo_url) == "string")
+    assert(type(lua_version) == "string" or not lua_version)
+
+    -- ...
+end
+
+-- bad
+local total_score = review_score .. ""
+
+-- good
+local total_score = tostring(review_score)
+
+local bar = require("foo.bar") -- requiring the module
+
+bar.say("hello") -- using the module
+
+-- bad
+local skt = require("socket")
+
+-- @module foo.bar
+local bar = {}
+
+function bar.say(greeting)
+    print(greeting)
+end
+
+-- bad
+local mp = require("MessagePack")
+mp.set_integer("unsigned")
+
+-- good
+local messagepack = require("messagepack")
+local mpack = messagepack.new({integer = "unsigned"})
+
+-- bad
+local bla = require("bla")
+
+-- good
+local bla = require("bla")
+
+-- @module myproject.myclass
+local myclass = {}
+
+-- class table
+local MyClass = {}
+
+function MyClass:some_method()
+    -- code
+end
+
+function MyClass:another_one()
+    self:some_method()
+    -- more code
+end
+
+function myclass.new()
+    local self = {}
+    setmetatable(
+        self,
+        {__index = MyClass}
+    )
+    return self
+end
+
+return myclass
+
+-- bad
+my_object.my_method(my_object)
+-- good
+my_object:my_method()
+
+if warning >= 600 and warning <= 699 then
+    print("no whitespace warnings")
+elseif warning == 542 then
+    -- pass
+else
+    print("got a warning: " .. warning)
+end
+
+local foo = 1
+local bar = foo
+
+bar = 9
+
+print(foo, bar) -- => 1
+
+local foo = {1, 2}
+local bar = foo
+
+bar[0] = 9
+foo[1] = 3
+
+print(foo[0], bar[0]) -- => 9
+print(foo[1], bar[1]) -- => 3
+print(foo[2], bar[2]) -- => 2
+
+-- bad
+local player = {}
+player.name = 'Jack'
+player.class = 'Rogue'
+
+-- good
+local player = {name = 'Jack', class = 'Rogue'}
+
+-- bad
+local player = {
+    attack = function()
+        -- ...stuff...
+    end,
+}
+
+-- good
+local function attack()
+end
+
+local player = {attack = attack}
+
+-- nils don't count
+local list = {}
+list[0] = nil
+list[1] = 'item'
+
+print(#list) -- 0
+print(select('#', list)) -- 1
+
+-- bad
+local me = {
+    fullname = function(this)
+        return this.first_name + ' ' + this.last_name
+    end,
+}
+
+-- good
+local me = {
+    fullname = function(self)
+        return self.first_name + ' ' + self.last_name
+    end,
+}
+
+-- bad
+local name = "Bob Parr"
+
+-- good
+local name = 'Bob Parr'
+
+-- bad
+local fullName = "Bob " .. self.lastName
+
+-- good
+local fullName = 'Bob ' .. self.lastName

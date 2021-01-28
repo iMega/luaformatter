@@ -13,9 +13,12 @@ if not ok then
 end
 
 -- good
-use_callback(x, function(k)
-    return k.last
-end)
+use_callback(
+    x,
+    function(k)
+        return k.last
+    end
+)
 
 -- good
 if test then
@@ -52,10 +55,16 @@ local numbers = {1, 2, 3}
 numbers = {1, 2, 3}
 numbers = {1, 2, 3}
 local strings = {"hello", "Lua", "world"}
-dog.set("attr", {age = "1 year", breed = "Bernese Mountain Dog"})
+dog.set(
+    "attr",
+    {age = "1 year", breed = "Bernese Mountain Dog"}
+)
 
 -- good
 local x = y * 9
 local numbers = {1, 2, 3}
 local strings = {"hello", "Lua", "world"}
-dog.set("attr", {age = "1 year", breed = "Bernese Mountain Dog"})
+dog.set(
+    "attr",
+    {age = "1 year", breed = "Bernese Mountain Dog"}
+)
