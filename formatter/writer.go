@@ -1,12 +1,15 @@
 package formatter
 
 import (
+	"errors"
 	"io"
 )
 
 type newLineWriter interface {
 	NewLine() error
 }
+
+var errCastingType = errors.New("failed casting interface to type")
 
 type cursorPositioner interface {
 	Cursor() cursorPosition

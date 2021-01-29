@@ -17,7 +17,8 @@ using_a_callback(
 )
 
 -- okay
-local message = "Hello, " .. user .. "! This is your day # " .. day .. " in our platform!"
+local message = "Hello, " .. user .. "! This is your day # " .. day ..
+    " in our platform!"
 
 -- bad
 local function hello(name, language)

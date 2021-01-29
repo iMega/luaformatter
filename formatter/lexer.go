@@ -95,9 +95,24 @@ type element struct {
 }
 
 func (s *element) Format(c *Config, p printer, w io.Writer) error {
+	// if s.Token.Type == nString {
+	// 	return s.FormatString(c, p, w)
+	// }
+
 	_, err := w.Write(s.Token.Lexeme)
 
 	return err
+}
+
+func (s *element) FormatString(c *Config, p printer, w io.Writer) error {
+	curpos, ok := w.(cursorPositioner)
+	if !ok {
+		return errCastingType
+	}
+
+	_ = curpos
+
+	return nil
 }
 
 func (s *scanner) Scan() (element, error) {

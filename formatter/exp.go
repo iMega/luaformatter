@@ -15,6 +15,7 @@
 package formatter
 
 import (
+	"bytes"
 	"io"
 )
 
@@ -500,8 +501,39 @@ func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 			return err
 		}
 
-		if err := space(w); err != nil {
-			return err
+		if s.Binop.Token.Type != nConcat {
+			if err := space(w); err != nil {
+				return err
+			}
+		}
+
+		if s.Binop.Token.Type == nConcat {
+			curpos, ok := w.(cursorPositioner)
+			if !ok {
+				return nil
+			}
+
+			buf := bytes.NewBuffer(nil)
+			if err := s.Exp.Format(c, p, buf); err != nil {
+				return err
+			}
+
+			if curpos.Cursor().Col+uint64(buf.Len()) > uint64(c.MaxLineLength) {
+				if err := newLine(w); err != nil {
+					return err
+				}
+
+				np := p
+				np.Pad += c.IndentSize
+
+				if err := np.WritePad(w); err != nil {
+					return err
+				}
+			} else {
+				if err := space(w); err != nil {
+					return err
+				}
+			}
 		}
 	}
 
@@ -512,4 +544,8 @@ func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	return nil
+}
+
+func (s *exp) isInline(c *Config, p printer, w io.Writer) bool {
+	return false
 }
