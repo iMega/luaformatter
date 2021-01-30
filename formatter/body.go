@@ -37,7 +37,7 @@ func (body) InnerStatement(prev, cur *element) (bool, statement) {
 	return false, nil
 }
 
-func (body) TypeOf() typeStatement { return tsNone }
+func (body) TypeOf() typeStatement { return tsBody }
 
 func (b *body) IsEnd(prev, cur *element) (bool, bool) {
 	if cur.Token.Type == nEnd {

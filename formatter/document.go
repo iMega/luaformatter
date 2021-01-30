@@ -44,6 +44,7 @@ const (
 	tsFuncCallStatement
 	tsTable
 	tsUnknow
+	tsBody
 )
 
 // chunk ::= block

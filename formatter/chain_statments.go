@@ -61,6 +61,10 @@ func (cs *chainStatments) ExctractStatement(ts typeStatement) statement {
 		if cs.chain[i].TypeOf() == ts {
 			item = i
 		}
+
+		if cs.chain[i].TypeOf() == tsBody {
+			break
+		}
 	}
 
 	if item == -1 {
