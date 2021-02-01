@@ -14,18 +14,24 @@
 
 package formatter
 
+import "errors"
+
 type chainStatments struct {
 	chain []statement
 }
 
-func (cs *chainStatments) Append(st statement) {
+var errDuplicateStatements = errors.New("statement does exists")
+
+func (cs *chainStatments) Append(st statement) error {
 	for i := len(cs.chain) - 1; i >= 0; i-- {
 		if cs.chain[i] == st {
-			return
+			return errDuplicateStatements
 		}
 	}
 
 	cs.chain = append(cs.chain, st)
+
+	return nil
 }
 
 func (cs *chainStatments) ExtractPrev() statement {

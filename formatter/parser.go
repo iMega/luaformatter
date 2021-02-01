@@ -76,8 +76,7 @@ func parse(code []byte) (*document, error) {
 		if b != currentBody {
 			currentBody = b
 
-			if b != chainSt.First() {
-				chainSt.Append(b)
+			if err := chainSt.Append(b); err == nil {
 				currentStatement = b
 			}
 		}
