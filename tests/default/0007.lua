@@ -78,7 +78,7 @@ bar.say("hello") -- using the module
 -- bad
 local skt = require("socket")
 
---- @module foo.bar
+-- @module foo.bar
 local bar = {}
 
 function bar.say(greeting)
@@ -99,7 +99,7 @@ local bla = require "bla"
 -- good
 local bla = require("bla")
 
---- @module myproject.myclass
+-- @module myproject.myclass
 local myclass = {}
 
 -- class table

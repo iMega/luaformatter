@@ -15,6 +15,7 @@
 package formatter
 
 import (
+	"bytes"
 	"io"
 )
 
@@ -50,7 +51,12 @@ func (s *commentStatement) GetStatement(prev, cur *element) statement {
 }
 
 func (s *commentStatement) Format(c *Config, p printer, w io.Writer) error {
-	if _, err := w.Write([]byte("-- ")); err != nil {
+	prefix := []byte("-- ")
+	if len(s.Element.Token.Lexeme) == 0 || bytes.HasPrefix(s.Element.Token.Lexeme, []byte("---")) {
+		prefix = []byte("--")
+	}
+
+	if _, err := w.Write(prefix); err != nil {
 		return err
 	}
 

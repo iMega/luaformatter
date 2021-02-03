@@ -17,6 +17,7 @@ package formatter
 import (
 	"bytes"
 	"io"
+	"unicode"
 
 	"github.com/timtadh/lexmachine"
 	"github.com/timtadh/lexmachine/machines"
@@ -38,13 +39,16 @@ func newScanner(code []byte) (*scanner, error) {
 	lexer.Add([]byte(`([a-zA-Z_][a-zA-Z0-9_:]*)`), token(nID))
 	lexer.Add([]byte(`\s*\n\s*\n\s*`), token(nLF))
 	lexer.Add([]byte("( |\t|\f|\r|\n)+"), skip)
-	lexer.Add([]byte(`--[^\[\[]( |\S)*`), comment(nComment))
-	lexer.Add([]byte(`--\[\[([^\]\]])*\]\]`), commentLong(nCommentLong))
-	lexer.Add([]byte(`::([^::])*::`), token(nLabel))
+	lexer.Add([]byte(`::[^:]*::`), token(nLabel))
+
+	lexer.Add([]byte(`--[^[\n]+[^\n]*`), comment(nComment))
+	lexer.Add([]byte(`--\[\[[^]]*\]\]`), commentLong(nCommentLong))
+	lexer.Add([]byte(`--\n`), comment(nComment))
+	lexer.Add([]byte(`--\r\n`), comment(nComment))
 
 	lexer.Add([]byte(`"[^"]*"`), token(nString))
 	lexer.Add([]byte(`'[^']*'`), token(nString))
-	lexer.Add([]byte(`\[\[[^\]\]]*\]\]`), token(nString))
+	lexer.Add([]byte(`\[\[[^]]*\]\]`), token(nString))
 
 	if err := lexer.Compile(); err != nil {
 		return nil, err
@@ -127,8 +131,13 @@ func token(nodeID int) lexmachine.Action {
 
 func comment(nodeID int) lexmachine.Action {
 	return func(s *lexmachine.Scanner, m *machines.Match) (interface{}, error) {
-		b := bytes.TrimLeft(m.Bytes, "--")
-		b = bytes.TrimSpace(b)
+		prefix := []byte("-- ")
+		if !bytes.HasPrefix(m.Bytes, prefix) {
+			prefix = []byte("--")
+		}
+
+		b := bytes.TrimPrefix(m.Bytes, prefix)
+		b = bytes.TrimRightFunc(b, unicode.IsSpace)
 		m.Bytes = b
 
 		return s.Token(nodeID, string(b), m), nil
@@ -137,8 +146,8 @@ func comment(nodeID int) lexmachine.Action {
 
 func commentLong(nodeID int) lexmachine.Action {
 	return func(s *lexmachine.Scanner, m *machines.Match) (interface{}, error) {
-		b := bytes.TrimLeft(m.Bytes, "--[[")
-		b = bytes.TrimRight(b, "]]")
+		b := bytes.TrimPrefix(m.Bytes, []byte("--[["))
+		b = bytes.TrimSuffix(b, []byte("]]"))
 		b = bytes.TrimSpace(b)
 		m.Bytes = b
 

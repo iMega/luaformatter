@@ -81,8 +81,8 @@ func TestParseComment(t *testing.T) {
 							Element: &element{
 								Token: &lexmachine.Token{
 									Type:        nComment,
-									Value:       "comment2",
-									Lexeme:      []byte("comment2"),
+									Value:       "    comment2",
+									Lexeme:      []byte("    comment2"),
 									TC:          12,
 									StartLine:   3,
 									StartColumn: 1,
@@ -94,6 +94,70 @@ func TestParseComment(t *testing.T) {
 						},
 					},
 					Qty: 2,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
+			name: "two comment statement",
+			args: args{
+				code: []byte(`
+---------------
+-- comment
+--     comment2
+`,
+				),
+			},
+			want: &document{
+				Body: &body{
+					Blocks: map[uint64]statement{
+						0: &commentStatement{
+							Element: &element{
+								Token: &lexmachine.Token{
+									Type:        nComment,
+									Value:       "-------------",
+									Lexeme:      []byte("-------------"),
+									TC:          1,
+									StartLine:   2,
+									StartColumn: 1,
+									EndLine:     2,
+									EndColumn:   15,
+								},
+							},
+						},
+						1: &commentStatement{
+							Element: &element{
+								Token: &lexmachine.Token{
+									Type:        nComment,
+									Value:       "comment",
+									Lexeme:      []byte("comment"),
+									TC:          17,
+									StartLine:   3,
+									StartColumn: 1,
+									EndLine:     3,
+									EndColumn:   10,
+								},
+							},
+							IsNewline: true,
+						},
+						2: &commentStatement{
+							Element: &element{
+								Token: &lexmachine.Token{
+									Type:        nComment,
+									Value:       "    comment2",
+									Lexeme:      []byte("    comment2"),
+									TC:          28,
+									StartLine:   4,
+									StartColumn: 1,
+									EndLine:     4,
+									EndColumn:   15,
+								},
+							},
+							IsNewline: true,
+						},
+					},
+					Qty: 3,
 				},
 			},
 			wantErr: false,

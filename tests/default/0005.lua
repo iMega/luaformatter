@@ -7,7 +7,7 @@ for i, pkg in ipairs(packages) do
     end
  end
 
---- Load a local or remote manifest describing a repository.
+-- Load a local or remote manifest describing a repository.
 -- All functions that use manifest tables assume they were obtained
 -- through either this function or load_local_manifest.
 -- @param repo_url string: URL or pathname for the repository.
