@@ -1,0 +1,231 @@
+-- bad
+local errorMessage = 'This is a super long error that was thrown because of Batman. When you stop to think about how Batman had anything to do with this, you would get nowhere fast.'
+
+-- bad
+local errorMessage = 'This is a super long error that \
+was thrown because of Batman. \
+When you stop to think about \
+how Batman had anything to do \
+with this, you would get nowhere \
+fast.'
+
+-- bad
+local errorMessage = [[This is a super long error that
+  was thrown because of Batman.
+  When you stop to think about
+  how Batman had anything to do
+  with this, you would get nowhere
+  fast.]]
+
+-- good
+local errorMessage = 'This is a super long error that ' ..
+    'was thrown because of Batman. ' .. 'When you stop to think about ' ..
+    'how Batman had anything to do ' .. 'with this, you would get nowhere ' ..
+    'fast.'
+
+-- bad
+local nope = function(name, options)
+    -- ...stuff...
+end
+
+-- good
+local function yup(name, options)
+    -- ...stuff...
+end
+
+-- bad
+local function nope(name, options, arg)
+    -- ...stuff...
+end
+
+-- good
+local function yup(name, options, ...)
+    -- ...stuff...
+end
+
+-- bad
+local is_good_name = function(name, options, arg)
+    local is_good = #name > 3
+    is_good = is_good and #name < 30
+
+    -- ...stuff...
+
+    return is_bad
+end
+
+-- good
+local is_good_name = function(name, options, args)
+    if #name < 3 or #name > 30 then
+        return false
+    end
+
+    -- ...stuff...
+
+    return true
+end
+
+local luke = {jedi = true, age = 28}
+
+-- bad
+local isJedi = luke['jedi']
+
+-- good
+local isJedi = luke.jedi
+
+local luke = {jedi = true, age = 28}
+
+local function getProp(prop)
+    return luke[prop]
+end
+
+local isJedi = getProp('jedi')
+
+-- bad
+superPower = SuperPower()
+
+-- good
+local superPower = SuperPower()
+
+-- bad
+local bad = function()
+    test()
+    print('doing stuff..')
+
+    -- ..other stuff..
+
+    local name = getName()
+
+    if name == 'test' then
+        return false
+    end
+
+    return name
+end
+
+-- good
+local function good()
+    local name = getName()
+
+    test()
+    print('doing stuff..')
+
+    -- ..other stuff..
+
+    if name == 'test' then
+        return false
+    end
+
+    return name
+end
+
+local str = ''
+
+if str then
+    -- true
+end
+
+-- bad
+if name ~= nil then
+    -- ...stuff...
+end
+
+-- good
+if name then
+    -- ...stuff...
+end
+
+-- bad
+if not thing then
+    -- ...stuff...
+else
+    -- ...stuff...
+end
+
+-- good
+if thing then
+    -- ...stuff...
+else
+    -- ...stuff...
+end
+
+-- bad
+local function full_name(first, last)
+    local name
+
+    if first and last then
+        name = first .. ' ' .. last
+    else
+        name = 'John Smith'
+    end
+
+    return name
+end
+
+-- good
+local function full_name(first, last)
+    local name = 'John Smith'
+
+    if first and last then
+        name = first .. ' ' .. last
+    end
+
+    return name
+end
+
+local function default_name(name)
+    -- return the default 'Waldo' if name is nil
+    return name or 'Waldo'
+end
+
+local function brew_coffee(machine)
+    return machine and machine.is_loaded and 'coffee brewing' or 'fill your water'
+end
+
+-- good
+if test then
+    return false
+end
+
+-- good
+if test then
+    return false
+end
+
+-- bad
+if  test < 1 and
+    do_complicated_function(test) == false or
+    seven == 8 and
+    nine == 10
+then
+    do_other_complicated_function()
+end
+
+-- good
+if  test < 1 and
+    do_complicated_function(test) == false or
+    seven == 8 and
+    nine == 10
+then
+
+    do_other_complicated_function()
+
+    return false
+end
+
+-- bad
+local test = {one = 1}
+
+-- good
+local test = {one = 1}
+
+-- bad
+dog.set(
+    'attr',
+    {age = '1 year', breed = 'Bernese Mountain Dog'}
+)
+
+-- good
+dog.set(
+    'attr',
+    {age = '1 year', breed = 'Bernese Mountain Dog'}
+)

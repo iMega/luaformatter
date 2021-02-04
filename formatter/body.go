@@ -139,6 +139,12 @@ func (b *body) Format(c *Config, p printer, w io.Writer) error {
 					return err
 				}
 
+				if isSemanticNewline(b.Blocks[uint64(i-1)], st) {
+					if err := newLine(w); err != nil {
+						return err
+					}
+				}
+
 				if err := p.WritePad(w); err != nil {
 					return err
 				}
@@ -159,4 +165,14 @@ func (b *body) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	return nil
+}
+
+func isSemanticNewline(prev statement, cur statement) bool {
+	if prev != nil {
+		if cur.TypeOf() == tsReturn && prev.TypeOf() != tsNewline && prev.TypeOf() != tsComment {
+			return true
+		}
+	}
+
+	return false
 }

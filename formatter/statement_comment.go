@@ -29,7 +29,7 @@ func (commentStatement) InnerStatement(prev, cur *element) (bool, statement) {
 }
 
 func (commentStatement) TypeOf() typeStatement {
-	return tsNone
+	return tsComment
 }
 
 func (s *commentStatement) IsEnd(prev, cur *element) (bool, bool) {

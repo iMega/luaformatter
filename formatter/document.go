@@ -45,6 +45,9 @@ const (
 	tsTable
 	tsUnknow
 	tsBody
+	tsReturn
+	tsNewline
+	tsComment
 )
 
 // chunk ::= block

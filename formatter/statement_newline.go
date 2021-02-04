@@ -25,7 +25,7 @@ func (newlineStatement) InnerStatement(prev, cur *element) (bool, statement) {
 }
 
 func (newlineStatement) TypeOf() typeStatement {
-	return tsNone
+	return tsNewline
 }
 
 func (s *newlineStatement) IsEnd(prev, cur *element) (bool, bool) {

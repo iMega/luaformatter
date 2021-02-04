@@ -41,6 +41,7 @@ if  test < 1 and
     nine == 10
 then
     do_other_complicated_function()
+
     return false
 end
 

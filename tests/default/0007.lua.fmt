@@ -121,6 +121,7 @@ function myclass.new()
         self,
         {__index = MyClass}
     )
+
     return self
 end
 
