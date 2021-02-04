@@ -501,7 +501,23 @@ func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 			return err
 		}
 
-		if s.Binop.Token.Type != nConcat {
+		if s.Binop.Token.Type == nAnd || s.Binop.Token.Type == nOr {
+			if p.IfStatementExpLong {
+				if err := newLine(w); err != nil {
+					return err
+				}
+
+				if err := p.WriteSpaces(w, int(p.Pad+c.IndentSize)); err != nil {
+					return err
+				}
+			} else {
+				if err := space(w); err != nil {
+					return err
+				}
+			}
+		}
+
+		if s.Binop.Token.Type != nConcat && s.Binop.Token.Type != nAnd && s.Binop.Token.Type != nOr {
 			if err := space(w); err != nil {
 				return err
 			}

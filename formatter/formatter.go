@@ -60,7 +60,8 @@ type printer struct {
 	SpacesBeforeAssign  uint8
 	SpacesBeforeComment uint8
 
-	IgnoreFirstPad bool
+	IgnoreFirstPad     bool
+	IfStatementExpLong bool
 }
 
 func (p printer) WritePad(w io.Writer) error {

@@ -14,7 +14,10 @@
 
 package formatter
 
-import "io"
+import (
+	"bytes"
+	"io"
+)
 
 type ifStatement struct {
 	Exp        *exp
@@ -85,13 +88,37 @@ func (s *ifStatement) Format(c *Config, p printer, w io.Writer) error {
 		return err
 	}
 
-	if s.Exp != nil {
-		if err := s.Exp.Format(c, p, w); err != nil {
+	curpos := getCursorPosition(w)
+	buf := bytes.NewBuffer(nil)
+	if err := s.Exp.Format(c, p, buf); err != nil {
+		return err
+	}
+	curpos.Col += uint64(buf.Len())
+	buf.Reset()
+	np := p
+	np.IfStatementExpLong = curpos.Col > uint64(c.MaxLineLength+1)
+
+	if np.IfStatementExpLong {
+		if err := p.WriteSpaces(w, int(c.IndentSize-3)); err != nil {
 			return err
 		}
 	}
 
-	if _, err := w.Write([]byte(" then")); err != nil {
+	if err := s.Exp.Format(c, np, w); err != nil {
+		return err
+	}
+
+	if np.IfStatementExpLong {
+		if err := newLine(w); err != nil {
+			return err
+		}
+	} else {
+		if err := space(w); err != nil {
+			return err
+		}
+	}
+
+	if _, err := w.Write([]byte("then")); err != nil {
 		return err
 	}
 
@@ -185,6 +212,10 @@ func (s *elseifStatement) GetStatement(prev, cur *element) statement {
 }
 
 func (s *elseifStatement) Format(c *Config, p printer, w io.Writer) error {
+	if err := p.WritePad(w); err != nil {
+		return err
+	}
+
 	if _, err := w.Write([]byte("elseif ")); err != nil {
 		return err
 	}

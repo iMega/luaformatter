@@ -44,3 +44,13 @@ func (w *writer) NewLine() error {
 func (w *writer) Cursor() cursorPosition {
 	return w.CurPos
 }
+
+func getCursorPosition(w io.Writer) cursorPosition {
+	var curpos cursorPosition
+
+	if v, ok := w.(cursorPositioner); ok {
+		curpos = v.Cursor()
+	}
+
+	return curpos
+}
