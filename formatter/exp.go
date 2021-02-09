@@ -364,10 +364,10 @@ func (s *exp) AppendStatement(st statement) {
 		s.Prefixexp = &prefixexpStatement{FuncCall: v} // a = func[0].call{}
 
 	case *prefixexpStatement:
-		if s.Element != nil {
-			v.Element = s.Element
-			s.Element = nil
-		}
+		// if s.Element != nil {
+		// 	v.Element = s.Element
+		// 	s.Element = nil
+		// }
 
 		s.Prefixexp = v
 	}

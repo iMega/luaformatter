@@ -52,6 +52,18 @@ func (s *prefixexpStatement) InnerStatement(prev, cur *element) (bool, statement
 		return false, &funcCallStatement{}
 	}
 
+	if cur.Token.Type == nDot {
+		if prev != nil && prev.Token.Type == nClosingParentheses {
+			return true, &prefixexpStatement{}
+		}
+	}
+
+	if cur.Token.Type == nColon {
+		if prev != nil && prev.Token.Type == nClosingParentheses {
+			return true, &prefixexpStatement{}
+		}
+	}
+
 	return false, nil
 }
 
@@ -96,6 +108,10 @@ func (s *prefixexpStatement) IsEnd(prev, cur *element) (bool, bool) {
 
 	if prev != nil && prev.Token.Type == nDot && cur.Token.Type == nID { // function call
 		return false, false // .id
+	}
+
+	if prev != nil && prev.Token.Type == nColon && cur.Token.Type == nID { // function call
+		return false, false // :id
 	}
 
 	if cur.Token.Type == nComma { // assignment statement
@@ -149,7 +165,7 @@ func (s *prefixexpStatement) Append(el *element) {
 		return
 	}
 
-	if el.Token.Type == nDot {
+	if el.Token.Type == nDot || el.Token.Type == nColon {
 		s.FieldAccessor = el
 
 		return
@@ -159,8 +175,16 @@ func (s *prefixexpStatement) Append(el *element) {
 		return
 	}
 
-	if s.FieldAccessor != nil && s.FieldAccessor.Token.Type == nDot { // .id
-		s.FieldAccessor = el
+	if s.FieldAccessor != nil {
+		if s.FieldAccessor.Token.Type == nDot { // .id
+			s.Element = s.FieldAccessor
+			s.FieldAccessor = el
+		}
+
+		if s.FieldAccessor.Token.Type == nColon { // :id
+			s.Element = s.FieldAccessor
+			s.FieldAccessor = el
+		}
 
 		return
 	}
@@ -197,7 +221,9 @@ func (s *prefixexpStatement) GetStatement(prev, cur *element) statement {
 	}
 
 	if cur.Token.Type == nParentheses || cur.Token.Type == nString {
-		return &funcCallStatement{}
+		return &funcCallStatement{
+			// TODO Prefixexp: s,
+		}
 	}
 
 	if cur.Token.Type == nCurlyBracket {
@@ -232,6 +258,12 @@ func (s *prefixexpStatement) Format(c *Config, p printer, w io.Writer) error {
 		}
 	}
 
+	if st := s.FuncCall; st != nil {
+		if err := st.Format(c, p, w); err != nil {
+			return err
+		}
+	}
+
 	if st := s.Element; st != nil {
 		if err := st.Format(c, p, w); err != nil {
 			return err
@@ -263,9 +295,9 @@ func (s *prefixexpStatement) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	if st := s.FieldAccessor; st != nil {
-		if _, err := w.Write([]byte(".")); err != nil {
-			return err
-		}
+		// if _, err := w.Write([]byte(".")); err != nil {
+		// 	return err
+		// }
 
 		if err := st.Format(c, p, w); err != nil {
 			return err
@@ -273,12 +305,6 @@ func (s *prefixexpStatement) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	if st := s.Prefixexp; st != nil {
-		if err := st.Format(c, p, w); err != nil {
-			return err
-		}
-	}
-
-	if st := s.FuncCall; st != nil {
 		if err := st.Format(c, p, w); err != nil {
 			return err
 		}

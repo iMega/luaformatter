@@ -66,7 +66,7 @@ func (s *functionStatement) AppendStatement(st statement) {
 }
 
 func (s *functionStatement) GetBody(prevSt statement, cur *element) statement {
-	if cur.Token.Type != nClosingParentheses {
+	if s.FuncCall == nil {
 		return prevSt
 	}
 
@@ -123,13 +123,13 @@ func (s *functionStatement) Format(c *Config, p printer, w io.Writer) error {
 		if err := st.Format(c, inner, w); err != nil {
 			return err
 		}
-	}
 
-	if st.Qty > 0 {
-		// a = function()
-		// end
-		if err := newLine(w); err != nil {
-			return err
+		if st.Qty > 0 {
+			// a = function()
+			// end
+			if err := newLine(w); err != nil {
+				return err
+			}
 		}
 	}
 

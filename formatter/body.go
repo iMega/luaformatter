@@ -15,6 +15,7 @@
 package formatter
 
 import (
+	"errors"
 	"io"
 )
 
@@ -68,6 +69,28 @@ func (b *body) AppendStatement(st statement) {
 
 	b.Blocks[b.Qty] = st
 	b.Qty++
+}
+
+var errStatementNotExist = errors.New("statement not exist")
+
+func (b *body) RemoveStatement(st statement) error {
+	for i := len(b.Blocks) - 1; i >= 0; i-- {
+		if b.Blocks[uint64(i)] == st {
+			b.Blocks[uint64(i)] = nil
+			return nil
+		}
+	}
+
+	return errStatementNotExist
+}
+
+func bodyRemoveStatement(haystack, needle statement) error {
+	v, ok := haystack.(*body)
+	if !ok {
+		return errCastingType
+	}
+
+	return v.RemoveStatement(needle)
 }
 
 func (b *body) GetStatement(prev, cur *element) statement {
@@ -130,6 +153,10 @@ func (b *body) GetStatement(prev, cur *element) statement {
 func (b *body) Format(c *Config, p printer, w io.Writer) error {
 	for i := 0; i < int(b.Qty); i++ {
 		st := b.Blocks[uint64(i)]
+
+		if st == nil {
+			continue
+		}
 
 		if !p.IgnoreFirstPad {
 			_, newlineOk := st.(*newlineStatement)

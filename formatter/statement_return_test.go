@@ -286,9 +286,9 @@ return function () end
 													List: []*exp{{}},
 												},
 											},
-											Body: &body{
-												Blocks: make(map[uint64]statement),
-											},
+											// Body: &body{
+											// 	Blocks: make(map[uint64]statement),
+											// },
 										},
 									},
 								},
@@ -323,9 +323,9 @@ return function () end, function () end
 													List: []*exp{{}},
 												},
 											},
-											Body: &body{
-												Blocks: make(map[uint64]statement),
-											},
+											// Body: &body{
+											// 	Blocks: make(map[uint64]statement),
+											// },
 										},
 									},
 									{
@@ -336,9 +336,9 @@ return function () end, function () end
 													List: []*exp{{}},
 												},
 											},
-											Body: &body{
-												Blocks: make(map[uint64]statement),
-											},
+											// Body: &body{
+											// 	Blocks: make(map[uint64]statement),
+											// },
 										},
 									},
 								},

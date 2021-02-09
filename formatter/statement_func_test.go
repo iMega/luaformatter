@@ -52,9 +52,9 @@ end
 									List: []*exp{{}},
 								},
 							},
-							Body: &body{
-								Blocks: make(map[uint64]statement),
-							},
+							// Body: &body{
+							// 	Blocks: make(map[uint64]statement),
+							// },
 						},
 					},
 					Qty: 1,
@@ -95,9 +95,9 @@ end
 									List: []*exp{{}},
 								},
 							},
-							Body: &body{
-								Blocks: make(map[uint64]statement),
-							},
+							// Body: &body{
+							// 	Blocks: make(map[uint64]statement),
+							// },
 						},
 					},
 					Qty: 1,
@@ -141,9 +141,9 @@ end
 									List: []*exp{{}},
 								},
 							},
-							Body: &body{
-								Blocks: make(map[uint64]statement),
-							},
+							// Body: &body{
+							// 	Blocks: make(map[uint64]statement),
+							// },
 						},
 						1: &newlineStatement{},
 						2: &functionStatement{
@@ -166,9 +166,9 @@ end
 									List: []*exp{{}},
 								},
 							},
-							Body: &body{
-								Blocks: make(map[uint64]statement),
-							},
+							// Body: &body{
+							// 	Blocks: make(map[uint64]statement),
+							// },
 						},
 					},
 					Qty: 3,
