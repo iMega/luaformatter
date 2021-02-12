@@ -36,7 +36,7 @@ func (s *prefixexpStatement) InnerStatement(prev, cur *element) (bool, statement
 
 	if cur.Token.Type == nParentheses {
 		if prev != nil && prev.Token.Type == nID {
-			return false, &funcCallStatement{}
+			return false, &funcCallStatement{} // Element: cur
 		}
 
 		s.Enclosed = true

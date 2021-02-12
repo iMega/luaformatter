@@ -50,6 +50,10 @@ func (exp) InnerStatement(prev, cur *element) (bool, statement) {
 		}
 
 		return false, &prefixexpStatement{Enclosed: true}
+
+	case nID:
+		//z = a().b()
+		return true, &prefixexpStatement{}
 	}
 
 	return false, nil

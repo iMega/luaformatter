@@ -39,6 +39,8 @@ func parse(code []byte) (*document, error) {
 	currentBody = b
 	currentStatement = b
 
+	logging := true
+
 	for s.Next() {
 		el, err := s.Scan()
 		if err != nil {
@@ -47,11 +49,13 @@ func parse(code []byte) (*document, error) {
 
 		curElement = &el
 
-		if prevElement != nil {
-			fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
-		}
+		if logging {
+			if prevElement != nil {
+				fmt.Printf("%s%s %s%s = ", mMagenta, TokenIDs[prevElement.Token.Type], prevElement.Token.Value, defaultStyle)
+			}
 
-		fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
+			fmt.Printf("%s%s %s%s\n", mMagenta, TokenIDs[el.Token.Type], el.Token.Value, defaultStyle)
+		}
 
 		for isBlockEnd, ok := currentStatement.IsEnd(prevElement, curElement); ok; isBlockEnd, ok = currentStatement.IsEnd(prevElement, curElement) {
 			if currentStatement.TypeOf() == tsUnknow && curElement.Token.Type == nComma {
@@ -59,7 +63,9 @@ func parse(code []byte) (*document, error) {
 			}
 
 			cs := chainSt.ExtractPrev()
-			fmt.Printf("-- ex %p %#v\n", cs, cs)
+			if logging {
+				fmt.Printf("-- ex %p %#v\n", cs, cs)
+			}
 			if cs == nil {
 				currentBody = doc.Body
 				chainSt.Append(currentBody)
@@ -85,7 +91,9 @@ func parse(code []byte) (*document, error) {
 		}
 
 		if st := currentStatement.GetStatement(prevElement, curElement); st != nil {
-			fmt.Printf("-- st %p %#v\n", st, st)
+			if logging {
+				fmt.Printf("-- st %p %#v\n", st, st)
+			}
 			var assignmentWithOneVar statement
 
 			isPrefixexpConvertAssignment := false
@@ -141,7 +149,9 @@ func parse(code []byte) (*document, error) {
 				st.AppendStatement(inner)
 				chainSt.Append(inner)
 				// }
-				fmt.Printf("-- in %p %#v\n", inner, inner)
+				if logging {
+					fmt.Printf("-- in %p %#v\n", inner, inner)
+				}
 				st = inner
 
 				if isBreak {
