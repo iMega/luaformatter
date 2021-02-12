@@ -32,8 +32,8 @@ func (funcCallStatement) TypeOf() typeStatement {
 }
 
 func (s *funcCallStatement) IsEnd(prev, cur *element) (bool, bool) {
-	if cur.Token.Type == nClosingParentheses {
-		return true, true
+	if cur.Token.Type == nClosingParentheses || cur.Token.Type == nDot || cur.Token.Type == nColon {
+		return false, false
 	}
 
 	return false, true
@@ -56,6 +56,12 @@ func (s *funcCallStatement) GetBody(prevSt statement, cur *element) statement {
 }
 
 func (s *funcCallStatement) GetStatement(prev, cur *element) statement {
+	if cur.Token.Type == nDot || cur.Token.Type == nColon {
+		return &prefixexpStatement{
+			FuncCall: s,
+		}
+	}
+
 	return nil
 }
 

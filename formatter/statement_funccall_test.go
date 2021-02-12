@@ -111,6 +111,108 @@ funccall "literal"
 			},
 			wantErr: false,
 		},
+		{
+			skip: false,
+			name: "funccall statement of table with funccall statement and etc",
+			args: args{
+				code: []byte(`
+a.b().c().d()
+`,
+				),
+			},
+			want: &document{
+				Body: &body{
+					Blocks: map[uint64]statement{
+						0: nil,
+						1: nil,
+						2: &funcCallStatement{
+							Prefixexp: &prefixexpStatement{
+								FuncCall: &funcCallStatement{
+									Prefixexp: &prefixexpStatement{
+										FuncCall: &funcCallStatement{
+											Prefixexp: &prefixexpStatement{
+												Element: &element{
+													Token: &lexmachine.Token{
+														Type:        nID,
+														Value:       "a",
+														Lexeme:      []byte("a"),
+														TC:          1,
+														StartLine:   2,
+														StartColumn: 1,
+														EndLine:     2,
+														EndColumn:   1,
+													},
+												},
+												Prefixexp: &prefixexpStatement{
+													FieldAccessor: &element{
+														Token: &lexmachine.Token{
+															Type:        nID,
+															Value:       "b",
+															Lexeme:      []byte("b"),
+															TC:          3,
+															StartLine:   2,
+															StartColumn: 3,
+															EndLine:     2,
+															EndColumn:   3,
+														},
+													},
+												},
+												IsUnknow: true,
+											},
+											Explist: &explist{
+												List: []*exp{
+													{},
+												},
+											},
+										},
+										Prefixexp: &prefixexpStatement{
+											FieldAccessor: &element{
+												Token: &lexmachine.Token{
+													Type:        nID,
+													Value:       "c",
+													Lexeme:      []byte("c"),
+													TC:          7,
+													StartLine:   2,
+													StartColumn: 7,
+													EndLine:     2,
+													EndColumn:   7,
+												},
+											},
+										},
+									},
+									Explist: &explist{
+										List: []*exp{
+											{},
+										},
+									},
+								},
+								Prefixexp: &prefixexpStatement{
+									FieldAccessor: &element{
+										Token: &lexmachine.Token{
+											Type:        nID,
+											Value:       "d",
+											Lexeme:      []byte("d"),
+											TC:          11,
+											StartLine:   2,
+											StartColumn: 11,
+											EndLine:     2,
+											EndColumn:   11,
+										},
+									},
+								},
+							},
+							Explist: &explist{
+								List: []*exp{
+									{},
+								},
+							},
+						},
+					},
+					Qty: 3,
+				},
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		if tt.skip == true {
