@@ -110,7 +110,20 @@ func (s *explist) isInline(c *Config, p printer, w io.Writer) bool {
 	}
 
 	for _, item := range s.List {
-		if item.Table != nil || item.Func != nil {
+		if item.Func != nil {
+			return false
+		}
+
+		if item.Table != nil {
+			fl := item.Table.FieldList
+			if fl.List == nil {
+				return true
+			}
+
+			if len(fl.List) == 1 {
+				return fl.isInline(c, p, w)
+			}
+
 			return false
 		}
 	}
