@@ -39,7 +39,7 @@ func parse(code []byte) (*document, error) {
 	currentBody = b
 	currentStatement = b
 
-	logging := true
+	logging := false
 
 	for s.Next() {
 		el, err := s.Scan()
@@ -124,10 +124,6 @@ func parse(code []byte) (*document, error) {
 
 				st.AppendStatement(extracted)
 				chainSt.Prev().AppendStatement(st)
-			} else if currentStatement.TypeOf() == tsFuncCallStatement && st.TypeOf() == tsPrefixexpStatement {
-				extracted := chainSt.ExctractStatement(tsFuncCallStatement)
-				bodyRemoveStatement(chainSt.GetLastBody(), extracted)
-				chainSt.GetLastBody().AppendStatement(st)
 			} else if currentStatement.TypeOf() == tsUnknow && st.TypeOf() == tsFuncCallStatement {
 				st.AppendStatement(chainSt.ExctractStatement(tsUnknow))
 				chainSt.Prev().AppendStatement(st)
@@ -145,10 +141,9 @@ func parse(code []byte) (*document, error) {
 			chainSt.Append(st)
 
 			for isBreak, inner := st.InnerStatement(prevElement, curElement); inner != nil; isBreak, inner = st.InnerStatement(prevElement, curElement) {
-				// if st.TypeOf() != inner.TypeOf() {
 				st.AppendStatement(inner)
 				chainSt.Append(inner)
-				// }
+
 				if logging {
 					fmt.Printf("-- in %p %#v\n", inner, inner)
 				}
