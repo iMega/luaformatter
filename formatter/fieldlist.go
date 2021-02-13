@@ -79,6 +79,9 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 		v := s.List[i]
 
 		if v.Key.Comments != nil {
+			comPrinter := p
+			comPrinter.Pad += c.IndentSize
+
 			for n := 0; n < len(v.Key.Comments); n++ {
 				com := v.Key.Comments[uint64(n)]
 				if com.Token.Type != nComment {
@@ -90,7 +93,7 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 						return err
 					}
 
-					if err := p.WritePad(w); err != nil {
+					if err := comPrinter.WritePad(w); err != nil {
 						return err
 					}
 				}
@@ -103,14 +106,14 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 						return err
 					}
 
-					if err := p.WritePad(w); err != nil {
+					if err := comPrinter.WritePad(w); err != nil {
 						return err
 					}
 				}
 
 				if i > 0 {
 					if n == 0 {
-						if err := p.WriteSpaces(w, int(fl[uint64(i-1)].Val)+pad); err != nil {
+						if err := comPrinter.WriteSpaces(w, int(fl[uint64(i-1)].Val)+pad); err != nil {
 							return err
 						}
 					}
@@ -120,7 +123,7 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 					return err
 				}
 
-				if err := com.Format(c, p, w); err != nil {
+				if err := com.Format(c, comPrinter, w); err != nil {
 					return err
 				}
 			}
@@ -141,14 +144,15 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 				if err := newLine(w); err != nil {
 					return err
 				}
-
-				if err := p.WritePad(w); err != nil {
-					return err
-				}
 			}
 		}
 
 		fieldPrinter := p
+		if isInLine {
+			fieldPrinter.Pad = 0
+		} else {
+			fieldPrinter.Pad += c.IndentSize
+		}
 		fieldPrinter.SpacesBeforeAssign = fl[uint64(i)].Key
 		if err := v.Format(c, fieldPrinter, w); err != nil {
 			return err
@@ -171,6 +175,10 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 
 	if p.ParentStatement == tsTable && !isInLine {
 		if err := newLine(w); err != nil {
+			return err
+		}
+
+		if err := p.WritePad(w); err != nil {
 			return err
 		}
 	}
@@ -200,7 +208,7 @@ func (s *fieldlist) isInline(c *Config, p printer, w io.Writer) bool {
 		item := s.List[i]
 
 		isEnded := isEndedAlignedBlock(item)
-		if isEnded || isStartAlignedBlock(item) {
+		if isEnded || item.HasComment() {
 			return false
 		}
 
@@ -229,9 +237,6 @@ func (s *fieldlist) isInline(c *Config, p printer, w io.Writer) bool {
 		if i < len(s.List)-1 {
 			buf.WriteString(", ")
 		}
-
-		a := buf.String()
-		_ = a
 
 		curpos.Col += uint64(buf.Len())
 		buf.Reset()

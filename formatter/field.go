@@ -112,6 +112,10 @@ func (s *field) GetStatement(prev, cur *element) statement {
 }
 
 func (s *field) Format(c *Config, p printer, w io.Writer) error {
+	if err := p.WritePad(w); err != nil {
+		return err
+	}
+
 	if s.Square {
 		if _, err := w.Write([]byte("[")); err != nil {
 			return err
@@ -147,4 +151,16 @@ func (s *field) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	return nil
+}
+
+func (s *field) HasComment() bool {
+	if s.Key.Comments != nil && len(s.Key.Comments) > 0 {
+		for i := 0; i < len(s.Key.Comments); i++ {
+			if s.Key.Comments[uint64(i)].Token.Type == nComment {
+				return true
+			}
+		}
+	}
+
+	return false
 }
