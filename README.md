@@ -6,7 +6,7 @@
 
 ### Variables
 
-The option alignment.variables will be align list of variables.
+The option alignment.variables will align list of variables.
 
 ```lua
 local a  = 1  -- comment
@@ -18,7 +18,7 @@ local c = "short text" -- comment
 ### Comments
 
 Skipped space between a double hyphen and text will be revert. Semantic line
-(only hyphens) will not has the space.
+(only hyphens) will not have the space.
 
 ```lua
 --------------------------------
@@ -29,8 +29,8 @@ Skipped space between a double hyphen and text will be revert. Semantic line
 
 ### Tables
 
-If you create an empty table or with only field key or
-with one field then will be written in one line.
+If you create an empty table or table with only key fields or
+table with one field they will be written in one line.
 
 ```lua
 local t = {}
@@ -38,9 +38,10 @@ local t = {"one", "two", 3, 4, 5}
 local t = {a = 1, b = 2, c = 3}
 ```
 
-If you write more five fields with only key then table will be written in
-multiline. Same behaviour will if more four fields with key and value.
-If the table is multiline then every field will has trailing comma.
+If you write more than five fields with only key then table will be written in
+multiline. Same behaviour will be if you write more than four fields
+with key and value. If the table is multiline then every field will have
+trailing comma.
 
 ```lua
 local t = {
@@ -59,7 +60,7 @@ local t = {
 }
 ```
 
-The option alignment.table will be align table.
+The option alignment.table will align table.
 
 ```lua
 local t = {
@@ -78,7 +79,8 @@ local t = {
 
 ### Newline
 
-If return statement inside block with other statements.
+If return statement is inside the block with other statements then a newline
+will be added before it.
 
 ```lua
 function isFalse()
@@ -92,7 +94,8 @@ function calc(a, b)
 end
 ```
 
-A function with other statements.
+If a function is inside the block with other statements then a newline
+will be added before it.
 
 ```lua
 function isFalse()
@@ -102,7 +105,8 @@ end
 isFalse()
 ```
 
-If a function has parameters more max line length.
+If a function has parameters more than max line length then
+every parameter will be moved to the next line.
 
 ```lua
 function very_long_name(
@@ -114,7 +118,8 @@ function very_long_name(
 end
 ```
 
-If a function call has parameters more max line length.
+If a function call has parameters more than max line length then
+every parameter will be moved to the next line.
 
 ```lua
 very_long_name_function_call(
