@@ -152,8 +152,9 @@ func (s *fieldlist) Format(c *Config, p printer, w io.Writer) error {
 			fieldPrinter.Pad = 0
 		} else {
 			fieldPrinter.Pad += c.IndentSize
+			fieldPrinter.SpacesBeforeAssign = fl[uint64(i)].Key
 		}
-		fieldPrinter.SpacesBeforeAssign = fl[uint64(i)].Key
+
 		if err := v.Format(c, fieldPrinter, w); err != nil {
 			return err
 		}
@@ -203,6 +204,10 @@ func (s *fieldlist) isInline(c *Config, p printer, w io.Writer) bool {
 	values := 0
 	keyType := -1
 	isVector := false
+
+	if s.List == nil {
+		return true
+	}
 
 	for i := 0; i < len(s.List); i++ {
 		item := s.List[i]
