@@ -524,17 +524,13 @@ func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 		}
 
 		if s.Binop.Token.Type == nConcat {
-			curpos, ok := w.(cursorPositioner)
-			if !ok {
-				return nil
-			}
-
 			buf := bytes.NewBuffer(nil)
 			if err := s.Exp.Format(c, p, buf); err != nil {
 				return err
 			}
 
-			if curpos.Cursor().Col+uint64(buf.Len()) > uint64(c.MaxLineLength) {
+			curpos := getCursorPosition(w)
+			if curpos.Col+uint64(buf.Len()) > uint64(c.MaxLineLength) {
 				if err := newLine(w); err != nil {
 					return err
 				}
