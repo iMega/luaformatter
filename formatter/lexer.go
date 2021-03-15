@@ -103,6 +103,23 @@ func (s *element) Format(c *Config, p printer, w io.Writer) error {
 	// 	return s.FormatString(c, p, w)
 	// }
 
+	types := []int{
+		nFalse, //10
+		nNil,   //17
+		nTrue,  //21
+		nAnd,   //41
+		nOr,    //42
+		nNot,   //63
+	}
+
+	if binarySearch(types, s.Token.Type) {
+		if err := writeKeyword(c, s.Token.Type, w); err != nil {
+			return err
+		}
+
+		return nil
+	}
+
 	_, err := w.Write(s.Token.Lexeme)
 
 	return err

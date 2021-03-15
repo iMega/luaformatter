@@ -60,12 +60,12 @@ func (s *returnStatement) GetStatement(prev, cur *element) statement {
 }
 
 func (s *returnStatement) Format(c *Config, p printer, w io.Writer) error {
-	if _, err := w.Write([]byte("return")); err != nil {
+	if err := writeKeyword(c, nReturn, w); err != nil {
 		return err
 	}
 
 	if st := s.Explist; st != nil {
-		if _, err := w.Write([]byte(" ")); err != nil {
+		if err := space(w); err != nil {
 			return err
 		}
 

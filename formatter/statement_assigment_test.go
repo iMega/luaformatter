@@ -725,7 +725,9 @@ func Test_assignmentStatement_Format(t *testing.T) {
 			fields: fields{
 				IsLocal: true,
 			},
-			args:    args{},
+			args: args{
+				c: &Config{Highlight: false},
+			},
 			wantW:   "",
 			wantErr: true,
 		},
@@ -736,7 +738,9 @@ func Test_assignmentStatement_Format(t *testing.T) {
 					List: []*exp{{}, {}},
 				},
 			},
-			args:    args{},
+			args: args{
+				c: &Config{Highlight: false},
+			},
 			wantW:   "",
 			wantErr: true,
 		},

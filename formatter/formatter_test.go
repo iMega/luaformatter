@@ -12,6 +12,10 @@ func TestFormat(t *testing.T) {
 		c Config
 		b []byte
 	}
+
+	conf := DefaultConfig()
+	conf.Highlight = false
+
 	tests := []struct {
 		name    string
 		args    args
@@ -21,7 +25,7 @@ func TestFormat(t *testing.T) {
 		{
 			name: "assignment statement",
 			args: args{
-				c: DefaultConfig(),
+				c: conf,
 				b: []byte(`
 a = -1
 a = -1 - -1
@@ -402,7 +406,7 @@ c = (a(((-1 + -2) + -1)) + b(-1 - -2 / -2))
 		{
 			name: "function call statement",
 			args: args{
-				c: DefaultConfig(),
+				c: conf,
 				b: []byte(`
 a()
 a{}
@@ -421,7 +425,7 @@ a("")
 		{
 			name: "for statement",
 			args: args{
-				c: DefaultConfig(),
+				c: conf,
 				b: []byte(`
 for a in b do
 end
@@ -471,6 +475,7 @@ end
 			name: "table statement",
 			args: args{
 				c: Config{
+					Highlight:     false,
 					IndentSize:    4,
 					MaxLineLength: 80,
 					Alignment: Alignment{
@@ -540,7 +545,7 @@ local strings = {
 		{
 			name: "break statement",
 			args: args{
-				c: DefaultConfig(),
+				c: conf,
 				b: []byte(`
 if true then break end
 `),
@@ -556,6 +561,7 @@ end
 			name: "config for table alignment",
 			args: args{
 				c: Config{
+					Highlight:     false,
 					IndentSize:    4,
 					MaxLineLength: 80,
 					Alignment: Alignment{
@@ -598,6 +604,7 @@ table = {
 			name: "config for table alignment",
 			args: args{
 				c: Config{
+					Highlight:     false,
 					IndentSize:    4,
 					MaxLineLength: 80,
 					Alignment: Alignment{
@@ -642,6 +649,7 @@ table = {
 			name: "config for table alignment",
 			args: args{
 				c: Config{
+					Highlight:     false,
 					IndentSize:    4,
 					MaxLineLength: 80,
 					Alignment: Alignment{
@@ -686,6 +694,7 @@ table = {
 			name: "config for table alignment",
 			args: args{
 				c: Config{
+					Highlight:     false,
 					IndentSize:    4,
 					MaxLineLength: 80,
 					Alignment: Alignment{

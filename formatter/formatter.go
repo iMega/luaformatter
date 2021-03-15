@@ -102,6 +102,30 @@ func writeKeyword(c *Config, tokenType int, w io.Writer) error {
 	return err
 }
 
+func writeKeywordWithSpace(c *Config, tokenType int, w io.Writer) error {
+	if err := space(w); err != nil {
+		return err
+	}
+
+	return writeKeywordWithSpaceRight(c, tokenType, w)
+}
+
+func writeKeywordWithSpaceLeft(c *Config, tokenType int, w io.Writer) error {
+	if err := space(w); err != nil {
+		return err
+	}
+
+	return writeKeyword(c, tokenType, w)
+}
+
+func writeKeywordWithSpaceRight(c *Config, tokenType int, w io.Writer) error {
+	if err := writeKeyword(c, tokenType, w); err != nil {
+		return err
+	}
+
+	return space(w)
+}
+
 var tokens = map[int][]byte{
 	nColon:     []byte(":"),
 	nSemiColon: []byte(";"),

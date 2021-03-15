@@ -55,7 +55,7 @@ func (s *doStatement) GetStatement(prev, cur *element) statement {
 }
 
 func (s *doStatement) Format(c *Config, p printer, w io.Writer) error {
-	if _, err := w.Write([]byte("do")); err != nil {
+	if err := writeKeyword(c, nDo, w); err != nil {
 		return err
 	}
 
@@ -83,7 +83,7 @@ func (s *doStatement) Format(c *Config, p printer, w io.Writer) error {
 		return err
 	}
 
-	if _, err := w.Write([]byte("end")); err != nil {
+	if err := writeKeyword(c, nEnd, w); err != nil {
 		return err
 	}
 

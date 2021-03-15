@@ -43,9 +43,5 @@ func (s *breakStatement) GetStatement(*element, *element) statement {
 }
 
 func (s *breakStatement) Format(c *Config, p printer, w io.Writer) error {
-	if _, err := w.Write([]byte("break")); err != nil {
-		return err
-	}
-
-	return nil
+	return writeKeyword(c, nBreak, w)
 }

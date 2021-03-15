@@ -80,7 +80,7 @@ func (s *forStatement) GetStatement(prev, cur *element) statement {
 }
 
 func (s *forStatement) Format(c *Config, p printer, w io.Writer) error {
-	if _, err := w.Write([]byte("for ")); err != nil {
+	if err := writeKeywordWithSpaceRight(c, nFor, w); err != nil {
 		return err
 	}
 
@@ -91,7 +91,7 @@ func (s *forStatement) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	if s.Explist != nil {
-		if _, err := w.Write([]byte(" in ")); err != nil {
+		if err := writeKeywordWithSpace(c, nIn, w); err != nil {
 			return err
 		}
 

@@ -85,7 +85,7 @@ func (s *assignmentStatement) GetStatement(prev, cur *element) statement {
 
 func (s *assignmentStatement) Format(c *Config, p printer, w io.Writer) error {
 	if s.IsLocal {
-		if _, err := w.Write([]byte("local ")); err != nil {
+		if err := writeKeywordWithSpaceRight(c, nLocal, w); err != nil {
 			return err
 		}
 	}

@@ -19,6 +19,7 @@ func DefaultConfig() Config {
 	return Config{
 		IndentSize:    defaultIndentSize,
 		MaxLineLength: defaultMaxLineLength,
+		Highlight:     true,
 	}
 }
 
