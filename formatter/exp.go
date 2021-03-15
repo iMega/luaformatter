@@ -487,6 +487,7 @@ func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	if st := s.Prefixexp; st != nil {
+		// isIncludedInMaxLineSize(c, p, w, s.Prefixexp)
 		if err := st.Format(c, p, w); err != nil {
 			return err
 		}
@@ -502,7 +503,12 @@ func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 		}
 
 		if s.Binop.Token.Type == nAnd || s.Binop.Token.Type == nOr {
-			if p.IfStatementExpLong {
+			isIncluded, err := isIncludedInMaxLineSize(c, p, w, s.Prefixexp)
+			if err != nil {
+				return err
+			}
+
+			if !isIncluded {
 				if err := newLine(w); err != nil {
 					return err
 				}
