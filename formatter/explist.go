@@ -14,7 +14,10 @@
 
 package formatter
 
-import "io"
+import (
+	"bytes"
+	"io"
+)
 
 type explist struct {
 	List []*exp // separator ,
@@ -69,7 +72,7 @@ func (s *explist) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	for i := 0; i < len(s.List); i++ {
-		if !isInLine {
+		if !isInLine && i > 0 {
 			if err := newLine(w); err != nil {
 				return err
 			}
@@ -79,6 +82,12 @@ func (s *explist) Format(c *Config, p printer, w io.Writer) error {
 			}
 		}
 
+		isIncluded, err := isIncludedInMaxLineSize(c, p, w, s.List[i])
+		if err != nil {
+			return err
+		}
+
+		p.IfStatementExpLong = !isIncluded
 		if err := s.List[i].Format(c, p, w); err != nil {
 			return err
 		}
@@ -105,11 +114,18 @@ func (s *explist) Format(c *Config, p printer, w io.Writer) error {
 }
 
 func (s *explist) isInline(c *Config, p printer, w io.Writer) bool {
-	if len(s.List) == 1 {
+	// if len(s.List) == 1 {
+	// 	return true
+	// }
+
+	if p.ParentStatement == tsAssignment {
+		p.ParentStatement = tsNone
 		return true
 	}
 
+	buf := bytes.NewBuffer(nil)
 	for _, item := range s.List {
+		// if item.Func != nil && len(s.List) > 1 {
 		if item.Func != nil {
 			return false
 		}
@@ -126,6 +142,20 @@ func (s *explist) isInline(c *Config, p printer, w io.Writer) bool {
 
 			return false
 		}
+
+		if err := item.Format(c, p, buf); err != nil {
+			return false
+		}
+	}
+
+	curpos := getCursorPosition(w)
+	//fmt.Printf("--%s %d>%d\n", buf.String(), curpos.Col+uint64(buf.Len()), uint64(c.MaxLineLength))
+	if curpos.Col+uint64(buf.Len()) > uint64(c.MaxLineLength) {
+		// if len(s.List) == 1 {
+		// 	return true
+		// }
+
+		return false
 	}
 
 	return true

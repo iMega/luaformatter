@@ -84,6 +84,8 @@ func (s *assignmentStatement) GetStatement(prev, cur *element) statement {
 }
 
 func (s *assignmentStatement) Format(c *Config, p printer, w io.Writer) error {
+	p.ParentStatement = s.TypeOf()
+
 	if s.IsLocal {
 		if _, err := w.Write([]byte("local ")); err != nil {
 			return err

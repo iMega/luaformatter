@@ -16,7 +16,9 @@ package formatter
 
 import (
 	"bytes"
+	"fmt"
 	"io"
+	"reflect"
 )
 
 const (
@@ -170,4 +172,32 @@ func spaceAroundOption(c *Config, tokenType int, w io.Writer) error {
 	_, err := w.Write(raw)
 
 	return err
+}
+
+func isIncludedInMaxLineSize(
+	c *Config,
+	p printer,
+	w io.Writer,
+	sts ...statement,
+) (bool, error) {
+	buf := bytes.NewBuffer(nil)
+	for _, st := range sts {
+		if reflect.ValueOf(st).IsNil() {
+			continue
+		}
+
+		if st == nil {
+			continue
+		}
+
+		if err := st.Format(c, p, buf); err != nil {
+			return false, err
+		}
+	}
+
+	curpos := getCursorPosition(w)
+
+	fmt.Printf("%s %d", buf.String(), buf.Len())
+
+	return curpos.Col+uint64(buf.Len()) <= uint64(c.MaxLineLength), nil
 }
