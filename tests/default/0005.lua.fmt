@@ -97,6 +97,7 @@ local vehicles = load_vehicles_from_disk("vehicles.dat")
 
 if vehicles["Porsche"] then
     porsche_handler(vehicles["Porsche"])
+
     vehicles["Porsche"] = nil
 end
 

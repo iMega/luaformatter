@@ -193,11 +193,7 @@ type fieldLength struct {
 }
 
 func (s *fieldlist) isInline(c *Config, p printer, w io.Writer) bool {
-	var curpos cursorPosition
-
-	if v, ok := w.(cursorPositioner); ok {
-		curpos = v.Cursor()
-	}
+	curpos := getCursorPosition(w)
 
 	buf := bytes.NewBuffer([]byte("{}"))
 

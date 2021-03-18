@@ -31,7 +31,7 @@ func (ifStatement) InnerStatement(prev, cur *element) (bool, statement) {
 }
 
 func (ifStatement) TypeOf() typeStatement {
-	return tsNone
+	return tsIfStatement
 }
 
 func (s *ifStatement) IsEnd(prev, cur *element) (bool, bool) {

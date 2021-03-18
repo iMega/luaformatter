@@ -168,10 +168,33 @@ func (b *body) Format(c *Config, p printer, w io.Writer) error {
 }
 
 func isSemanticNewline(prev statement, cur statement) bool {
-	if prev != nil {
-		if cur.TypeOf() == tsReturn && prev.TypeOf() != tsNewline && prev.TypeOf() != tsComment {
-			return true
-		}
+	if prev == nil {
+		return false
+	}
+
+	if prev.TypeOf() == tsNewline || prev.TypeOf() == tsComment {
+		return false
+	}
+
+	if cur.TypeOf() == tsReturn {
+		// always before tsAssignment
+		return true
+	}
+
+	if prev.TypeOf() == tsAssignment {
+		return false
+	}
+
+	if cur.TypeOf() == tsFunction {
+		return true
+	}
+
+	if cur.TypeOf() == tsIfStatement {
+		return true
+	}
+
+	if cur.TypeOf() == tsAssignment {
+		return true
 	}
 
 	return false
