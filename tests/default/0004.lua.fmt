@@ -17,5 +17,6 @@ else
         return 4
     end
 end
+
 c = b()
 print(c)

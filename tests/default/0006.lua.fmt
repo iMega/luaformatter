@@ -1,5 +1,7 @@
 local function brew_coffee(machine)
-    return (machine and machine.is_loaded) and "coffee brewing" or "fill your water"
+    return (machine and machine.is_loaded) and
+        "coffee brewing" or
+        "fill your water"
 end
 
 -- good

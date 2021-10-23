@@ -48,6 +48,7 @@ const (
 	tsReturn
 	tsNewline
 	tsComment
+	tsIfStatement
 )
 
 // chunk ::= block

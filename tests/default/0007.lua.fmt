@@ -34,6 +34,7 @@ end
 local function foo()
     -- code
 end
+
 local function bar()
     -- code
 end

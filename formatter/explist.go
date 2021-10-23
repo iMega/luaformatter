@@ -14,7 +14,10 @@
 
 package formatter
 
-import "io"
+import (
+	"fmt"
+	"io"
+)
 
 type explist struct {
 	List []*exp // separator ,
@@ -79,7 +82,19 @@ func (s *explist) Format(c *Config, p printer, w io.Writer) error {
 			}
 		}
 
-		if err := s.List[i].Format(c, p, w); err != nil {
+		//////////////////////////////////
+		np := p
+		l, err := StatementLength(c, s.List[i], p)
+		if err != nil {
+			return fmt.Errorf("failed to call lehgth of statement, %w", err)
+		}
+
+		curpos := getCursorPosition(w)
+		curpos.Col += uint64(l)
+
+		np.IfStatementExpLong = curpos.Col > uint64(c.MaxLineLength+1)
+		//////////////////////////////////
+		if err := s.List[i].Format(c, np, w); err != nil {
 			return err
 		}
 

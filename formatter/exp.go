@@ -16,6 +16,7 @@ package formatter
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 )
 
@@ -487,7 +488,19 @@ func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 	}
 
 	if st := s.Prefixexp; st != nil {
-		if err := st.Format(c, p, w); err != nil {
+		//////////////////////////////////
+		np := p
+		l, err := StatementLength(c, st, p)
+		if err != nil {
+			return fmt.Errorf("failed to call lehgth of statement, %w", err)
+		}
+
+		curpos := getCursorPosition(w)
+		curpos.Col += uint64(l)
+
+		np.IfStatementExpLong = curpos.Col > uint64(c.MaxLineLength+1)
+		//////////////////////////////////
+		if err := st.Format(c, np, w); err != nil {
 			return err
 		}
 	}
