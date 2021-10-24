@@ -451,20 +451,27 @@ end
 			wantW: `
 for a in b do
 end
+
 for a in b do
     -- comment
 end
+
 for a, b in c do
 end
+
 for a, b in c(d) do
 end
+
 for a = 1, 1 do
 end
+
 for a = 1, 1 do
     -- comment
 end
+
 for a = 1, 1, -1 do
 end
+
 for a = 1, 1, -1 do
     -- comment
 end
