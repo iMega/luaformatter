@@ -490,6 +490,7 @@ func (s *exp) Format(c *Config, p printer, w io.Writer) error {
 	if st := s.Prefixexp; st != nil {
 		//////////////////////////////////
 		np := p
+
 		l, err := StatementLength(c, st, p)
 		if err != nil {
 			return fmt.Errorf("failed to call lehgth of statement, %w", err)

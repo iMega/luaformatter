@@ -64,8 +64,9 @@ func (s *explist) GetStatement(prev, cur *element) statement {
 }
 
 func (s *explist) Format(c *Config, p printer, w io.Writer) error {
-	isInLine := s.isInline(c, p, w)
 	sep := []byte(", ")
+
+	isInLine := s.isInline(c, p, w)
 	if !isInLine {
 		sep = []byte(",")
 		p.Pad += c.IndentSize

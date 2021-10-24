@@ -233,7 +233,9 @@ func (s *fieldlist) isInline(c *Config, p printer, w io.Writer) bool {
 
 		if s.List[i].Val != nil {
 			values++
+
 			buf.WriteString(" = ")
+
 			if err := s.List[i].Val.Format(c, p, buf); err != nil {
 				return false
 			}
