@@ -66,6 +66,7 @@ local numbers = {1, 2, 3}
 numbers = {1, 2, 3}
 numbers = {1, 2, 3}
 local strings = {"hello", "Lua", "world"}
+
 dog.set(
     "attr",
     {age = "1 year", breed = "Bernese Mountain Dog"}
@@ -75,6 +76,7 @@ dog.set(
 local x = y * 9
 local numbers = {1, 2, 3}
 local strings = {"hello", "Lua", "world"}
+
 dog.set(
     "attr",
     {age = "1 year", breed = "Bernese Mountain Dog"}

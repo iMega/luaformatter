@@ -39,16 +39,23 @@ type typeStatement int
 const (
 	tsNone = iota
 	tsAssignment
-	tsFunction
-	tsPrefixexpStatement
+	tsBody
+	tsBreak
+	tsComment
+	tsDo
+	tsFor
 	tsFuncCallStatement
+	tsFunction
+	tsGoto
+	tsIfStatement
+	tsLabel
+	tsNewline
+	tsPrefixexpStatement
+	tsRepeat
+	tsReturn
 	tsTable
 	tsUnknow
-	tsBody
-	tsReturn
-	tsNewline
-	tsComment
-	tsIfStatement
+	tsWhile
 )
 
 // chunk ::= block

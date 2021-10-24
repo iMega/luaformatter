@@ -112,7 +112,6 @@ if vehicles["Porsche"] then
   porsche_handler(vehicles["Porsche"])
   vehicles["Porsche"] = nil
 end
-
 for name, cars in pairs(vehicles) do
    regular_handler(cars)
 end

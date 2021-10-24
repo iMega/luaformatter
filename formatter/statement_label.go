@@ -28,7 +28,7 @@ func (labelStatement) InnerStatement(prev, cur *element) (bool, statement) {
 }
 
 func (labelStatement) TypeOf() typeStatement {
-	return tsNone
+	return tsLabel
 }
 
 func (s *labelStatement) IsEnd(prev, cur *element) (bool, bool) {

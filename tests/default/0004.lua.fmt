@@ -1,5 +1,6 @@
 local a = 1
 local b, c
+
 if a == 1 then
     b = function()
         return 1

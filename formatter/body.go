@@ -128,18 +128,29 @@ func (b *body) GetStatement(prev, cur *element) statement {
 }
 
 func (b *body) Format(c *Config, p printer, w io.Writer) error {
+	var IsPrevInsertNewLine bool
+
 	for i := 0; i < int(b.Qty); i++ {
 		st := b.Blocks[uint64(i)]
 
 		if !p.IgnoreFirstPad {
 			_, newlineOk := st.(*newlineStatement)
 			commentSt, commentOk := st.(*commentStatement)
+
 			if !newlineOk && !commentOk || commentSt != nil && commentSt.IsNewline {
 				if err := newLine(w); err != nil {
 					return err
 				}
 
-				if isSemanticNewline(b.Blocks[uint64(i-1)], st) {
+				prePrev := b.Blocks[uint64(i-2)]
+				prev := b.Blocks[uint64(i-1)]
+				if IsPrevInsertNewLine {
+					prePrev = &newlineStatement{}
+					IsPrevInsertNewLine = false
+				}
+
+				if isSemanticNewline(prePrev, prev, st) {
+					IsPrevInsertNewLine = true
 					if err := newLine(w); err != nil {
 						return err
 					}
@@ -167,34 +178,60 @@ func (b *body) Format(c *Config, p printer, w io.Writer) error {
 	return nil
 }
 
-func isSemanticNewline(prev statement, cur statement) bool {
+func isSemanticNewline(prePrev, prev, cur statement) bool {
 	if prev == nil {
 		return false
 	}
 
-	if prev.TypeOf() == tsNewline || prev.TypeOf() == tsComment {
+	if ts := prev.TypeOf(); ts == tsNewline || ts == tsComment {
 		return false
 	}
 
-	if cur.TypeOf() == tsReturn {
-		return true
-	}
-
-	if cur.TypeOf() == tsIfStatement && prev.TypeOf() != tsAssignment {
-		return true
-	}
-
-	if cur.TypeOf() == tsFunction {
-		return true
-	}
-
-	if cur.TypeOf() == tsAssignment && prev.TypeOf() != tsAssignment {
-		return true
-	}
-
-	if cur.TypeOf() == tsFuncCallStatement && prev.TypeOf() != tsFuncCallStatement {
+	if cur.TypeOf() == tsComment {
 		return false
 	}
 
-	return false
+	exps := []int{
+		tsBreak,
+		tsFunction,
+		tsGoto,
+		tsLabel,
+		tsReturn,
+	}
+	if binarySearch(exps, int(cur.TypeOf())) {
+		return true
+	}
+
+	if prePrev == nil && prev.TypeOf() == tsAssignment {
+		return false
+	}
+
+	if prev.TypeOf() == tsAssignment {
+		if prePrev == nil {
+			return false
+		}
+
+		if ts := prePrev.TypeOf(); ts == tsComment || ts == tsNewline {
+			return false
+		}
+	}
+
+	exps = []int{
+		tsDo,
+		tsFor,
+		tsIfStatement,
+		tsRepeat,
+		tsWhile,
+	}
+	if binarySearch(exps, int(cur.TypeOf())) {
+		return true
+	}
+
+	if ts := prev.TypeOf(); ts == tsAssignment || ts == tsFuncCallStatement {
+		if ts == cur.TypeOf() {
+			return false
+		}
+	}
+
+	return true
 }

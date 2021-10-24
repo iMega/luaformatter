@@ -26,7 +26,7 @@ func (whileStatement) InnerStatement(prev, cur *element) (bool, statement) {
 }
 
 func (whileStatement) TypeOf() typeStatement {
-	return tsNone
+	return tsWhile
 }
 
 func (s *whileStatement) IsEnd(prev, cur *element) (bool, bool) {

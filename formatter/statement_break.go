@@ -23,7 +23,7 @@ func (breakStatement) InnerStatement(*element, *element) (bool, statement) {
 }
 
 func (breakStatement) TypeOf() typeStatement {
-	return tsNone
+	return tsBreak
 }
 
 func (s *breakStatement) IsEnd(*element, *element) (bool, bool) {

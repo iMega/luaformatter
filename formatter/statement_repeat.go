@@ -26,7 +26,7 @@ func (repeatStatement) InnerStatement(prev, cur *element) (bool, statement) {
 }
 
 func (repeatStatement) TypeOf() typeStatement {
-	return tsNone
+	return tsRepeat
 }
 
 func (s *repeatStatement) IsEnd(prev, cur *element) (bool, bool) {
