@@ -12,7 +12,7 @@ lint:
 	@-docker run --rm -t -v $(CURDIR):$(CWD) -w $(CWD) \
 		golangci/golangci-lint golangci-lint run
 
-test: lint unit
+test:
 	@docker run --rm -w $(CWD) -v $(CURDIR):$(CWD) \
 		$(GO_IMG) sh -c "apk add --upd bash && go build -o /bin/app && tests/test.sh"
 

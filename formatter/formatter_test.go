@@ -27,6 +27,22 @@ func TestFormat(t *testing.T) {
 			args: args{
 				c: conf,
 				b: []byte(`
+function funccall() end
+b = 1
+x = 2
+t = {
+    call = function() end,
+    ca = {
+        ll = function() end,
+    },
+}
+t0 = {}
+t0[0] = {
+    ca = {
+        ll = function() end
+    },
+    call = function() end,
+}
 a = -1
 a = -1 - -1
 a = -1 - -b
@@ -66,8 +82,18 @@ a = -1 ~= -1
 a = -1 ~= -b
 a = -1 and -1
 a = -1 and -b
+a = -1 and nil
+a = -1 and false
+a = -1 and true
+a = -1 and ""
+a = -1 and ...
+a = -1 and function() end
+a = -1 and funccall()
+a = -1 and {}
+a = -1 and 1 and -1
 a = -1 or -1
 a = -1 or -b
+a = -1 or false
 a = -b
 a = -b - -1
 a = -b .. -1
@@ -105,7 +131,7 @@ a = "" ~= ""
 a = "" and ""
 a = "" or ""
 a = {}
-a = #b
+a = #t
 a = 0
 a = 1 - 1
 a = 1 - b
@@ -157,18 +183,18 @@ a = false and nil
 a = false and true
 a = false or nil
 a = false or true
-a = func:call""
-a = func:call()
-a = func:call{}
-a = func.call""
-a = func.call()
-a = func.call{}
-a = func[0].ca:ll""
-a = func[0].ca:ll()
-a = func[0].ca:ll{}
-a = func[0].call""
-a = func[0].call()
-a = func[0].call{}
+a = t:call""
+a = t:call()
+a = t:call{}
+a = t.call""
+a = t.call()
+a = t.call{}
+a = t0[0].ca:ll""
+a = t0[0].ca:ll()
+a = t0[0].ca:ll{}
+a = t0[0].call""
+a = t0[0].call()
+a = t0[0].call{}
 a = funccall""
 a = funccall()
 a = funccall{}
@@ -188,16 +214,16 @@ local a
 local a, b
 local a = b
 local a, b = c, d
-local a = b()
-local a = b({})
-local a = b({
+local a = funccall()
+local a = funccall({})
+local a = funccall({
     c = d,
 })
-local a = b.c({
+local a = t.call({
     d = e,
 })
-local a = b("1")
-local a = b("")
+local a = funccall("1")
+local a = funccall("")
 c = -(x^2)
 c = -x^2
 c = (a < y) and (y <= z)
@@ -217,6 +243,28 @@ c = (a(((-1 + -2) + -1)) + b(-1 - -2 / -2))
 `),
 			},
 			wantW: `
+function funccall()
+end
+
+b = 1
+x = 2
+t = {
+    call = function()
+    end,
+    ca = {
+        ll = function()
+        end,
+    },
+}
+t0 = {}
+t0[0] = {
+    ca = {
+        ll = function()
+        end,
+    },
+    call = function()
+    end,
+}
 a = -1
 a = -1 - -1
 a = -1 - -b
@@ -256,8 +304,19 @@ a = -1 ~= -1
 a = -1 ~= -b
 a = -1 and -1
 a = -1 and -b
+a = -1 and nil
+a = -1 and false
+a = -1 and true
+a = -1 and ""
+a = -1 and ...
+a = -1 and function()
+end
+a = -1 and funccall()
+a = -1 and {}
+a = -1 and 1 and -1
 a = -1 or -1
 a = -1 or -b
+a = -1 or false
 a = -b
 a = -b - -1
 a = -b .. -1
@@ -295,7 +354,7 @@ a = "" ~= ""
 a = "" and ""
 a = "" or ""
 a = {}
-a = #b
+a = #t
 a = 0
 a = 1 - 1
 a = 1 - b
@@ -347,18 +406,18 @@ a = false and nil
 a = false and true
 a = false or nil
 a = false or true
-a = func:call("")
-a = func:call()
-a = func:call({})
-a = func.call("")
-a = func.call()
-a = func.call({})
-a = func[0].ca:ll("")
-a = func[0].ca:ll()
-a = func[0].ca:ll({})
-a = func[0].call("")
-a = func[0].call()
-a = func[0].call({})
+a = t:call("")
+a = t:call()
+a = t:call({})
+a = t.call("")
+a = t.call()
+a = t.call({})
+a = t0[0].ca:ll("")
+a = t0[0].ca:ll()
+a = t0[0].ca:ll({})
+a = t0[0].call("")
+a = t0[0].call()
+a = t0[0].call({})
 a = funccall("")
 a = funccall()
 a = funccall({})
@@ -378,12 +437,12 @@ local a
 local a, b
 local a = b
 local a, b = c, d
-local a = b()
-local a = b({})
-local a = b({c = d})
-local a = b.c({d = e})
-local a = b("1")
-local a = b("")
+local a = funccall()
+local a = funccall({})
+local a = funccall({c = d})
+local a = t.call({d = e})
+local a = funccall("1")
+local a = funccall("")
 c = -(x ^ 2)
 c = -x ^ 2
 c = (a < y) and (y <= z)

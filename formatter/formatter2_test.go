@@ -30,11 +30,13 @@ func TestFormat2(t *testing.T) {
 					},
 				},
 				b: []byte(`
-return (machine and machine.is_loaded_qwe) and "coffee brewing" or "fill your water"
+params = a or {}
 `),
 			},
 			wantW: `
-a.b().c().d()
+function badFunction(argument1, argument2)
+end
+badFunctionCall()
 `,
 			wantErr: false,
 		},

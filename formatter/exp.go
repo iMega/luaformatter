@@ -421,6 +421,10 @@ func (s *exp) GetStatement(prev, cur *element) statement {
 		return &prefixexpStatement{}
 	}
 
+	if isBinop(prev) && isExp(cur) { // it's work params = a or {}
+		return &exp{}
+	}
+
 	if cur.Token.Type == nCurlyBracket {
 		return &tableStatement{}
 	}
@@ -429,9 +433,9 @@ func (s *exp) GetStatement(prev, cur *element) statement {
 	// 	return false, false
 	// }
 
-	if isBinop(prev) && isExp(cur) {
-		return &exp{}
-	}
+	// if isBinop(prev) && isExp(cur) { // it's not work params = a or {}
+	// 	return &exp{}
+	// }
 
 	return nil
 }
